@@ -14,13 +14,46 @@
   <div class="content">
     <div th:replace="/layout/basic :: navbar"></div>
 
-    <div class="inner-content" style="margin:5%; max-width: 80%;">
+    <div class="inner-content" style="margin:4%; max-width: 80%;">
 
       <h2 style="display: inline-flex">행정 관리</h2>
       <button style="display: inline-flex" class="btn btn-primary float-end" onclick="location.href='/member/admin/insert'"> 행정 등록 </button>
 
-      <div th:each="member : ${memberList}" th:with="admin=${admin}">
-          <div th:if="${member.getRoleSet().contains(admin)}">
+
+      <!-- 검색 -->
+
+
+      <div class="row mt-3" style="max-width: 500px">
+        <form action="/member/admin" method="get">
+          <div class="col">
+            <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <select class="form-select" name="type">
+                  <option value="">---</option>
+                  <option th:selected="${pageRequestDTO.type == 'n'}" value="n">이름</option>
+                  <option th:selected="${pageRequestDTO.type == 'i'}" value="i">아이디</option>
+                  <option th:selected="${pageRequestDTO.type == 'ni'}" value="ni">이름/아이디</option>
+                </select>
+              </div>
+
+              <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-info searchBtn">검색</button>
+                <button type="button" class="btn btn-secondary clearBtn">초기화</button>
+              </div>
+
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+
+      <!-- 검색 끝-->
+
+
+      <div th:each="member : ${pageResponseDTO.getDtoList()}" th:with="admin=${admin}">
 
             <hr>
             <img class="rounded-circle" th:src="@{/img/{fileName}(fileName=${member.getFileName()})}" alt="" style="width: 40px; height: 40px;">
@@ -30,8 +63,27 @@
               <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}" th:onclick="admindelete(this.getAttribute('data-name'))">삭제</button>
             </div>
 
-          </div>
+      </div>
 
+      <br>
+      <br>
+      <div class="float-end">
+        <ul class="pagination flex-wrap">
+          <li class="page-item" th:if="${pageResponseDTO.prev}">
+            <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
+          </li>
+
+          <th:block th:each="i : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+            <li th:class="${pageResponseDTO.page == i} ? 'page-item active' : 'page-item'">
+              <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
+            </li>
+          </th:block>
+
+          <li class="page-item" th:if="${pageResponseDTO.next}">
+            <a class="page-link" th:data-num="${pageResponseDTO.end + 1}">다음</a>
+          </li>
+
+        </ul>
       </div>
 
 

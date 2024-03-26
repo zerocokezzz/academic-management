@@ -3,10 +3,14 @@ package com.ezen.management.controller;
 import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
 import com.ezen.management.dto.MemberDTO;
+import com.ezen.management.dto.PageRequestDTO;
+import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @Slf4j
@@ -29,12 +35,25 @@ public class MemberController {
 //    행정 관리 홈(행정 리스트)
     @PreAuthorize("hasRole('MASTER')")
     @GetMapping("/admin")   //  /member/admin
-    public String adminIndex(Model model){
+    public String adminIndex(Model model, PageRequestDTO pageRequestDTO){
 
-        List<Member> memberList = memberService.findAll();
+//        페이징
+//        Pageable pageable = PageRequest.of(page - 1, size);
 
-        model.addAttribute("memberList", memberList);
+//        이거 전체 회원 가지고 오는 게 아니라 admin만 가져와야함
+//        전체 회원 목록 불러와서 행정만 보이게 하는 거라 페이지가 다르게 나올 거임
+
+        Set<MemberRole> memberRoleSet = new HashSet<>();
+        memberRoleSet.add(MemberRole.ADMIN);
+
+        PageResponseDTO<Member> pageResponseDTO = memberService.findBySpecificRoles(memberRoleSet, pageRequestDTO);
+
+        log.info("pageResponseDTO" + pageResponseDTO);
+
+        log.info("pageResponseDTO.getDtoList() " + pageResponseDTO.getDtoList());
+
         model.addAttribute("admin", MemberRole.ADMIN);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
 
         return "/member/admin/index";
     }
@@ -157,12 +176,36 @@ public class MemberController {
 //    교사 관리 홈(교사 리스트)
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     @GetMapping("/teacher")
-    public String teacherIndex(Model model){
+    public String teacherIndex(Model model, PageRequestDTO pageRequestDTO){
+//
+//        //        페이징
+//        Pageable pageable = PageRequest.of(page - 1, size);
+//
+////        이거 전체 회원 가지고 오는 게 아니라 admin만 가져와야함
+////        전체 회원 목록 불러와서 교사만 보이게 하는 거라 페이지가 다르게 나올 거임
+//        List<Member> memberList = memberService.findAll(pageable);
+//
+//        int total = memberService.countAll();
+////        출력될 총 페이지 개수
+//        int totalPage = (total % size) > 0 ? (total / size) + 1 : (total / size);
+//        log.info("total page......" + totalPage);
+//
+//        model.addAttribute("memberList", memberList);
+//        model.addAttribute("teacher", MemberRole.TEACHER);
+//
+//        model.addAttribute("totalPage", totalPage);
+//
+////        페이지는 0부터 시작함
+//        model.addAttribute("currentPage", page - 1);
 
-        List<Member> memberList = memberService.findAll();
+        Set<MemberRole> memberRoleSet = new HashSet<>();
+        memberRoleSet.add(MemberRole.TEACHER);
 
-        model.addAttribute("memberList", memberList);
+        PageResponseDTO<Member> pageResponseDTO = memberService.findBySpecificRoles(memberRoleSet, pageRequestDTO);
+
+        log.info("pageResponseDTO" + pageResponseDTO);
         model.addAttribute("teacher", MemberRole.TEACHER);
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
 
         return "/member/teacher/index";
     }

@@ -14,33 +14,43 @@
   <div class="content">
     <div th:replace="/layout/basic :: navbar"></div>
 
-    <div class="inner-content" style="margin:5%; max-width: 80%">
+    <div class="inner-content" style="margin:4%; max-width: 80%">
 
       <h2 style="display: inline-flex">강사 관리</h2>
       <button style="display: inline-flex" class="btn btn-primary float-end" onclick="location.href='/member/teacher/insert'"> 교사 등록 </button>
 
-      <div th:each="member : ${memberList}" th:with="teacher=${teacher}">
-        <div th:if="${member.getRoleSet().contains(teacher)}">
+      <div th:each="member : ${pageResponseDTO.getDtoList()}" th:with="teacher=${teacher}">
 
           <hr>
-            <img class="rounded-circle" th:src="@{/img/{fileName}(fileName=${member.getFileName()})}" alt="" style="width: 40px; height: 40px;">
+          <img class="rounded-circle" th:src="@{/img/{fileName}(fileName=${member.getFileName()})}" alt="" style="width: 40px; height: 40px;">
           <div style="display: inline-flex" th:text="${member.name}"></div>
           <div class="float-end">
             <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${member.id}" th:onclick="teacherUpdate(this.getAttribute('data-name'))">수정</button>
-<!--            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}"  th:onclick="confirmAndDelete(this.getAttribute('data-name'))">삭제</button>-->
-            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}"  th:onclick="teacherDelete(this.getAttribute('data-name'))">삭제</button>
+            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}" th:onclick="teacherdelete(this.getAttribute('data-name'))">삭제</button>
           </div>
 
-        </div>
-
       </div>
-      <hr>
 
+      <br>
+      <br>
+      <div class="float-end">
+        <ul class="pagination flex-wrap">
+          <li class="page-item" th:if="${pageResponseDTO.prev}">
+            <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
+          </li>
 
+          <th:block th:each="i : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+            <li th:class="${pageResponseDTO.page == i} ? 'page-item active' : 'page-item'">
+              <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
+            </li>
+          </th:block>
 
-    </div>
+          <li class="page-item" th:if="${pageResponseDTO.next}">
+            <a class="page-link" th:data-num="${pageResponseDTO.end + 1}">다음</a>
+          </li>
 
-
+        </ul>
+      </div>
 
 
 

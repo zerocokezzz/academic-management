@@ -4,14 +4,20 @@ import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
 import com.ezen.management.domain.QMember;
 import com.ezen.management.dto.MemberDTO;
+import com.ezen.management.dto.PageRequestDTO;
+import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -59,13 +65,58 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> findAll() {
-//        return memberRepository.findAll();
-        Optional<List<Member>> allByWithRoles = memberRepository.getAllByWithRoles();
+    public PageResponseDTO<Member> findAll(PageRequestDTO pageRequestDTO) {
 
-        return allByWithRoles.orElse(null);
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
+//        String keyword = pageRequestDTO.getKeyword();
+
+//        List<Member> dtoList = memberRepository.findAll();
+        Page<Member> all = memberRepository.getAllByWithRoles(pageable);
+
+        List<Member> dtoList = all.getContent();
+
+        log.info("memberServiceImpl dtoList " + dtoList);
+        dtoList.forEach(member -> {
+            log.info("member roleSet" + member.getRoleSet());
+        });
+
+        return PageResponseDTO.<Member>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(memberRepository.countAll())
+                .build();
 
     }
+
+    @Override
+    public PageResponseDTO<Member> findBySpecificRoles(Set<MemberRole> memberRoleSet, PageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
+
+        Page<Member> bySpecificRoles = memberRepository.findBySpecificRoles(memberRoleSet, pageable);
+
+        List<Member> dtoList = bySpecificRoles.getContent();
+
+        return PageResponseDTO.<Member>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total(memberRepository.countBySpecificRoles(memberRoleSet))
+                .build();
+    }
+
+//    @Override
+//    public List<Member> findAll(Pageable pageable) {
+////        Optional<List<Member>> allByWithRoles = memberRepository.getAllByWithRoles();
+////        return allByWithRoles.orElse(null);
+//
+////        여기에 페이지
+////        Pageable pageable = PageRequest.of(0, 10);
+//        Page<Member> page = memberRepository.getAllByWithRoles(pageable);
+//
+//
+//        return page.getContent();   //  List<Member>
+//    }
+
+
 
     @Override
     public int delete(String id) {
@@ -116,6 +167,11 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> findById(String id) {
 
         return memberRepository.findById(id);
+    }
+
+    @Override
+    public int countAll() {
+        return memberRepository.countAll();
     }
 
 
