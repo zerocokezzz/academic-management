@@ -1,8 +1,15 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.3'
     id 'io.spring.dependency-management' version '1.1.4'
 }
+
 
 group = 'com.ezen'
 version = '0.0.1-SNAPSHOT'
@@ -34,8 +41,30 @@ dependencies {
 // test lombok
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+//    spring web security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    thymeleaf spring security
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+//    querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+    annotationProcessor(
+            "jakarta.persistence:jakarta.persistence-api",
+            "jakarta.annotation:jakarta.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
+    )
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// querydsl
+sourceSets {
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/main/generated"]
+        }
+    }
 }

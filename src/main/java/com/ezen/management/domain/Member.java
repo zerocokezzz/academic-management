@@ -1,28 +1,30 @@
 package com.ezen.management.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+@ToString(exclude = "roleSet")
+public class Member extends BaseEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int member_idx;
-
     private String id;
+
+    @Column(nullable = false)
     private String pwd;
 
+    @Column(length = 30, nullable = false)
     private String name;
-    private int access;
+//    private int access;
+
+
 
 
     @Builder.Default
@@ -30,6 +32,26 @@ public class Member {
 
     public void changeProfile(String fileName){
         this.fileName = fileName;
+    }
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<MemberRole> roleSet = new HashSet<>();
+
+    public void addRole(MemberRole memberRole){
+        this.roleSet.add(memberRole);
+    }
+
+    public void changePassword(String pwd){
+        this.pwd = pwd;
+    }
+
+    public void clearRoles(){
+        this.roleSet.clear();
+    }
+
+    public void changeName(String name){
+        this.name = name;
     }
 
 

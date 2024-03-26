@@ -15,9 +15,7 @@ import lombok.NoArgsConstructor;
 public class Subject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
-
     private String name;
+
     private String method;
 }

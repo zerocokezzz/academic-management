@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+  <div th:replace="/layout/basic :: sidebar">
+
+  </div>
+
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
+
+    <div class="inner-content" style="margin:5%; max-width: 80%">
+
+      <h2 style="display: inline-flex">강사 관리</h2>
+      <button style="display: inline-flex" class="btn btn-primary float-end" onclick="location.href='/member/teacher/insert'"> 교사 등록 </button>
+
+      <div th:each="member : ${memberList}" th:with="teacher=${teacher}">
+        <div th:if="${member.getRoleSet().contains(teacher)}">
+
+          <hr>
+            <img class="rounded-circle" th:src="@{/img/{fileName}(fileName=${member.getFileName()})}" alt="" style="width: 40px; height: 40px;">
+          <div style="display: inline-flex" th:text="${member.name}"></div>
+          <div class="float-end">
+            <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${member.id}" th:onclick="teacherUpdate(this.getAttribute('data-name'))">수정</button>
+<!--            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}"  th:onclick="confirmAndDelete(this.getAttribute('data-name'))">삭제</button>-->
+            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}"  th:onclick="teacherDelete(this.getAttribute('data-name'))">삭제</button>
+          </div>
+
+        </div>
+
+      </div>
+      <hr>
+
+
+
+    </div>
+
+
+
+
+
+  </div>
+  <!-- content end -->
+
+
+  <!-- 진짜 개 천천히 top으로 올라가네요-->
+  <a th:replace="/layout/basic :: back-to-top"></a>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script>
+
+  // 삭제 버튼 클릭 시 확인 메시지를 표시하고, 확인 시 Axios를 사용하여 POST 요청으로 삭제 수행
+  // function confirmAndDelete(memberId) {
+  //
+  //   console.log(memberId);
+  //
+  //   if (confirm('정말로 삭제하시겠습니까?')) {
+  //     // Axios를 사용하여 POST 요청 보내기
+  //     axios.post('/member/teacher/delete', { id: memberId })
+  //             .then(response => {
+  //               // 성공적으로 삭제된 경우 처리
+  //               console.log('삭제되었습니다.');
+  //             })
+  //             .catch(error => {
+  //               // 삭제 실패 시 처리
+  //               console.error('삭제에 실패하였습니다.');
+  //             });
+  //   }
+  // }
+
+  function teacherDelete(memberId) {
+    if(confirm('삭제하시겠습니까?')){
+      location.href='/member/teacher/delete?id=' + memberId;
+    }
+  }
+
+
+  function teacherUpdate(memberId) {
+    location.href='/member/teacher/update?id=' + memberId;
+  }
+  
+  
+</script>
+</body>
+</html>

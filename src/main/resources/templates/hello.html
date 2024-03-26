@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin:5%; max-width: 80%">
+
+                <h1> content here!</h1>
+
+        </div>
+
+
+
+
+
+    </div>
+    <!-- content end -->
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+</body>
+</html>

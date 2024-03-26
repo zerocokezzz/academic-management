@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+  <div th:replace="/layout/basic :: sidebar">
+
+  </div>
+
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
+
+    <div class="inner-content" style="margin:5%; max-width: 80%;">
+
+      <h2 style="display: inline-flex">행정 관리</h2>
+      <button style="display: inline-flex" class="btn btn-primary float-end" onclick="location.href='/member/admin/insert'"> 행정 등록 </button>
+
+      <div th:each="member : ${memberList}" th:with="admin=${admin}">
+          <div th:if="${member.getRoleSet().contains(admin)}">
+
+            <hr>
+            <img class="rounded-circle" th:src="@{/img/{fileName}(fileName=${member.getFileName()})}" alt="" style="width: 40px; height: 40px;">
+            <div style="display: inline-flex" th:text="${member.name}"></div>
+            <div class="float-end">
+              <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${member.id}" th:onclick="adminUpdate(this.getAttribute('data-name'))">수정</button>
+              <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}" th:onclick="admindelete(this.getAttribute('data-name'))">삭제</button>
+            </div>
+
+          </div>
+
+      </div>
+
+
+    </div>
+
+
+
+
+
+  </div>
+  <!-- content end -->
+
+
+  <!-- 진짜 개 천천히 top으로 올라가네요-->
+  <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script>
+  function adminDelete(memberId) {
+    if(confirm('삭제하시겠습니까?')){
+      location.href='/member/admin/delete?id=' + memberId;
+    }
+  }
+
+
+  function adminUpdate(memberId) {
+    location.href='/member/admin/update?id=' + memberId;
+  }
+
+</script>
+</body>
+</html>
