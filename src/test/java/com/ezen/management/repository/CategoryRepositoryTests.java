@@ -14,7 +14,7 @@ public class CategoryRepositoryTests {
     private CategoryRepository categoryRepository;
 
     @Test
-    public void insertCategory(){
+    public void 카테고리추가(){
         Category category = Category.builder()
                 .name("KDT")
                 .build();

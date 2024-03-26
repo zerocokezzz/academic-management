@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
@@ -194,6 +195,27 @@ public class MemberRepositoryTests {
 
     }
 
+
+    @Test
+    public void 행정조회테스트(){
+
+//        2페이지 등록순 조회
+        PageRequest pageable = PageRequest.of(1, 10);
+
+        String[] types = {"n"};
+        String keyword = "7";
+
+        Set<MemberRole> memberRoleSet = new HashSet<>();
+        memberRoleSet.add(MemberRole.ADMIN);
+
+        Page<Member> members = memberRepository.searchMember(types, keyword, pageable, memberRoleSet);
+
+        members.forEach(member -> {
+            log.info("조회 결과 member " + member);
+            log.info("조회 결과 memberRoleSet " + memberRoleSet);
+        });
+
+    }
 
 
 

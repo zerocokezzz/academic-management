@@ -11,8 +11,10 @@ public class PageResponseDTO<E> {
 
     private int page;
 
+//    페이지당 개수 요청 따로 없으면 10개씩
     @Builder.Default
     private int size = 10;
+
     private int total;
 
 //    시작 페이지
@@ -26,8 +28,10 @@ public class PageResponseDTO<E> {
 
     private List<E> dtoList;
 
+//    PageResponseDTO.<Member>withAll 로 사용할 수 있음
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total){
+
         if(total <= 0){
             return;
         }

@@ -41,6 +41,7 @@ public interface MemberRepository extends JpaRepository<Member, String>, MemberS
     int countBySpecificRoles(Set<MemberRole> roles);
 
 //    특정 권한을 가지고 있고, 아이디가 keyword에 해당하는 멤버
+    @EntityGraph(attributePaths = "roleSet")
     @Query("select m from Member m left join m.roleSet r where m.id like concat('%', :keyword, '%') and r in :roles")
     Page<Member> findByKeywordAndSpecificRoles(String keyword, Pageable pageable, Set<MemberRole> roles);
 

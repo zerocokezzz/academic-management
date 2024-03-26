@@ -26,7 +26,7 @@ public class LessonRepositoryTests {
     private CurriculumRepository curriculumRepository;
 
     @Test
-    public void insertLesson(){
+    public void 수업추가(){
 
         Optional<Member> memberResult = memberRepository.getByIdWithRoles("teacher");
         Member member = memberResult.orElseThrow();

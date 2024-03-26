@@ -19,7 +19,7 @@ public class QuestionRepositoryTests {
     @Autowired
     private LessonRepository lessonRepository;
     @Test
-    public void insertTest(){
+    public void 사전조사1문제추가(){
 
         Question question = Question.builder()
                 .name("자바 풀스택")
@@ -38,7 +38,7 @@ public class QuestionRepositoryTests {
     }
 
     @Test
-    public void getByQuestionTest(){
+    public void 사전조사이름으로가져오기(){
         Optional<List<Question>> result = questionRepository.getQuestionsByName("자바 풀스택");
         List<Question> questions = result.orElseThrow();
         log.info("questions...... " + questions);

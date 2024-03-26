@@ -14,26 +14,64 @@
   <div class="content">
     <div th:replace="/layout/basic :: navbar"></div>
 
-    <div class="inner-content" style="margin:4%; max-width: 80%">
+    <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
-      <h2 style="display: inline-flex">강사 관리</h2>
-      <button style="display: inline-flex" class="btn btn-primary float-end" onclick="location.href='/member/teacher/insert'"> 교사 등록 </button>
+      <h3 style="display: inline-flex">강사 관리</h3>
+      <button style="display: inline-flex" class="btn btn-primary float-end" onclick="location.href='/member/teacher/insert'"> 강사 등록 </button>
 
+      <hr>
+      <br>
+
+      <!-- 검색 -->
+      <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+        <form action="/member/teacher" method="get">
+          <div class="col">
+            <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <select class="form-select type" name="type">
+                  <option value="">---</option>
+                  <option th:selected="${pageRequestDTO.type == 'n'}" value="n">이름</option>
+                  <option th:selected="${pageRequestDTO.type == 'i'}" value="i">아이디</option>
+                  <option th:selected="${pageRequestDTO.type == 'ni'}" value="ni">이름/아이디</option>
+                </select>
+              </div>
+
+              &nbsp;&nbsp;
+              <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
+              &nbsp;&nbsp;
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
+                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
+              </div>
+
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <!-- 검색 끝-->
+
+      <br>
+      <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]명</div>
       <div th:each="member : ${pageResponseDTO.getDtoList()}" th:with="teacher=${teacher}">
 
           <hr>
           <img class="rounded-circle" th:src="@{/img/{fileName}(fileName=${member.getFileName()})}" alt="" style="width: 40px; height: 40px;">
-          <div style="display: inline-flex" th:text="${member.name}"></div>
+        &nbsp;&nbsp;
+          <div style="display: inline-flex" th:text="${member.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
+          <div style="display: inline-flex" th:text="${#temporals.format(member.regDate, 'yy-MM-dd')}"></div>
           <div class="float-end">
             <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${member.id}" th:onclick="teacherUpdate(this.getAttribute('data-name'))">수정</button>
             <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}" th:onclick="teacherdelete(this.getAttribute('data-name'))">삭제</button>
           </div>
-
       </div>
 
+
+<!--      페이지-->
+      <hr>
       <br>
-      <br>
-      <div class="float-end">
+      <div class="">
         <ul class="pagination flex-wrap">
           <li class="page-item" th:if="${pageResponseDTO.prev}">
             <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
@@ -51,7 +89,11 @@
 
         </ul>
       </div>
+      <br>
+      <br>
 
+    </div>
+<!--    inner content end-->
 
 
   </div>
@@ -60,10 +102,10 @@
 
   <!-- 진짜 개 천천히 top으로 올라가네요-->
   <a th:replace="/layout/basic :: back-to-top"></a>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 </div>
 <!-- wrapper end-->
+
 
 
 
@@ -71,25 +113,6 @@
 </div>
 
 <script>
-
-  // 삭제 버튼 클릭 시 확인 메시지를 표시하고, 확인 시 Axios를 사용하여 POST 요청으로 삭제 수행
-  // function confirmAndDelete(memberId) {
-  //
-  //   console.log(memberId);
-  //
-  //   if (confirm('정말로 삭제하시겠습니까?')) {
-  //     // Axios를 사용하여 POST 요청 보내기
-  //     axios.post('/member/teacher/delete', { id: memberId })
-  //             .then(response => {
-  //               // 성공적으로 삭제된 경우 처리
-  //               console.log('삭제되었습니다.');
-  //             })
-  //             .catch(error => {
-  //               // 삭제 실패 시 처리
-  //               console.error('삭제에 실패하였습니다.');
-  //             });
-  //   }
-  // }
 
   function teacherDelete(memberId) {
     if(confirm('삭제하시겠습니까?')){
@@ -101,8 +124,51 @@
   function teacherUpdate(memberId) {
     location.href='/member/teacher/update?id=' + memberId;
   }
-  
-  
+
+  //   페이지 클릭 이벤트 처리
+  //   clear 버튼 누르면 검색 조건 사라진 목록(/member/teacher) 출력
+  document.querySelector(".pagination").addEventListener("click", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const target = e.target;
+
+    if (target.tagName !== 'A') {
+      return;
+    }
+
+    const formObj = document.querySelector("form");
+
+    const num = target.getAttribute("data-num");
+    const keyword = document.querySelector(".keyword");
+    const type = document.querySelector(".type");
+
+    // 버튼 누르면 ?page=num
+    formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
+
+    // 검색 목록이면
+    if(keyword.value !== ''){
+      formObj.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
+      formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+    }
+
+    formObj.submit();
+
+  }, false);
+
+
+  document.querySelector(".clearBtn").addEventListener("click", function (e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    self.location = '/member/teacher';
+
+  }, false)
+
+
+  document.querySelector(".teacherManagement").classList.add("active");
+  document.querySelector(".memberManagement").classList.add("active");
+
 </script>
 </body>
 </html>

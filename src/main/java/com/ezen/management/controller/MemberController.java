@@ -177,26 +177,6 @@ public class MemberController {
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     @GetMapping("/teacher")
     public String teacherIndex(Model model, PageRequestDTO pageRequestDTO){
-//
-//        //        페이징
-//        Pageable pageable = PageRequest.of(page - 1, size);
-//
-////        이거 전체 회원 가지고 오는 게 아니라 admin만 가져와야함
-////        전체 회원 목록 불러와서 교사만 보이게 하는 거라 페이지가 다르게 나올 거임
-//        List<Member> memberList = memberService.findAll(pageable);
-//
-//        int total = memberService.countAll();
-////        출력될 총 페이지 개수
-//        int totalPage = (total % size) > 0 ? (total / size) + 1 : (total / size);
-//        log.info("total page......" + totalPage);
-//
-//        model.addAttribute("memberList", memberList);
-//        model.addAttribute("teacher", MemberRole.TEACHER);
-//
-//        model.addAttribute("totalPage", totalPage);
-//
-////        페이지는 0부터 시작함
-//        model.addAttribute("currentPage", page - 1);
 
         Set<MemberRole> memberRoleSet = new HashSet<>();
         memberRoleSet.add(MemberRole.TEACHER);
@@ -209,6 +189,7 @@ public class MemberController {
 
         return "/member/teacher/index";
     }
+
 
 //    교사 추가 폼
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")

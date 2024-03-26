@@ -26,7 +26,7 @@ public class QuestionAnswerRepositoryTests {
     private LessonRepository lessonRepository;
 
     @Test
-    public void 등록(){
+    public void 사전조사등록(){
 
         Optional<Lesson> byId = lessonRepository.findById(1);
         Lesson lesson = byId.orElseThrow();

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -90,32 +91,27 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public PageResponseDTO<Member> findBySpecificRoles(Set<MemberRole> memberRoleSet, PageRequestDTO pageRequestDTO) {
-        Pageable pageable = pageRequestDTO.getPageable("regDate");
+        Pageable pageable = pageRequestDTO.getPageable();
 
-        Page<Member> bySpecificRoles = memberRepository.findBySpecificRoles(memberRoleSet, pageable);
+        String[] types = pageRequestDTO.getTypes(); // split("_")
+        String keyword = pageRequestDTO.getKeyword();
 
-        List<Member> dtoList = bySpecificRoles.getContent();
+        log.info("types: " + Arrays.toString(types));
+        log.info("keyword: " + keyword);
+
+//        검색 카테고리, 키워드, 특정 권한을 가진 멤버 regDate 내림차순으로 페이징 처리해서 가져옴
+        Page<Member> memberPage = memberRepository.searchMember(types, keyword, pageable, memberRoleSet);
+
+//        페이지 안에 담긴 dtoList
+        List<Member> dtoList = memberPage.getContent();
 
         return PageResponseDTO.<Member>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-                .total(memberRepository.countBySpecificRoles(memberRoleSet))
+//                검색했을 때 총 개수(페이지에 담긴 개수 말고 검색 결과 개수)
+                .total((int)memberPage.getTotalElements())
                 .build();
     }
-
-//    @Override
-//    public List<Member> findAll(Pageable pageable) {
-////        Optional<List<Member>> allByWithRoles = memberRepository.getAllByWithRoles();
-////        return allByWithRoles.orElse(null);
-//
-////        여기에 페이지
-////        Pageable pageable = PageRequest.of(0, 10);
-//        Page<Member> page = memberRepository.getAllByWithRoles(pageable);
-//
-//
-//        return page.getContent();   //  List<Member>
-//    }
-
 
 
     @Override

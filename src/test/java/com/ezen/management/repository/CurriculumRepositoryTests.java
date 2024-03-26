@@ -20,7 +20,7 @@ public class CurriculumRepositoryTests {
     private CategoryRepository categoryRepository;
 
     @Test
-    public void insertCurriculum(){
+    public void 과정추가(){
 
         Optional<Category> result = categoryRepository.findById("KDT");
         Category category = result.orElseThrow();
