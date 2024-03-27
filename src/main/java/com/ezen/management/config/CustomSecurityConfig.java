@@ -86,7 +86,7 @@ public class CustomSecurityConfig {
     }
 
 
-//  403 : 권한 없는 유저가 요청할 경우 발생하는 오류 -> 로그인으로 튕겨냄
+//  403 : 권한 없는 유저가 요청할 경우 발생하는 오류 ->
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new Custom403Handler();
