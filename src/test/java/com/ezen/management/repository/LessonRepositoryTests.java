@@ -34,12 +34,12 @@ public class LessonRepositoryTests {
         Optional<Curriculum> curriculumResult = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정");
         Curriculum curriculum = curriculumResult.orElseThrow();
 
-        LocalDate start = LocalDate.of(2024, 3, 22);
+        LocalDate start = LocalDate.of(2024, 9, 27);
 
         Lesson lesson = Lesson.builder()
                 .curriculum(curriculum)
                 .member(member)
-                .number(1)
+                .number(2)
                 .startDay(start)
                 .endDay(start.plusDays(curriculum.getDay()))
                 .survey1(start.plusMonths(1))
@@ -88,10 +88,18 @@ public class LessonRepositoryTests {
 
         LocalDate now = LocalDate.now();
 
-        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
-        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
+//        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
+        List<Lesson> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
+//        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
 
-        log.info("lessons...... " + lessons);
+//        log.info("lessons...... " + lessons);
+    }
+
+    @Test
+    public void 전체목록(){
+        List<Lesson> all = lessonRepository.findAll();
+
+        log.info("all lessons......" + all);
     }
 
 

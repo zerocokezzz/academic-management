@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    Optional<List<Question>> getQuestionsByName(String name);
+    List<Question> getQuestionsByName(String questionName);
 
 }
