@@ -1,12 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Ezen Student</title>
-</head>
+<head th:replace="/layout/student/basic :: head"></head>
 <body>
-<h1>학생 인덱스</h1>
-<h1>사전평가 링크 / 설문 링크</h1>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/student/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <br>
+        <br>
+        <br>
+            <div class="inner-content" style="margin: 0 4vw 0 12vh; max-width: 80%">
+
+                <h3>학생 정보 입력</h3>
+                <div style="font-size: 12pt"> 참여하고 있는 과정과 이름을 입력해주세요. </div>
+
+                <br>
+                <br>
+                <div style="max-width: 500px">
+                    <form action="/student/select" method="post">
+                        <select class="form-select" name="lessonIdx">
+                            <option th:value="${lesson.idx}" th:each="lesson : ${lessonList}">[[${lesson.curriculum.name}]] [[${lesson.number}]]회차</option>
+                        </select>
+
+                        <input class="form-control" type="text" name="name" placeholder="이름"/>
+                        <!--                        <input class="form-control" type="text" name="birthday" placeholder="생년월일"/>-->
+
+                        <br>
+                        <button class="btn btn-primary" type="submit">입력</button>
+                        <button class="btn btn-secondary" type="reset">초기화</button>
+                    </form>
+                </div>
+
+            </div>
+
+
+
+
+
+    </div>
+    <!-- content end -->
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/student/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/student/basic :: scriptSet">
+</div>
+
+<script>
+    document.querySelector(".studentHomeBtn").classList.add("active");
+
+</script>
+
 </body>
 </html>

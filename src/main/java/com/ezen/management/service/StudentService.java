@@ -10,5 +10,7 @@ public interface StudentService {
 
     Student findByLessonIdxAndName(int lessonIdx, String name);
 
+    Student findById(int studentIdx);
+
 
 }
