@@ -15,6 +15,9 @@ public class QuestionAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idx;
 
+//    문제 주제 이름
+    private String name;
+
     @OneToOne
     private Student student;
 

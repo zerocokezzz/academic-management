@@ -1,10 +1,7 @@
 package com.ezen.management.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +10,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 @ToString(exclude = "lesson")
 public class Student extends BaseEntity{
 
@@ -61,12 +59,14 @@ public class Student extends BaseEntity{
 
     private String etc;
 
-
-
-
-
     public void insertCounseling(){
         this.counseling++;
     }
+
+    public void grading(int score){
+        this.pretest = true;
+        this.score = score;
+    }
+
 
 }

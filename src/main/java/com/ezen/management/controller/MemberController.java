@@ -37,12 +37,6 @@ public class MemberController {
     @GetMapping("/admin")   //  /member/admin
     public String adminIndex(Model model, PageRequestDTO pageRequestDTO){
 
-//        페이징
-//        Pageable pageable = PageRequest.of(page - 1, size);
-
-//        이거 전체 회원 가지고 오는 게 아니라 admin만 가져와야함
-//        전체 회원 목록 불러와서 행정만 보이게 하는 거라 페이지가 다르게 나올 거임
-
         Set<MemberRole> memberRoleSet = new HashSet<>();
         memberRoleSet.add(MemberRole.ADMIN);
 

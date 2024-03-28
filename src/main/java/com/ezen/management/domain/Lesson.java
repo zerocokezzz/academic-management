@@ -31,7 +31,7 @@ public class Lesson extends BaseEntity{
 
     //    인원
     @Builder.Default
-    private int head_count = 0;
+    private int headCount = 0;
 
     @Column(nullable = false)
     private LocalDate startDay;
@@ -50,12 +50,21 @@ public class Lesson extends BaseEntity{
 
     private String classRoom;
 
+    private String questionName;
     public void changeTeacher(Member member){
         this.member = member;
     }
 
     public void changeClassroom(String classRoom) {
         this.classRoom = classRoom;
+    }
+
+    public void changeQuestionName(String questionName){
+        this.questionName = questionName;
+    }
+
+    public void headCountUp(){
+        this.headCount++;
     }
 
 
