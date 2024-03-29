@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+  <div th:replace="/layout/basic :: sidebar">
+
+  </div>
+
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
+
+    <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+
+      <h3 style="display: inline-flex">사전 평가 문제</h3>
+      <button style="display: inline-flex" class="btn btn-primary float-end"> 문제 등록 </button>
+
+      <hr>
+      <br>
+
+      <form>
+        <div style="max-width: 300px">
+            <select class="form-select questionKeywordSelect" name="name">
+              <option selected>분류 선택</option>
+              <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>
+            </select>
+        </div>
+
+
+      </form>
+
+
+
+
+      <!-- 문제 리스트 -->
+
+      <br>
+      <div class="questionList">
+      <div  th:each="question : ${questions}">
+
+        <div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px"> [[${question.name}]]</p></div>
+        &nbsp;
+        <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">[[${question.number}]]. [[${question.content}]]</a></div>
+        <div class="float-end" style="display: inline-flex">
+          <button class="btn btn-secondary" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal' + question.idx}" data-bs-whatever="@mdo">수정</button>
+          &nbsp;
+          <button class="btn btn-danger">삭제</button>
+        </div>
+        <hr>
+
+        <!-- 수정 모달 -->
+
+        <div class="modal fade" th:id="${'exampleModal' + question.idx}" tabindex="-1" th:aria-labelledby="${'exampleModalLabel' + question.idx}" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" th:id="${'exampleModalLabel' + question.idx}">문제 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form>
+
+                  <select class="form-select mb-3" name="name" style="max-width: 200px">
+                    <option selected value="">분류 선택</option>
+                    <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}" th:if="${!question.name.equals(questionKeyword.name)}"}></option>
+                    <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}" th:if="${question.name.equals(questionKeyword.name)}" selected></option>
+                  </select>
+
+                  <div class="mb-3">
+                    <label for="content" class="col-form-label">문제</label>
+                    <textarea type="text" rows="2" class="form-control" name="content" id="content" th:text="${question.content}"></textarea>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="item1" class="col-form-label">1번</label>
+                    <textarea class="form-control" rows="1" name="item1" id="item1" th:text="${question.item1}"></textarea>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="item2" class="col-form-label">2번</label>
+                    <textarea class="form-control" rows="1" name="item2" id="item2" th:text="${question.item2}"></textarea>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="item3" class="col-form-label">3번</label>
+                    <textarea class="form-control" rows="1" name="item3" id="item3" th:text="${question.item3}"></textarea>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="item4" class="col-form-label">4번</label>
+                    <textarea class="form-control" rows="1" name="item4" id="item4" th:text="${question.item4}"></textarea>
+                  </div>
+
+
+                  <label for="answer" class="col-form-label">정답</label>
+                  <select class="form-select mb-3" name="answer" id="answer" style="max-width: 200px">
+                    <option th:if="${question.answer.equals('1')}" selected>1</option>
+                    <option th:if="${!question.answer.equals('1')}">1</option>
+                    <option th:if="${question.answer.equals('2')}" selected>2</option>
+                    <option th:if="${!question.answer.equals('2')}" >2</option>
+                    <option th:if="${question.answer.equals('3')}" selected>3</option>
+                    <option th:if="${!question.answer.equals('3')}">3</option>
+                    <option th:if="${question.answer.equals('4')}" selected>4</option>
+                    <option th:if="${!question.answer.equals('4')}">4</option>
+
+                  </select>
+
+
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary">등록</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- 수정 모달 끝-->
+
+      </div>
+        <!-- <div  th:each="question : ${questions}">  end -->
+
+
+
+      </div>
+      <br>
+
+      <!-- 문제 끝 -->
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+  </div>
+  <!-- content end -->
+
+
+  <!-- 진짜 개 천천히 top으로 올라가네요-->
+  <!--    좀 빠르게 고침 -->
+  <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+  <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script>
+
+  // 카테고리 선택했을 때 문제 리스트 불러와서 출력
+  const questionKeywordSelect = document.querySelector(".questionKeywordSelect");
+  const questionList = document.querySelector(".questionList");
+
+  questionKeywordSelect.addEventListener("change", function (e) {
+
+    console.log(questionKeywordSelect.value);
+
+    const param = {
+      name : questionKeywordSelect.value
+    }
+
+    let htmls = '';
+
+    getQuestionList(param).then(result => {
+      console.log("[result] " +  result);
+
+      for(const question of result){
+
+        htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+                  &nbsp;
+                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+                  <div class="float-end" style="display: inline-flex">
+                  <button class="btn btn-secondary">수정</button>
+                  &nbsp;
+                  <button class="btn btn-danger">삭제</button>
+                  </div>
+                  <hr>`;
+      }// for
+
+      questionList.innerHTML = htmls;
+
+    }).catch( e => {
+      console.log(e);
+      console.log('error!');
+    });
+
+  })// questionKeywordSelect.addEventListener
+
+
+
+
+  // 문제 리스트 불러옴
+  async function getQuestionList(paramList){
+
+    console.log(paramList);
+    console.log(paramList.name);
+
+    const response = await axios.get('/member/question/list', {params : paramList});
+    console.log(response);
+
+    return response.data;
+  }// getQuestionList
+
+
+</script>
+
+</body>
+</html>

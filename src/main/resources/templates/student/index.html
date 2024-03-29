@@ -62,6 +62,23 @@
 <script>
     document.querySelector(".studentHomeBtn").classList.add("active");
 
+    // const code = [[${code}]];
+
+    const url = new URL(window.location.href);
+    console.log(window.location.href);
+    const urlSearchParams = url.searchParams;
+
+    console.log(urlSearchParams.get("code"));
+    const code = urlSearchParams.get("code");
+
+    switch (code){
+        case 'success' :
+            alert('제출되었습니다. ◝(ᵔᵕᵔ)◜');
+            break;
+        case 'fail' :
+            alert('오류 발생! 다시 제출해주세요. (T⌓T)');
+    }
+
 </script>
 
 </body>

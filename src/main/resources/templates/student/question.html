@@ -31,8 +31,7 @@
             </div>
 
             <br>
-            <br>
-            <br>
+            <hr>
             <br>
 
             <form action="/student/question/insert" method="post">
@@ -43,7 +42,7 @@
 
                 <div th:each="question : ${questions}" style="margin: 10px;" class="col-md-6">
 
-                    <input th:if="${question.idx == 1}"
+                    <input th:if="${question.number == 1}"
                            type="hidden"
                            th:value="${question.name}" name="name"/>
                     <strong>[[${question.number}]]. [[${question.content}]]</strong>

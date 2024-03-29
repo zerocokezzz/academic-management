@@ -35,9 +35,9 @@ public class StudentRepositoryTests {
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("새별")
-                .email("byeol@gmail.com")
-                .birthday("960123")
+                .name("지영")
+                .email("young@gmail.com")
+                .birthday("000000")
                 .build();
 
         studentRepository.save(student);

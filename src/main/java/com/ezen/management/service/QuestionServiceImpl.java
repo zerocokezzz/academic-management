@@ -20,4 +20,9 @@ public class QuestionServiceImpl implements QuestionService{
     public List<Question> findQuestionByName(String questionName) {
         return questionRepository.getQuestionsByName(questionName);
     }
+
+    @Override
+    public List<Question> findAll() {
+        return questionRepository.findAll();
+    }
 }
