@@ -18,5 +18,5 @@ public interface LessonRepository extends JpaRepository<Lesson, Integer> {
     @Query("select l from Lesson l where l.member = :member")
     Optional<List<Lesson>> getLessonsByMember(Member member);
 
-    Optional<List<Lesson>> getLessonsByEndDayGreaterThan(LocalDate now);
+    List<Lesson> getLessonsByEndDayGreaterThan(LocalDate now);
 }

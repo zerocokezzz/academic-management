@@ -23,13 +23,14 @@ public class QuestionRepositoryTests {
 
         Question question = Question.builder()
                 .name("자바 풀스택")
-                .number(1)
-                .content("다음 중 니가 배우는 것은?")
-                .item1("자바")
-                .item2("파이썬")
-                .item3("자바스크립트")
-                .item4("C++")
-                .answer(1)
+                .number(20)
+                .content("다음 SQL 명령문의 의미로 가장 적절한 것은?")
+                .example("DROP TABLE 학과 CASCADE")
+                .item1("학과 테이블을 제거")
+                .item2("학과 필드를 제거")
+                .item3("학과 테이블과 이 테이블을 참조하는 다른 테이블도 함께 제거")
+                .item4("학과 테이블이 다른 테이블에 참조 중이면 제거하지 않음")
+                .answer(3)
                 .build();
 
         questionRepository.save(question);
@@ -39,8 +40,12 @@ public class QuestionRepositoryTests {
 
     @Test
     public void 사전조사이름으로가져오기(){
-        Optional<List<Question>> result = questionRepository.getQuestionsByName("자바 풀스택");
-        List<Question> questions = result.orElseThrow();
-        log.info("questions...... " + questions);
+        List<Question> questions = questionRepository.getQuestionsByName("자바 풀스택");
+//        log.info("questions...... " + questions);
+
+        questions.forEach(question -> {
+            log.info(question.getNumber() + "");
+            log.info(question.getContent());
+        });
     }
 }
