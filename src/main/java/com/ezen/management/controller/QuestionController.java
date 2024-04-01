@@ -21,13 +21,13 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'TEACHER')")
 public class QuestionController {
 
-    private final QuestionNameService questionKeywordService;
+    private final QuestionNameService questionNameService;
     private final QuestionService questionService;
 
     @GetMapping("")
     public String index(Model model, String keyword){
 
-        List<QuestionName> questionKeywordList = questionKeywordService.findAll();
+        List<QuestionName> questionKeywordList = questionNameService.findAll();
 
         model.addAttribute("questionKeywordList", questionKeywordList);
 
@@ -76,13 +76,7 @@ public class QuestionController {
 
         return questionService.findById(questionIdx);
     }
-//
-//    @GetMapping("/insert")
-//    public String insertGET(){
-//        return "/member/question/insert";
-//    }
-//
-//
+
 
     @PostMapping("/insert")
     @ResponseBody
@@ -133,6 +127,14 @@ public class QuestionController {
 
 
     }
+
+    @GetMapping("/insert")
+    public void insertGET(){
+
+    }
+
+
+
 
 
 }

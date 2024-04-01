@@ -30,7 +30,7 @@ public class QuestionRepositoryTests {
                 .item2("학과 필드를 제거")
                 .item3("학과 테이블과 이 테이블을 참조하는 다른 테이블도 함께 제거")
                 .item4("학과 테이블이 다른 테이블에 참조 중이면 제거하지 않음")
-                .answer("3")
+                .answer(3)
                 .build();
 
         questionRepository.save(question);
@@ -62,7 +62,7 @@ public class QuestionRepositoryTests {
                     .item2("2번입니다.")
                     .item3("3번입니다.")
                     .item4("4번입니다.")
-                    .answer("1")
+                    .answer(1)
                     .build();
             questionRepository.save(question);
         }

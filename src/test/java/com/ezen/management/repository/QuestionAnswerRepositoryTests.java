@@ -7,6 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,5 +116,65 @@ public class QuestionAnswerRepositoryTests {
         log.info("score...... " + score);
 
     }
+
+    @Test
+    public void 전체목록() throws Exception {
+        //given
+        Pageable pageable = PageRequest.of(0, 10);
+//        Page<QuestionAnswer> all = questionAnswerRepository.findAll(pageable);
+        Page<QuestionAnswer> all = questionAnswerRepository.searchQuestionAnswer(null, pageable);
+        //when
+
+
+        List<QuestionAnswer> content = all.getContent();
+
+        content.forEach(questionAnswer -> {
+            log.info(questionAnswer + "");
+            log.info(questionAnswer.getStudent() + "");
+        });
+
+
+    }
+
+    @Test
+    public void 레슨인덱스학생이름으로검색() throws Exception {
+        //given
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<QuestionAnswer> findBy = questionAnswerRepository.searchQuestionAnswer("새별", pageable);
+
+        List<QuestionAnswer> content = findBy.getContent();
+
+        content.forEach(questionAnswer -> {
+            log.info("questionAnswer(새별) {}", questionAnswer);
+        });
+
+
+        //when
+
+        //then
+
+    }
+    
+    @Test
+    public void 레슨으로조회() throws Exception {
+
+        Optional<Lesson> byId = lessonRepository.findById(1);
+        Lesson lesson = byId.orElseThrow();
+
+        log.info("lesson : {}", lesson);
+        //given
+        List<QuestionAnswer> result = questionAnswerRepository.findByLesson(lesson);
+
+        //when
+        
+        //then
+        result.forEach(questionAnswer ->  {
+            log.info(questionAnswer + "");
+        });
+    
+    }
+
+    
 
 }

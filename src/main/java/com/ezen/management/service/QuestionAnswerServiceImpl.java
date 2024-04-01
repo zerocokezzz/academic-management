@@ -1,14 +1,20 @@
 package com.ezen.management.service;
 
+import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Question;
 import com.ezen.management.domain.QuestionAnswer;
 import com.ezen.management.domain.Student;
+import com.ezen.management.dto.PageRequestDTO;
+import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.dto.QuestionAnswerDTO;
+import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.QuestionAnswerRepository;
 import com.ezen.management.repository.QuestionRepository;
 import com.ezen.management.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,17 +31,19 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
     private final QuestionAnswerRepository questionAnswerRepository;
     private final QuestionRepository questionRepository;
     private final StudentRepository studentRepository;
+    private final LessonRepository lessonRepository;
 
     @Override
     @Transactional
     public int grading(QuestionAnswerDTO questionAnswerDTO) {
 
+//        문제 리스트
         List<Question> questions = questionRepository.getQuestionsByName(questionAnswerDTO.getName());
 
+//        답안지 저장
         QuestionAnswer questionAnswer = dtoToEntity(questionAnswerDTO);
         questionAnswerRepository.save(questionAnswer);
 
-//        questionAnswer (답안지) 저장
 //      ---------------------------------------------------------------------------------
 
         questions.forEach(question -> {
@@ -43,15 +51,15 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         });
 
 
-
-//        답안지 만들기
+//        답안지 리스트 만들기
         List<String> testPaper = questionAnswerDTO.getTestPaper();
-        log.info("답안지" + testPaper);
+        testPaper.forEach(log::info);
+//        log.info("답안지" + testPaper);
 
 //        채점
         int score = 0;
         for(int i = 0; i < testPaper.size(); i++){
-            if(testPaper.get(i).equals(questions.get(i).getAnswer())){
+            if(Integer.parseInt(testPaper.get(i)) == (questions.get(i).getAnswer())){
                 score += 5;
                 log.info(i + "");
                 log.info("점수 {} ", score);
@@ -69,6 +77,30 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
 
         return 1;
 
+
+    }
+
+    @Override
+    public PageResponseDTO<QuestionAnswer> findAll(String keyword, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = pageRequestDTO.getPageable();
+        Page<QuestionAnswer> all = questionAnswerRepository.searchQuestionAnswer(keyword, pageable);
+        List<QuestionAnswer> dtoList = all.getContent();
+
+        return PageResponseDTO.<QuestionAnswer>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)all.getTotalElements())
+                .build();
+
+    }
+
+    @Override
+    public List<QuestionAnswer> findByLesson(int lessonIdx) {
+        Optional<Lesson> byId = lessonRepository.findById(lessonIdx);
+        Lesson lesson = byId.orElseThrow();
+
+        return questionAnswerRepository.findByLesson(lesson);
 
     }
 

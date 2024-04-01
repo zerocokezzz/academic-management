@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/basic :: head">
+
+</head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+
+            <h3> 사전 평가 답안지 </h3>
+
+            <hr>
+
+            <div>
+            <!-- 검색-->
+
+                <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+                    <form action="/member/lesson/question" method="get" style="margin:0">
+                        <div class="col">
+                            <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <select class="form-select type" name="type">
+                                        <option selected value="">---</option>
+                                        <option>이름</option>
+                                    </select>
+                                </div>
+
+                                &nbsp;&nbsp;
+                                <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
+                                &nbsp;&nbsp;
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
+                                    <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+            <!-- 검색 끝-->
+            <br>
+<!--            <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]개</div>-->
+            <div class="" style="max-width: 500px; display: inline-flex">
+                <select class="form-select questionKeywordSelect" name="name" id="lessonSelect">
+                    <option selected value="0">전체</option>
+                    <option th:value="${lesson.idx}" th:each="lesson : ${lessonList}" th:text="${lesson.curriculum.name + ' ' + lesson.number + '회차'}"></option>
+                </select>
+            </div>
+
+            </div>
+
+            <hr>
+
+            <!-- 답안지 리스트 -->
+            <div id="questionAnswerList">
+            <div th:each="questionAnswer : ${pageResponseDTO.getDtoList()}">
+            <br>
+            <a class="link-dark" href="#">
+                <p th:text="${questionAnswer.getStudent().name}" style="display: inline-flex"></p>
+                &nbsp;|&nbsp;
+                <p style="display: inline-flex" th:text="${questionAnswer.getStudent().getLesson().number + '회차'}"></p>
+                &nbsp;|&nbsp;
+                <p style="display: inline-flex" th:text="${questionAnswer.getStudent().getLesson().curriculum.name}"></p>
+                &nbsp;|&nbsp;
+                <p style="display: inline-flex" th:text="${questionAnswer.getStudent().score + '점'}"></p>
+            </a>
+            <hr>
+            </div>
+            </div>
+
+
+            <!--      페이지-->
+            <br>
+            <div id="pageDiv">
+                <ul class="pagination flex-wrap">
+                    <li class="page-item" th:if="${pageResponseDTO.prev}">
+                        <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
+                    </li>
+
+                    <th:block th:each="i : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+                        <li th:class="${pageResponseDTO.page == i} ? 'page-item active' : 'page-item'">
+                            <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
+                        </li>
+                    </th:block>
+
+                    <li class="page-item" th:if="${pageResponseDTO.next}">
+                        <a class="page-link" th:data-num="${pageResponseDTO.end + 1}">다음</a>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- 페이지 끝-->
+
+
+            <br>
+        </div>
+        <!-- inner content-->
+
+
+    </div>
+    <!-- content end -->
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script>
+    //  검색 조건 초기화
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.stopPropagation();
+        e.preventDefault();
+
+        self.location = '/member/lesson/question';
+
+    }, false)
+    //  검색 초기화 end
+
+
+
+    const pageDiv = document.querySelector("#pageDiv");
+
+    const lessonSelect = document.querySelector("#lessonSelect");
+    const questionAnswerList = document.querySelector("#questionAnswerList");
+
+
+    //   페이지 클릭 이벤트 처리
+    //   clear 버튼 누르면 검색 조건 사라진 목록(/member/lesson/question) 출력
+    document.querySelector(".pagination").addEventListener("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const target = e.target;
+
+        if (target.tagName !== 'A') {
+            return;
+        }
+
+        const formObj = document.querySelector("form");
+
+        const num = target.getAttribute("data-num");
+        const keyword = document.querySelector(".keyword");
+
+
+        // 버튼 누르면 ?page=num
+        formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
+
+        // 검색 목록이면
+
+        if(keyword.value !== ''){
+            formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+        }
+
+        formObj.submit();
+
+    }, false);
+    //  페이지 클릭 end
+
+
+    lessonSelect.addEventListener("change", printQuestionAnswerList);
+
+    function printQuestionAnswerList(){
+
+        // 레슨 인덱스
+        console.log('레슨 인덱스');
+        console.log(lessonSelect.value);
+
+        // 전체 선택하면 초기화면
+        if(lessonSelect.value === '0'){
+            console.log('바보');
+            location.href = '/member/lesson/question';
+            return;
+        }
+
+        const params = {
+            lessonIdx : lessonSelect.value
+        }
+
+    //     레슨 인덱스로 답안지 가져와서 목록에 뿌림
+
+        let htmls = '';
+        getQuestionAnswerList(params).then(result => {
+            console.log(result);
+
+            for(const questionAnswer of result){
+
+                console.log(questionAnswer.student.name);
+
+                htmls += `<br>
+                        <a class="link-dark" href="#">
+                            <p style="display: inline-flex">${questionAnswer.student.name}</p>
+                            &nbsp;|&nbsp;
+                            <p style="display: inline-flex">${questionAnswer.student.lesson.number}회차</p>
+                            &nbsp;|&nbsp;
+                            <p style="display: inline-flex">${questionAnswer.student.lesson.curriculum.name}</p>
+                            &nbsp;|&nbsp;
+                            <p style="display: inline-flex">${questionAnswer.student.score}점</p>
+                        </a>
+                        <hr>`;
+            }
+
+            questionAnswerList.innerHTML = htmls;
+            pageDiv.style.display = 'none';
+
+
+        })
+
+
+    }
+
+    async function getQuestionAnswerList(paramList){
+        const response = await axios.get('/member/lesson/question/list', {params : paramList});
+        return response.data;
+    }
+
+
+
+</script>
+
+</body>
+</html>
