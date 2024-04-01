@@ -12,6 +12,9 @@ import lombok.*;
 public class Curriculum {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
+
     private String name;
 
     @ManyToOne

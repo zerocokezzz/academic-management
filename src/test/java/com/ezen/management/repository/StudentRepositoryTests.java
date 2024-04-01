@@ -27,7 +27,7 @@ public class StudentRepositoryTests {
     @Test
     public void 학생추가(){
 
-        Optional<Curriculum> result = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정");
+        Optional<Curriculum> result = curriculumRepository.findById(1L);
         Curriculum curriculum = result.orElseThrow();
 
         Optional<Lesson> lessonResult = lessonRepository.getByCurriculumAndNumber(curriculum, 1);
@@ -35,9 +35,9 @@ public class StudentRepositoryTests {
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("지영")
-                .email("young@gmail.com")
-                .birthday("000000")
+                .name("새별")
+                .email("byeol@gmail.com")
+                .birthday("960123")
                 .build();
 
         studentRepository.save(student);
@@ -60,7 +60,7 @@ public class StudentRepositoryTests {
     @Test
     public void 학생선택2(){
 
-        Optional<Curriculum> result = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정");
+        Optional<Curriculum> result = curriculumRepository.findById(1L);
         Curriculum curriculum = result.orElseThrow();
 
         Optional<Lesson> lessonResult = lessonRepository.getByCurriculumAndNumber(curriculum, 1);

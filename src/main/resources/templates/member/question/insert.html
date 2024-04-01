@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/basic :: head">
+
+
+  <style>
+    .v-line{
+      border-left: thick solid #000;
+      height:100%;
+      left: 50%;
+      position: absolute;
+    }
+
+  </style>
+</head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+  <div th:replace="/layout/basic :: sidebar">
+
+  </div>
+
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
+
+    <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+
+      <h1> 문제 insert </h1>
+
+
+
+      <form>
+
+
+
+      <!-- 문제 카드-->
+      <div style="max-width: 80%">
+
+        <select name="name" class="form-select" style="max-width: 300px">
+          <option value="">분류 선택</option>
+          <option>자바 풀스택</option>
+          <option>프론트 엔드</option>
+        </select>
+
+        <br>
+        <br>
+
+        <!-- 1 ~ 10 -->
+      <div class="col-6 float-start">
+        <div style="max-width: 450px" th:each="i: ${#numbers.sequence(1, 10)}">
+        <div class="card">
+          <div class="card-header">
+            <input type="hidden" value="number" th:value="${i}"/>
+            [[${i}]]번
+          </div>
+          <div class="card-body">
+            <label for="content">문제</label>
+            <input name="content" class="card-title form-control" id="content"/>
+
+            <br>
+
+            <label for="item1">보기 1</label>
+            <input name="content" class="card-title form-control" id="item1"/>
+
+            <label for="item2">보기 2</label>
+            <input name="content" class="card-title form-control" id="item2"/>
+
+            <label for="item3">보기 3</label>
+            <input name="content" class="card-title form-control" id="item3"/>
+
+            <label for="item4">보기 4</label>
+            <input name="content" class="card-title form-control" id="item4"/>
+
+          </div>
+
+        </div>
+        <br>
+
+        </div>
+      </div>
+
+        <div class="v-line"></div>
+
+        <!-- 11 ~ 20 -->
+        <div class="col-6 float-end">
+          <div style="max-width: 450px" th:each="i: ${#numbers.sequence(11, 20)}">
+            <div class="card">
+              <div class="card-header">
+               [[${i}]]번
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              </div>
+
+            </div>
+            <br>
+
+          </div>
+        </div>
+
+      </div>
+      </form>
+
+      <!-- 문제 카드 end-->
+
+
+
+
+
+    </div>
+    <!-- inner content-->
+
+
+  </div>
+  <!-- content end -->
+
+
+  <!-- 진짜 개 천천히 top으로 올라가네요-->
+  <!--    좀 빠르게 고침 -->
+  <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+  <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+</body>
+</html>
