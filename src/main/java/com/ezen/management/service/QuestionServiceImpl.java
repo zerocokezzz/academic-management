@@ -58,4 +58,13 @@ public class QuestionServiceImpl implements QuestionService{
 
         return 1;
     }
+
+    @Override
+    public void delete(int questionIdx) {
+        Optional<Question> byId = questionRepository.findById(questionIdx);
+        Question question = byId.orElseThrow();
+
+        questionRepository.delete(question);
+
+    }
 }

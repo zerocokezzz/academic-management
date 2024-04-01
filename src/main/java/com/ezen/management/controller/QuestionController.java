@@ -1,14 +1,13 @@
 package com.ezen.management.controller;
 
 import com.ezen.management.domain.Question;
-import com.ezen.management.domain.QuestionKeyword;
+import com.ezen.management.domain.QuestionName;
 import com.ezen.management.dto.QuestionDTO;
-import com.ezen.management.service.QuestionKeywordService;
+import com.ezen.management.service.QuestionNameService;
 import com.ezen.management.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +21,13 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'TEACHER')")
 public class QuestionController {
 
-    private final QuestionKeywordService questionKeywordService;
+    private final QuestionNameService questionKeywordService;
     private final QuestionService questionService;
 
     @GetMapping("")
     public String index(Model model, String keyword){
 
-        List<QuestionKeyword> questionKeywordList = questionKeywordService.findAll();
+        List<QuestionName> questionKeywordList = questionKeywordService.findAll();
 
         model.addAttribute("questionKeywordList", questionKeywordList);
 
@@ -103,7 +102,7 @@ public class QuestionController {
 
     @PostMapping("/update")
     @ResponseBody
-    public List<Question> updatePost(QuestionDTO questionDTO){
+    public List<Question> updatePOST(QuestionDTO questionDTO){
 //        해당 문제 수정한 다음 그 문제 키워드로 가져온 문제 리스트 반환
 
         int update = questionService.update(questionDTO);
@@ -115,6 +114,22 @@ public class QuestionController {
         log.info("" + questionByName);
 
         return questionByName;
+
+
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public List<Question> deletePOST(int questionIdx){
+
+        log.info("questionIdx : {}", questionIdx);
+        log.info("question : {}", questionService.findById(questionIdx));
+
+        String name = questionService.findById(questionIdx).getName();
+
+        questionService.delete(questionIdx);
+
+        return questionService.findQuestionByName(name);
 
 
     }

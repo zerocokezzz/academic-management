@@ -1,8 +1,6 @@
 package com.ezen.management.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -11,9 +9,12 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @ToString
-public class QuestionKeyword {
+public class QuestionName {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idx;
+
     @Column(nullable = false)
     private String name;
 

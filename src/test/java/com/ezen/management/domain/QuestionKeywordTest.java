@@ -10,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Slf4j
 class QuestionKeywordTest {
@@ -22,15 +20,15 @@ class QuestionKeywordTest {
     @Test
     public void 문제키워드추가() throws Exception {
         //given
-        QuestionKeyword questionKeyword = QuestionKeyword.builder()
+        QuestionName questionKeyword = QuestionName.builder()
                 .name("프론트엔드")
                 .build();
 
         questionKeywordRepository.save(questionKeyword);
 
         //when
-        Optional<QuestionKeyword> result = questionKeywordRepository.findById("프론트엔드");
-        QuestionKeyword findById = result.orElseThrow();
+        Optional<QuestionName> result = questionKeywordRepository.findById("프론트엔드");
+        QuestionName findById = result.orElseThrow();
 
         //then
         Assertions.assertThat(findById.getName()).isEqualTo(questionKeyword.getName());
@@ -40,7 +38,7 @@ class QuestionKeywordTest {
     @Test
     public void 전체목록() throws Exception {
         //given
-        List<QuestionKeyword> all = questionKeywordRepository.findAll();
+        List<QuestionName> all = questionKeywordRepository.findAll();
 
         //when
         all.forEach(questionKeyword -> {

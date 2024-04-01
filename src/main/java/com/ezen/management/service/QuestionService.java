@@ -17,4 +17,6 @@ public interface QuestionService {
 
     int update(QuestionDTO questionDTO);
 
+    void delete(int questionIdx);
+
 }

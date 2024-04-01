@@ -15,7 +15,7 @@
 
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
-      <h3 style="display: inline-flex">사전 평가 문제</h3>
+      <h3 style="display: inline-flex">사전 평가 문제 리스트</h3>
       <button style="display: inline-flex" class="btn btn-primary float-end insertBtn"> 문제 등록 </button>
 
       <hr>
@@ -48,7 +48,7 @@
 <!--          <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">수정</button>-->
           <button class="btn btn-secondary" th:questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
           &nbsp;
-          <button class="btn btn-danger">삭제</button>
+          <button class="btn btn-danger" th:questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
         </div>
         <hr>
 
@@ -280,7 +280,7 @@
                   <div class="float-end" style="display: inline-flex">
                   <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
                   &nbsp;
-                  <button class="btn btn-danger">삭제</button>
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
                   </div>
                   <hr>`;
       }// for
@@ -424,7 +424,7 @@
                   <div class="float-end" style="display: inline-flex">
                   <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
                   &nbsp;
-                  <button class="btn btn-danger">삭제</button>
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
                   </div>
                   <hr>`;
       }// for
@@ -558,7 +558,7 @@
                   <div class="float-end" style="display: inline-flex">
                   <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
                   &nbsp;
-                  <button class="btn btn-danger">삭제</button>
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
                   </div>
                   <hr>`;
         }// for
@@ -595,6 +595,54 @@
 
   async function insertQuestion(paramList){
     const response = await axios.post(`/member/question/insert`, null, {params : paramList});
+    console.log(response);
+
+    return response.data;
+  }
+
+
+  // 삭제
+  function questionDelete(index){
+
+    if(!confirm('삭제하시겠습니까?')){
+      alert('취소되었습니다.');
+      return;
+    }
+
+    const deleteParams = {
+      questionIdx : index
+    }
+
+    let htmls = '';
+    deleteQuestion(deleteParams).then(result => {
+
+      //   문제 리스트가 리턴되면 새로운 문제 리스트를 출력하고 모달 초기화한 뒤 모달을 닫음
+      for(const question of result){
+
+        htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+                  &nbsp;
+                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+                  <div class="float-end" style="display: inline-flex">
+                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+                  &nbsp;
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+                  </div>
+                  <hr>`;
+      }// for
+
+      alert('삭제되었습니다.');
+
+      // 문제 리스트 교체
+      questionList.innerHTML = htmls;
+
+    })
+
+  }
+
+
+
+  async function deleteQuestion(paramList){
+    const response = await axios.post(`/member/question/delete`, null, {params : paramList});
     console.log(response);
 
     return response.data;
