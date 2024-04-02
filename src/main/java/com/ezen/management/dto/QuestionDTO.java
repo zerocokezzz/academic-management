@@ -1,12 +1,11 @@
 package com.ezen.management.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class QuestionDTO {
 
     private int idx;

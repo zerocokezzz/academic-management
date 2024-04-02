@@ -2,6 +2,7 @@ package com.ezen.management.controller;
 
 import com.ezen.management.domain.Question;
 import com.ezen.management.domain.QuestionName;
+import com.ezen.management.dto.QuestionBlockDTO;
 import com.ezen.management.dto.QuestionDTO;
 import com.ezen.management.service.QuestionNameService;
 import com.ezen.management.service.QuestionService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -128,10 +130,61 @@ public class QuestionController {
 
     }
 
-    @GetMapping("/insert")
-    public void insertGET(){
+    @GetMapping("/create")
+    public void createGET(){
 
     }
+
+    @PostMapping("/create")
+    public String createPOST(String name,
+                             @RequestParam("number") List<Integer> number,
+                             @RequestParam("content") List<String> content,
+                             @RequestParam(value = "example", required = false) List<String> example,
+                             @RequestParam("item1") List<String> item1,
+                             @RequestParam("item2") List<String> item2,
+                             @RequestParam("item3") List<String> item3,
+                             @RequestParam("item4") List<String> item4,
+                             @RequestParam("answer") List<Integer> answer){
+
+        log.info("!!!!!!!!!!!!!!!!!!! createPOST! !!!!!!!!!!!!!!!!!!!");
+
+        log.info("number : {}", number);
+        log.info("content : {}", content);
+        log.info("answer : {}", answer);
+//
+//        List<QuestionDTO> questionDTOList = new ArrayList<>();
+//
+//        for(int i = 0; i < content.size(); i++){
+//            QuestionDTO questionDTO = QuestionDTO.builder()
+//                    .name(name)
+//                    .number(number.get(i))
+//                    .content(content.get(i))
+//                    .item1(item1.get(i))
+//                    .item2(item2.get(i))
+//                    .item3(item3.get(i))
+//                    .item4(item4.get(i))
+//                    .answer(answer.get(i))
+//                    .build();
+//
+//            if(example != null && example.get(i) != null){
+//                questionDTO.setExample(example.get(i));
+//            }
+//
+//            questionDTOList.add(questionDTO);
+//        }
+//
+//        questionDTOList.forEach(questionDTO -> {
+//            log.info("questionDTO : {}", questionDTO);
+//        });
+
+//
+//        questionBlockDTO.getQuestionDTOList().forEach(questionDTO -> {
+//            log.info("questionDTO : {}", questionDTO);
+//        });
+
+        return null;
+    }
+
 
 
 

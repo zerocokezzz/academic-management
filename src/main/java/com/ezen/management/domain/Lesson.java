@@ -51,6 +51,9 @@ public class Lesson extends BaseEntity{
     private String classRoom;
 
     private String questionName;
+
+    private String content;
+
     public void changeTeacher(Member member){
         this.member = member;
     }
@@ -65,6 +68,10 @@ public class Lesson extends BaseEntity{
 
     public void headCountUp(){
         this.headCount++;
+    }
+
+    public void changeContent(String content){
+        this.content = content;
     }
 
 

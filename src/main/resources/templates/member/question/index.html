@@ -16,7 +16,10 @@
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
       <h3 style="display: inline-flex">사전 평가 문제 리스트</h3>
-      <button style="display: inline-flex" class="btn btn-primary float-end insertBtn"> 문제 등록 </button>
+      <div class="float-end">
+      <button style="display: inline-flex" class="btn btn-primary insertBtn"> 문제 추가 </button>
+      <button style="display: inline-flex" class="btn btn-primary createBtn"> 새 문제 등록 </button>
+      </div>
 
       <hr>
       <br>
@@ -647,6 +650,12 @@
 
     return response.data;
   }
+
+
+  const createBtn = document.querySelector(".createBtn")
+  createBtn.addEventListener("click", function() {
+    location.href = '/member/question/create';
+  })
 
 
 
