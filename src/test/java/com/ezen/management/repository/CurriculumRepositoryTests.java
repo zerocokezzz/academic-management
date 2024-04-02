@@ -22,7 +22,7 @@ public class CurriculumRepositoryTests {
     @Test
     public void 과정추가(){
 
-        Optional<Category> result = categoryRepository.findById("KDT");
+        Optional<Category> result = categoryRepository.findById(1L);
         Category category = result.orElseThrow();
 
         Curriculum curriculum = Curriculum.builder()

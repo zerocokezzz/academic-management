@@ -27,7 +27,7 @@ public class SubjectRepositoryTests {
 
     @Test
     public void 수정(){
-        Optional<Subject> result = subjectRepository.findById("자바");
+        Optional<Subject> result = subjectRepository.findById(1l);
 
         Subject subject = result.orElseThrow();
         subject.changeMethod("팀프로젝트");
