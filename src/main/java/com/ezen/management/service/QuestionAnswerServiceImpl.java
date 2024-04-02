@@ -81,10 +81,10 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
     }
 
     @Override
-    public PageResponseDTO<QuestionAnswer> findAll(String keyword, PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<QuestionAnswer> findAll(Lesson lesson, String keyword, PageRequestDTO pageRequestDTO) {
 
         Pageable pageable = pageRequestDTO.getPageable();
-        Page<QuestionAnswer> all = questionAnswerRepository.searchQuestionAnswer(keyword, pageable);
+        Page<QuestionAnswer> all = questionAnswerRepository.searchQuestionAnswer(lesson, keyword, pageable);
         List<QuestionAnswer> dtoList = all.getContent();
 
         return PageResponseDTO.<QuestionAnswer>withAll()

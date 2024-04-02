@@ -120,9 +120,12 @@ public class QuestionAnswerRepositoryTests {
     @Test
     public void 전체목록() throws Exception {
         //given
+
+        Optional<Lesson> byId = lessonRepository.findById(1);
+        Lesson lesson = byId.orElseThrow();
         Pageable pageable = PageRequest.of(0, 10);
 //        Page<QuestionAnswer> all = questionAnswerRepository.findAll(pageable);
-        Page<QuestionAnswer> all = questionAnswerRepository.searchQuestionAnswer(null, pageable);
+        Page<QuestionAnswer> all = questionAnswerRepository.searchQuestionAnswer(lesson, null, pageable);
         //when
 
 
@@ -140,8 +143,11 @@ public class QuestionAnswerRepositoryTests {
     public void 레슨인덱스학생이름으로검색() throws Exception {
         //given
 
+        Optional<Lesson> byId = lessonRepository.findById(1);
+        Lesson lesson = byId.orElseThrow();
+
         Pageable pageable = PageRequest.of(0, 10);
-        Page<QuestionAnswer> findBy = questionAnswerRepository.searchQuestionAnswer("새별", pageable);
+        Page<QuestionAnswer> findBy = questionAnswerRepository.searchQuestionAnswer(lesson, "새별", pageable);
 
         List<QuestionAnswer> content = findBy.getContent();
 

@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface QuestionAnswerSearch {
 
-    Page<QuestionAnswer> searchQuestionAnswer(String keyword, Pageable pageable);
+    Page<QuestionAnswer> searchQuestionAnswer(Lesson lesson, String keyword, Pageable pageable);
 }

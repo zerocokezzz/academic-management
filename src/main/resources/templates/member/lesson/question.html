@@ -25,14 +25,14 @@
             <!-- 검색-->
 
                 <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
-                    <form action="/member/lesson/question" method="get" style="margin:0">
+                    <form action="/member/lesson/question" method="get" style="margin:0" id="searchForm">
                         <div class="col">
                             <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <select class="form-select type" name="type">
-                                        <option selected value="">---</option>
-                                        <option>이름</option>
+                                    <select class="form-select" name="type" id="type">
+<!--                                        <option selected value="">-&#45;&#45;</option>-->
+                                        <option value="n">이름</option>
                                     </select>
                                 </div>
 
@@ -40,7 +40,7 @@
                                 <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
                                 &nbsp;&nbsp;
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
+                                    <button type="submit" class="btn btn-outline-primary" id="searchBtn">검색</button>
                                     <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
                                 </div>
 
@@ -168,9 +168,12 @@
         formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
 
         // 검색 목록이면
-
         if(keyword.value !== ''){
             formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+        }
+
+        if(lessonSelect.value !== '0'){
+            formObj.innerHTML += `<input type="hidden" name="lessonIdx" value="${lessonSelect.value}">`
         }
 
         formObj.submit();
@@ -179,6 +182,12 @@
     //  페이지 클릭 end
 
 
+
+    const keyword = document.querySelector(".keyword");
+    console.log(keyword.value);
+    const type = document.querySelector("#type");
+
+    // 분류 변경되면
     lessonSelect.addEventListener("change", printQuestionAnswerList);
 
     function printQuestionAnswerList(){
@@ -194,17 +203,28 @@
             return;
         }
 
+        // 키워드 비어있지 않으면 keyword 같이 보내야함
         const params = {
-            lessonIdx : lessonSelect.value
+            lessonIdx : lessonSelect.value,
+            keyword : keyword.value,
+            type : type.value
         }
+
+        // if(type.value === '' && keyword.value === ''){
+        //     const params = {
+        //         lessonIdx : lessonSelect.value
+        //     }
+        // }
 
     //     레슨 인덱스로 답안지 가져와서 목록에 뿌림
 
         let htmls = '';
+        let htmls2 = '';
         getQuestionAnswerList(params).then(result => {
             console.log(result);
+            console.log(result.dtoList);
 
-            for(const questionAnswer of result){
+            for(const questionAnswer of result.dtoList){
 
                 console.log(questionAnswer.student.name);
 
@@ -221,12 +241,39 @@
                         <hr>`;
             }
 
+
+            if(result.dtoList.length === 0){
+                htmls = `<p>검색 결과가 없습니다.</p>`;
+            }
+
+
+            // 페이지 (미완) 4/2
+            // htmls2 +=  `<ul class="pagination flex-wrap">`;
+            // if(result.prev){
+            //     htmls2 += `<li class="page-item" >
+            //                     <a class="page-link" data-num="${result.start -1}">이전</a>
+            //                 </li>`;
+            // }
+            //
+            // for(let i = result.start; i <= result.end; i++){
+            //     htmls2 += result.page === i ?  `<li class="page-item active">` : `<li class="page-item">`;
+            //     htmls2 += `<a class="page-link" data-num="${i}" >${i}</a>
+            //               </li>`;
+            // }
+            //
+            // if(result.next){
+            //     htmls2 += `<li class="page-item">
+            //                 <a class="page-link" data-num="${result.end + 1}">다음</a>
+            //                 </li>`;
+            // }
+            //
+            // pageDiv.innerHTML = htmls2;
+
             questionAnswerList.innerHTML = htmls;
             pageDiv.style.display = 'none';
 
 
         })
-
 
     }
 
@@ -234,6 +281,32 @@
         const response = await axios.get('/member/lesson/question/list', {params : paramList});
         return response.data;
     }
+
+
+    // 검색 버튼 누르면
+    const searchBtn = document.querySelector("#searchBtn");
+    const searchForm = document.querySelector("#searchForm");
+    searchBtn.addEventListener("click", function () {
+
+        console.log(lessonSelect.value);
+
+        // 분류가 선택되어있으면
+        if(lessonSelect.value !== '0'){
+            searchForm.innerHTML += `<input type="hidden" name="lessonIdx" value="${lessonSelect.value}">`
+        }
+
+        // if(type.value !== ''){
+        //     searchForm.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
+        // }
+
+        // if(keyword.value !== ''){
+        //     searchForm.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+        // }
+
+        searchForm.submit();
+
+
+    });
 
 
 

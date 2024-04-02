@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.Objects;
 
 public class QuestionAnswerSearchImpl extends QuerydslRepositorySupport implements QuestionAnswerSearch {
 
@@ -21,7 +22,7 @@ public class QuestionAnswerSearchImpl extends QuerydslRepositorySupport implemen
     }
 
     @Override
-    public Page<QuestionAnswer> searchQuestionAnswer(String keyword, Pageable pageable) {
+    public Page<QuestionAnswer> searchQuestionAnswer(Lesson lesson, String keyword, Pageable pageable) {
 
         QQuestionAnswer questionAnswer = QQuestionAnswer.questionAnswer;
 
@@ -33,9 +34,15 @@ public class QuestionAnswerSearchImpl extends QuerydslRepositorySupport implemen
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if(keyword != null){
+        if(keyword != null && !keyword.isEmpty()){
             booleanBuilder.or(questionAnswer.student.name.like(keyword));
         }
+
+
+        if(lesson != null){
+            booleanBuilder.and(questionAnswer.student.lesson.idx.eq(lesson.getIdx()));
+        }
+
 
 //        if(lessonIdx != 0){
 //            booleanBuilder.and(questionAnswer.student.lesson.idx.eq(lessonIdx));

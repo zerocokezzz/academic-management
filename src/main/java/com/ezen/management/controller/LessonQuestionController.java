@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -29,16 +30,41 @@ public class LessonQuestionController {
     private final QuestionAnswerService questionAnswerService;
     private final LessonService lessonService;
 
+//    @GetMapping("")
+//    public String index(Model model, PageRequestDTO pageRequestDTO){
+//
+//        PageResponseDTO<QuestionAnswer> pageResponseDTO = questionAnswerService.findAll(pageRequestDTO.getKeyword(), pageRequestDTO);
+//
+//        log.info("pageResponseDTO " + pageResponseDTO);
+//        log.info("pageResponseDTO.getDtoList() " + pageResponseDTO.getDtoList());
+//
+//        List<Lesson> lessonList = lessonService.findAll();
+//
+//
+//        model.addAttribute("pageResponseDTO", pageResponseDTO);
+//        model.addAttribute("lessonList", lessonList);
+//
+//        log.info("lessonList : {}", lessonList);
+//
+//
+//        return "/member/lesson/question";
+//
+//    }
+
+
     @GetMapping("")
-    public String index(Model model, PageRequestDTO pageRequestDTO){
+    public String index(Model model, PageRequestDTO pageRequestDTO, @RequestParam(defaultValue = "0") int lessonIdx){
 
-        PageResponseDTO<QuestionAnswer> pageResponseDTO = questionAnswerService.findAll(pageRequestDTO.getKeyword(), pageRequestDTO);
+        Lesson lesson = lessonService.findById(lessonIdx);
 
+        PageResponseDTO<QuestionAnswer> pageResponseDTO = questionAnswerService.findAll(lesson, pageRequestDTO.getKeyword(), pageRequestDTO);
+
+        log.info("pageRequestDTO : {} ", pageRequestDTO);
         log.info("pageResponseDTO " + pageResponseDTO);
         log.info("pageResponseDTO.getDtoList() " + pageResponseDTO.getDtoList());
 
         List<Lesson> lessonList = lessonService.findAll();
-
+//        List<QuestionAnswer> lessonList = pageResponseDTO.getDtoList();
 
         model.addAttribute("pageResponseDTO", pageResponseDTO);
         model.addAttribute("lessonList", lessonList);
@@ -52,20 +78,28 @@ public class LessonQuestionController {
 
     @GetMapping("/list")
     @ResponseBody
-    public List<QuestionAnswer> list(int lessonIdx){
+    public PageResponseDTO<QuestionAnswer> list(PageRequestDTO pageRequestDTO, @RequestParam(defaultValue = "0") int lessonIdx){
 
-        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+//        PageRequestDTO pageRequestDTO = new PageRequestDTO();
 
-        if(lessonIdx == 0){
+//        if(lessonIdx == 0){
+//
+//            PageResponseDTO<QuestionAnswer> all = questionAnswerService.findAll(null, pageRequestDTO);
+//            return all.getDtoList();
+//        }
 
-            PageResponseDTO<QuestionAnswer> all = questionAnswerService.findAll(null, pageRequestDTO);
-            return all.getDtoList();
-        }
+        log.info("pageRequestDTO : {}", pageRequestDTO);
+//        List<QuestionAnswer> dtoList = questionAnswerService.findByLesson(lessonIdx);
 
-        List<QuestionAnswer> byLesson = questionAnswerService.findByLesson(lessonIdx);
+        Lesson lesson = lessonService.findById(lessonIdx);
+        PageResponseDTO<QuestionAnswer> all = questionAnswerService.findAll(lesson, pageRequestDTO.getKeyword(), pageRequestDTO);
 
-        log.info("questionAnswer by lesson : {} ", byLesson);
+//        List<QuestionAnswer> dtoList = all.getDtoList();
+//
+//        log.info("questionAnswer by lesson : {} ", dtoList);
+//
+//        return dtoList;
 
-        return byLesson;
+        return all;
     }
 }
