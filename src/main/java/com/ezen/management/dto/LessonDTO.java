@@ -43,4 +43,6 @@ public class LessonDTO {
 
     private String classRoom;
 
+    private String questionName;
+
 }

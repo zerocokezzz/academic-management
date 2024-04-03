@@ -52,3 +52,8 @@ async function curriculumDelete(idx){
 }
 
 //----------------------------------------------------수업----------------------------------------------------
+
+//수업 삭제
+async function lessonDelete(idx){
+    await axios.delete(`/training/lesson/${idx}`)
+}

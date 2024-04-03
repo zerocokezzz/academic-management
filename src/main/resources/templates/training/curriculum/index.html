@@ -67,7 +67,18 @@
                 <div style="display: inline-flex" th:text="${curriculum.day}"></div> &nbsp;일 &nbsp;
 
                 <div class="float-end">
-                    <button style="display: inline-flex" class="btn btn-secondary" th:idx="${curriculum.idx}" th:name="${curriculum.name}" th:category_name="${curriculum.category.name}" th:category_idx="${curriculum.category.idx}" th:time="${curriculum.time}" th:day="${curriculum.day}" th:onclick="updateBtn(this.getAttribute('idx'),this.getAttribute('name'),this.getAttribute('category_name'),this.getAttribute('category_idx'),this.getAttribute('time'),this.getAttribute('day'))">수정</button>
+                    <button style="display: inline-flex" class="btn btn-secondary" th:idx="${curriculum.idx}"
+                            th:name="${curriculum.name}"
+                            th:category_name="${curriculum.category.name}"
+                            th:category_idx="${curriculum.category.idx}"
+                            th:time="${curriculum.time}"
+                            th:day="${curriculum.day}"
+                            th:onclick="updateBtn(this.getAttribute('idx'),
+                                this.getAttribute('name'),
+                                this.getAttribute('category_name'),
+                                this.getAttribute('category_idx'),
+                                this.getAttribute('time'),
+                                this.getAttribute('day'))" >수정</button>
                     <button style="display: inline-flex" class="btn btn-danger" th:index="${curriculum.idx}" th:onclick="deleteBtn(this.getAttribute('index'))">삭제</button>
                 </div>
             </div>

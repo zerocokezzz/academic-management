@@ -173,6 +173,13 @@ public class TrainingServiceImpl implements TrainingService{
         curriculumRepository.deleteById(idx);
     }
 
+    //과정 인덱스로 가져오기
+    @Override
+    public Curriculum getCurriculumByIdx(Long idx){
+        Optional<Curriculum> result = curriculumRepository.findById(idx);
+        return result.orElseThrow();
+    }
+
     //----------------------------------------------------수업----------------------------------------------------
     
     //수업 전체
@@ -198,41 +205,59 @@ public class TrainingServiceImpl implements TrainingService{
     @Override
     public void lessonInsert(LessonDTO lessonDTO) {
 
-        log.info("Service LessonDTO : 서비스 : " + lessonDTO);
         Optional<Curriculum> result1 = curriculumRepository.findById(lessonDTO.getCurriculum_idx());
         Curriculum curriculum = result1.orElseThrow();
         lessonDTO.setCurriculum_name(curriculum.getName());
         lessonDTO.setCurriculum_day(curriculum.getDay());
         lessonDTO.setCurriculum_time(curriculum.getTime());
 
-        log.info("서비스 1 : Curriculum : " + curriculum);
-        
         Optional<Member> result2 = memberRepository.findById(lessonDTO.getMember_id());
         Member member= result2.orElseThrow();
         lessonDTO.setMember_name(member.getName());
 
-        log.info("서비스 2 : Member : " + member);
-
-        log.info("서비스 3 : LessonDTO : " + lessonDTO);
-
         Lesson lesson = lessonDtoToEntity(lessonDTO, curriculum, member);
         
-        log.info("서비스 4 : Lesson : " + lesson);
-        
         lessonRepository.save(lesson);
-        
-        log.info("서비스 5 여기가 마지마ㅏㅏㅏㅏㅏㅏㅏㅁ가");
-        
+    }
+
+    //수업 상세
+    @Override
+    public Lesson getLessonByIdx(Integer idx){
+
+        Optional<Lesson> lesson = lessonRepository.findById(idx);
+
+        return lesson.orElseThrow();
     }
 
     //수업 수정
     @Override
     public void lessonUpdate(LessonDTO lessonDTO) {
+        Optional<Lesson> lessonResult = lessonRepository.findById(lessonDTO.getIdx());
+        Lesson lesson = lessonResult.orElseThrow();
+
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(lessonDTO.getCurriculum_idx());
+        Curriculum curriculum = curriculumResult.orElseThrow();
+
+        Optional<Member> memberResult = memberRepository.findById(lessonDTO.getMember_id());
+        Member member = memberResult.orElseThrow();
+
+        lesson.changeTeacher(member);
+        lesson.changeCurriculum(curriculum);
+        lesson.changeClassroom(lessonDTO.getClassRoom());
+        lesson.changeQuestionName(lessonDTO.getQuestionName());
+        lesson.changeContent(lessonDTO.getContent());
+        lesson.changeNumber(lesson.getNumber());
+        lesson.changeStartDay(lesson.getStartDay());
+        lesson.changeSurvey1(lesson.getSurvey1());
+        lesson.changeSurvey2(lesson.getSurvey2());
+        lesson.changeSurvey3(lesson.getSurvey3());
+
+        log.info("잘 바뀌었나 확인해보자 : " + lesson);
+
+        lessonRepository.save(lesson);
     }
-    
+
     //수업 삭제
     @Override
-    public void lessonDelete(int idx) {
-
-    }
+    public void lessonDelete(int idx) { lessonRepository.deleteById(idx);}
 }

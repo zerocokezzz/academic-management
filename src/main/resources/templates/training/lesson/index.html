@@ -52,7 +52,6 @@
                 </form>
             </div>
 
-
             <!-- 리스트 -->
             <br>
             <div style="display: inline-flex">총 [[${responseDTO.total}]]개</div>
@@ -73,14 +72,38 @@
                 <div style="display: inline-flex" th:text="${lesson.curriculum.name}"></div> &nbsp; | &nbsp;
                 <div style="display: inline-flex" th:text="${lesson.number}"></div> &nbsp;기 &nbsp; | &nbsp;
                 <div style="display: inline-flex" th:text="${lesson.member.name}"></div> &nbsp; | &nbsp;
-                <div style="display: inline-flex" th:text="${lesson.head_count}"></div> &nbsp; 명 &nbsp; | &nbsp;
+                <div style="display: inline-flex" th:text="${lesson.headCount}"></div> &nbsp; 명 &nbsp; | &nbsp;
                 <div style="display: inline-flex" th:text="${lesson.startDay}"></div> &nbsp; | &nbsp;
                 <div style="display: inline-flex" th:text="${lesson.endDay}"></div>
 
-                <div class="float-end">
-                    <button style="display: inline-flex" class="btn btn-secondary" th:idx="${lesson.idx}"
-                            th:onclick="updateBtn(this.getAttribute('idx'))">수정
-                    </button>
+                <div class="float-end" style="display: inline-flex">
+                    <button style="display: inline-flex" class="btn btn-secondary"
+                            th:idx="${lesson.idx}"
+                            th:curriculumIdx="${lesson.curriculum.idx}"
+                            th:curriculumName="${lesson.curriculum.name}"
+                            th:memberId="${lesson.member.id}"
+                            th:memberName="${lesson.member.name}"
+                            th:number="${lesson.number}"
+                            th:startDay="${lesson.startDay}"
+                            th:endDay="${lesson.endDay}"
+                            th:survey1="${lesson.survey1}"
+                            th:survey2="${lesson.survey2}"
+                            th:survey3="${lesson.survey3}"
+                            th:content="${lesson.content}"
+                            th:classRoom="${lesson.classRoom}"
+                            th:questionName="${lesson.questionName}"
+                            th:onclick="updateBtn(this.getAttribute('idx'),
+                                                  this.getAttribute('curriculumIdx'),
+                                                  this.getAttribute('memberId'),
+                                                  this.getAttribute('number'),
+                                                  this.getAttribute('startDay'),
+                                                  this.getAttribute('endDay'),
+                                                  this.getAttribute('survey1'),
+                                                  this.getAttribute('survey2'),
+                                                  this.getAttribute('survey3'),
+                                                  this.getAttribute('content'),
+                                                  this.getAttribute('classRoom'),
+                                                  this.getAttribute('questionName'))" >수정</button>
                     <button style="display: inline-flex" class="btn btn-danger" th:idx="${lesson.idx}"
                             th:onclick="deleteBtn(this.getAttribute('idx'))">삭제
                     </button>
@@ -136,20 +159,18 @@
                                         <option value="">---교사---</option>
                                         <option th:each="member: ${member}" th:value="${member.id}" th:text="${member.name}"></option>
                                     </select>
-                                    <input type="text" class="form-control lessonClassRoom" name="classRoom" placeholder="강의실">
                                     <input type="text" class="form-control lessonNumber" name="number" placeholder="기수">
+                                    <input type="text" class="form-control lessonClassRoom" name="classRoom" placeholder="강의실">
                                 </div>
 
                                 <br>
 
                                 <div class="input-group mb-2">
-<!--                                    <label class="form-control">시작일</label>
-<!--                                    <label class="form-control">종료일</label>-->
+                                    <div style="width: 50%; display: flex; justify-content: center; align-items: center;"><span style="font-weight: 600;">시작일</span></div>
+                                    <div style="width: 50%; display: flex; justify-content: center; align-items: center;"><span style="font-weight: 600;">종료일</span></div>
                                 </div>
                                 <div class="input-group mb-2">
-<!--                                    <label>시작일</label>-->
                                     <input type="date" class="form-control lessonStartDay" name="startDay" placeholder="시작일">
-<!--                                    <label>종료일</label>-->
                                     <input type="date" class="form-control lessonEndDay" name="endDay" placeholder="수료일">
                                 </div>
 
@@ -165,9 +186,21 @@
                                     <input type="date" class="form-control lessonSurvey2" name="survey2" placeholder="설문2">
                                     <input type="date" class="form-control lessonSurvey3" name="survey3" placeholder="설문3">
                                 </div>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control lessonContent" name="content" placeholder="비고">
+
+                                <br>
+
+                                <div class="input-group mb-3">
+                                    <select class="form-select type" th:name="questionName" >
+                                        <option value="">---사전평가문제---</option>
+                                        <option th:each="questionName: ${questionName}" th:value="${questionName.name}" th:text="${questionName.name}"></option>
+                                    </select>
+                                </div>
+
+                                <br>
+
+                                <div class="input-group mb-2">
+                                    <textarea type="text" rows="2" class="form-control lessonContent" style="resize: none; height: 85px;" id="content" name="content" placeholder="비고"></textarea>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary lessonInsert">등록</button>
@@ -179,37 +212,97 @@
             </div>
 
             <!-- 수정 모달 -->
-            <!--            <div class="modal updateModal" tabindex="-1">-->
-            <!--                <div class="modal-dialog">-->
-            <!--                    <div class="modal-content">-->
-            <!--                        <div class="modal-header">-->
-            <!--                            <h5 class="modal-title">과정 수정</h5>-->
-            <!--                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-            <!--                        </div>-->
-            <!--                        <form action="/training/lesson/update" method="post">-->
-            <!--                            <div class="modal-body">-->
-            <!--                                <div class="input-group mb-3">-->
-            <!--                                    <input type="hidden" class="form-control updateIdx" name="idx">-->
-            <!--                                    <input type="text" class="form-control updateName" name="name">-->
-            <!--                                </div>-->
-            <!--                                <div class="input-group mb-3">-->
-            <!--                                    <input type="hidden" class="form-control updateCategory_idx" name="category_idx">-->
-            <!--                                    <input type="text" class="form-control updateCategory_name" name="category_name">-->
-            <!--                                </div>-->
-            <!--                                <div class="input-group mb-3">-->
-            <!--                                    <input type="text" class="form-control updateTime" name="time">-->
-            <!--                                    <input type="text" class="form-control updateDay" name="day">-->
-            <!--                                </div>-->
-            <!--                            </div>-->
-            <!--                            <div class="modal-footer">-->
-            <!--                                <button type="submit" class="btn btn-secondary updateSubmit" >수정</button>-->
-            <!--                                <button type="button" class="btn btn-danger updateClose">닫기</button>-->
-            <!--                                <button type="button" class="btn btn-outline-light remove">초기화</button>-->
-            <!--                            </div>-->
-            <!--                        </form>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--            </div>-->
+                <div class="modal updateModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">수업 수정</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="/training/lesson/update" method="post" >
+                                <div class="modal-body">
+                                    <input type="hidden" class="form-control updateIdx" name="idx">
+<!--                                    <input type="hidden" class="form-control updateCurriculumIdx" name="curriculumIdx" >-->
+<!--                                    <input type="hidden" class="form-control updateMemberId" name="memberId">-->
+
+                                    <br>
+
+                                    <div class="input-group-prepend" >
+                                        <select class="form-select type" name="curriculumIdx" >
+                                            <option  class="updateCurriculumIdx" value="updateCurriculumIdx">---유형---</option>
+                                            <option class="updateCurriculumName" th:each="curriculum : ${curriculum}" th:value="${curriculum.idx}" th:text="${curriculum.name}"></option>
+                                        </select>
+                                    </div>
+
+                                    <br>
+
+                                    <div class="input-group mb-3">
+                                        <div style="width: 40%; display: flex; justify-content: center; align-items: center;"><span style="font-weight: 600;">교사</span></div>
+                                        <div style="width: 30%; display: flex; justify-content: center; align-items: center;"><span style="font-weight: 600;">기수</span></div>
+                                        <div style="width: 30%; display: flex; justify-content: center; align-items: center;"><span style="font-weight: 600;">강의실</span></div>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <div style="width: 40%;">
+                                            <select class="form-select type" name="memberId">
+                                                <option class="updateMemberId" value="updateMemberId" >---교사---</option>
+                                                <option class="updateMemberId" th:each="member: ${member}" th:value="${member.id}" th:text="${member.name}"></option>
+                                            </select>
+                                        </div>
+                                        <div style="width: 30%;"><input type="text" class="form-control updateNumber" name="number" ></div>
+                                        <div style="width: 30%;"><input type="text" class="form-control updateClassRoom" name="classRoom"></div>
+                                    </div>
+
+                                    <br>
+
+                                    <div class="input-group mb-2">
+                                        <div style="width: 50%; display: flex; justify-content: center; align-items: center;"><span style="font-weight: 600;">시작일</span></div>
+                                        <div style="width: 50%; display: flex; justify-content: center; align-items: center;"><span style="font-weight: 600;">종료일</span></div>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <input type="date" class="form-control updateStartDay" name="startDay">
+                                        <input type="date" class="form-control updateEndDay" name="endDay">
+                                    </div>
+
+                                    <br>
+
+                                    <div class="input-group mb-2">
+                                        <div class="form-control">설문1</div>
+                                        <div class="form-control">설문2</div>
+                                        <div class="form-control">설문3</div>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <input type="date" class="form-control updateSurvey1" name="survey1" >
+                                        <input type="date" class="form-control updateSurvey2" name="survey2" >
+                                        <input type="date" class="form-control updateSurvey3" name="survey3" >
+                                    </div>
+
+                                    <br>
+
+                                    <div class="input-group mb-3">
+                                        <select class="form-select type" name="questionName" >
+                                            <option class="updateQuestionName" value="updateQuestionName">---사전평가문제---</option>
+                                            <option th:each="questionName: ${questionName}" th:value="${questionName.name}" th:text="${questionName.name}"></option>
+                                        </select>
+                                    </div>
+
+                                    <br>
+
+                                    <div class="input-group mb-2">
+                                        <textarea type="text" rows="2" class="form-control updateContent" style="resize: none; height: 85px;" name="content" ></textarea>
+                                    </div>
+
+
+                                </div> <!-- modal body end -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-secondary updateSubmit" >수정</button>
+                                    <button type="button" class="btn btn-danger updateClose">닫기</button>
+                                    <button type="button" class="btn btn-outline-light remove">초기화</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
         </div> <!-- inner content end -->
     </div> <!-- content end -->
     <!-- content end -->
@@ -266,10 +359,71 @@
         insertModal.hide()
     }, false)
 
+    //수업 수정 모달
+    const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
+    const updateClose = document.querySelector(".updateClose")
+    const updateIdx = document.querySelector(".updateIdx")
+    const updateCurriculumIdx = document.querySelector(".updateCurriculumIdx ")
+    const updateMemberId= document.querySelector(".updateMemberId ")
+    const updateNumber= document.querySelector(".updateNumber ")
+    const updateStartDay= document.querySelector(".updateStartDay ")
+    const updateEndDay= document.querySelector(".updateEndDay ")
+    const updateSurvey1= document.querySelector(".updateSurvey1 ")
+    const updateSurvey2= document.querySelector(".updateSurvey2 ")
+    const updateSurvey3= document.querySelector(".updateSurvey3 ")
+    const updateContent= document.querySelector(".updateContent ")
+    const updateClassRoom= document.querySelector(".updateClassRoom ")
+    const updateQuestionName= document.querySelector(".updateQuestionName ")
+    const updateMemberName = document.querySelector(".updateMemberName")
+    const updateCurriculumName = document.querySelector(".updateCurriculumName")
 
-    //수업 수정
+    //수업 상세 모달
+    async function updateBtn(idx, curriculumIdx, memberId, number, startDay, endDay, survey1, survey2, survey3, content, classRoom, questionName){
+        updateIdx.value = idx
+        updateCurriculumIdx .value = curriculumIdx
+        updateMemberId.value = memberId
+        updateNumber.value = number
+        updateStartDay.value = startDay
+        updateEndDay.value = endDay
+        updateSurvey1.value = survey1
+        updateSurvey2.value = survey2
+        updateSurvey3.value = survey3
+        updateContent.value = content
+        updateClassRoom.value = classRoom
+        updateQuestionName.value = questionName
+
+        console.log("idx : " + idx +
+            " , curriculumIdx : " + curriculumIdx +
+            " , memberId : " + memberId +
+            " , number : " + number +
+            " , startDay : " + startDay +
+            " , endDay : " + endDay +
+            " , survey1 : " + survey1 +
+            " , survey2 : " + survey2 +
+            " , survey3 : " + survey3 +
+            " , content : " + content +
+            " , classRoom : " + classRoom +
+            " , questionName : " + questionName)
+        updateModal.show()
+    }
+
+    //수업 수정 모달 닫기
+    updateClose.addEventListener("click", function (e){
+        updateModal.hide()
+    })
 
     //수업 삭제
+    async function deleteBtn(idx){
+        if(!confirm("과정을 삭제하시겠습니까?")){
+            return
+        }
+
+        lessonDelete(idx).then(result => {
+            location.reload()
+        }).catch(e =>{
+            console.log(e)
+        })
+    }
 
     //페이지 클릭
     document.querySelector(".pagination").addEventListener("click", function (e) {

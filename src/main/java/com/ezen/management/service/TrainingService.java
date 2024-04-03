@@ -71,6 +71,9 @@ public interface TrainingService {
     //과정 삭제
     public void curriculumDelete(Long idx);
 
+    //과정 인덱스로 가져오기
+    public Curriculum getCurriculumByIdx(Long idx);
+
     default Curriculum curriculumDtoTOEntity(CurriculumDTO curriculumDTO){
 
 
@@ -89,6 +92,9 @@ public interface TrainingService {
     //수업전체 & 검색 & 페이징
     public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO);
 
+    //수업 상세
+    public Lesson getLessonByIdx(Integer idx);
+
     //수업 등록
     public void lessonInsert(LessonDTO lessonDTO);
 
@@ -105,7 +111,7 @@ public interface TrainingService {
                 .curriculum(curriculum)
                 .member(member)
                 .number(lessonDTO.getNumber())
-                .head_count(lessonDTO.getHead_count())
+                .headCount(lessonDTO.getHead_count())
                 .startDay(lessonDTO.getStartDay())
                 .endDay(lessonDTO.getEndDay())
                 .survey1(lessonDTO.getSurvey1())
@@ -113,6 +119,7 @@ public interface TrainingService {
                 .survey3(lessonDTO.getSurvey3())
                 .classRoom(lessonDTO.getClassRoom())
                 .content(lessonDTO.getContent())
+                .questionName(lessonDTO.getQuestionName())
                 .build();
 
         return lesson;
