@@ -60,6 +60,7 @@ public class LessonRepositoryTests {
     public void getByCurriculumNameAndNumber(){
 
         Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
+
         Curriculum curriculum = curriculumResult.orElseThrow();
         int number = 1;
 

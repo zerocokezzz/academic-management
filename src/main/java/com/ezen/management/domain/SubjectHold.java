@@ -11,20 +11,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Subject {
+public class SubjectHold {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private int idx;
 
-    //과목명 -> 변경 X 그냥 새로생성 혹은 삭제
     @Column(nullable = false)
     private String name;
 
-    //평가방식
     @Column(nullable = false)
-    private String method;
-
-    public void changeMethod(String method){this.method = method;}
+    private int lesson_idx;
 }
-
