@@ -28,6 +28,7 @@ public class StudentRepositoryTests {
     public void 학생추가(){
 
         Optional<Curriculum> result = curriculumRepository.findById(1L);
+
         Curriculum curriculum = result.orElseThrow();
 
 //        파라미터 (수업, 회차)

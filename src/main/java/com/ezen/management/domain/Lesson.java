@@ -21,15 +21,18 @@ public class Lesson extends BaseEntity{
     @JoinColumn(nullable = false)
     private Curriculum curriculum;
 
+    //과정 설명(내용)
+    private String content;
+
+    //교사
     @ManyToOne
-//    교사
     private Member member;
 
+    //기수
     @Column(nullable = false)
-    //    기수
     private int number;
 
-    //    인원
+    //인원
     @Builder.Default
     private int headCount = 0;
 
@@ -61,6 +64,9 @@ public class Lesson extends BaseEntity{
     public void changeClassroom(String classRoom) {
         this.classRoom = classRoom;
     }
+
+
+    public void changeCurriculum(Curriculum curriculum){this.curriculum = curriculum;}
 
     public void changeQuestionName(String questionName){
         this.questionName = questionName;
