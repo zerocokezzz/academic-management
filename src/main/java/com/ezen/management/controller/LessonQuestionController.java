@@ -1,13 +1,16 @@
 package com.ezen.management.controller;
 
 import com.ezen.management.domain.Lesson;
+import com.ezen.management.domain.Question;
 import com.ezen.management.domain.QuestionAnswer;
 import com.ezen.management.dto.PageRequestDTO;
 import com.ezen.management.dto.PageResponseDTO;
+import com.ezen.management.dto.QuestionAnswerDTO;
 import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.QuestionAnswerRepository;
 import com.ezen.management.service.LessonService;
 import com.ezen.management.service.QuestionAnswerService;
+import com.ezen.management.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +34,7 @@ public class LessonQuestionController {
 
     private final QuestionAnswerService questionAnswerService;
     private final LessonService lessonService;
+    private final QuestionService questionService;
 
 //    @GetMapping("")
 //    public String index(Model model, PageRequestDTO pageRequestDTO){
@@ -102,4 +108,31 @@ public class LessonQuestionController {
 
         return all;
     }
+
+
+
+    @GetMapping("/getQuestionAnswerAndAnswerList")
+    @ResponseBody
+    public Map<String, Object> getQuestionAnswerAndAnswerList(int questionAnswerIdx){
+
+        log.info("questionAnswerIdx : {} ", questionAnswerIdx);
+
+//        return questionAnswerService.findById(questionAnswerIdx);
+
+        QuestionAnswerDTO questionAnswerDTO = questionAnswerService.findById(questionAnswerIdx);
+        log.info("QuestionAnswerDTO : {} ", questionAnswerDTO);
+
+        List<Question> answerList = questionService.findQuestionByName(questionAnswerDTO.getName());
+
+//        return questionAnswerDTO;
+
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("questionAnswer", questionAnswerDTO);
+        result.put("answerList", answerList);
+
+        return result;
+
+    }
+
 }
