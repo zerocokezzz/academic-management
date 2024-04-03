@@ -120,6 +120,7 @@ public class LessonQuestionController {
 //        return questionAnswerService.findById(questionAnswerIdx);
 
         QuestionAnswerDTO questionAnswerDTO = questionAnswerService.findById(questionAnswerIdx);
+        List<String> testPaper = questionAnswerDTO.getTestPaper();
         log.info("QuestionAnswerDTO : {} ", questionAnswerDTO);
 
         List<Question> answerList = questionService.findQuestionByName(questionAnswerDTO.getName());
@@ -128,7 +129,8 @@ public class LessonQuestionController {
 
         Map<String, Object> result = new HashMap<>();
 
-        result.put("questionAnswer", questionAnswerDTO);
+//        result.put("questionAnswer", questionAnswerDTO);
+        result.put("questionAnswer", testPaper);
         result.put("answerList", answerList);
 
         return result;
