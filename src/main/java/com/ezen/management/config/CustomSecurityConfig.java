@@ -48,7 +48,8 @@ public class CustomSecurityConfig {
                         request.requestMatchers("/member/**")
                                 .hasAnyRole("MASTER", "ADMIN", "TEACHER")
                                 .anyRequest()
-                                .anonymous()
+//                                .anonymous()
+                                .permitAll()
                                 )
                 .exceptionHandling(exceptionHandler -> exceptionHandler.accessDeniedHandler(accessDeniedHandler()))
 //                로그인 페이지를 커스텀 로그인 페이지로 매핑

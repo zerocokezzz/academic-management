@@ -4,23 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
 @ToString
-public class Curriculum {
+public class QuestionName {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+    private int idx;
 
+    @Column(nullable = false)
     private String name;
-
-    @ManyToOne
-    private Category category;
-
-    private int time;
-    private int day;
 
 }

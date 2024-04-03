@@ -31,8 +31,11 @@ public class LessonRepositoryTests {
         Optional<Member> memberResult = memberRepository.getByIdWithRoles("teacher");
         Member member = memberResult.orElseThrow();
 
-        Optional<Curriculum> curriculumResult = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정");
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
+
+        log.info("curriculum {}", curriculum);
+
 
         LocalDate start = LocalDate.of(2024, 9, 27);
 
@@ -40,6 +43,7 @@ public class LessonRepositoryTests {
                 .curriculum(curriculum)
                 .member(member)
                 .number(2)
+                .questionName("자바 풀스택")
                 .startDay(start)
                 .endDay(start.plusDays(curriculum.getDay()))
                 .survey1(start.plusMonths(1))
@@ -55,7 +59,7 @@ public class LessonRepositoryTests {
     @Test
     public void getByCurriculumNameAndNumber(){
 
-        Optional<Curriculum> curriculumResult = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정 ");
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
         int number = 1;
 

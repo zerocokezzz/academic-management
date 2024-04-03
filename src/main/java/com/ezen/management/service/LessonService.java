@@ -10,4 +10,6 @@ public interface LessonService {
     List<Lesson> findAll();
 
     List<Lesson> findAllGreaterThan(LocalDate day);
+
+    Lesson findById(int lessonIdx);
 }

@@ -16,7 +16,7 @@ public class CategoryRepositoryTests {
     @Test
     public void 카테고리추가(){
         Category category = Category.builder()
-                .name("재직자")
+                .name("KDT")
                 .build();
 
         categoryRepository.save(category);
