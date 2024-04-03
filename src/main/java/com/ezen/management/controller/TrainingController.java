@@ -1,23 +1,22 @@
 package com.ezen.management.controller;
 
-import com.ezen.management.domain.Category;
-import com.ezen.management.domain.Curriculum;
-import com.ezen.management.domain.Subject;
+import com.ezen.management.domain.*;
 import com.ezen.management.dto.*;
+import com.ezen.management.repository.CurriculumRepository;
+import com.ezen.management.repository.MemberRepository;
+import com.ezen.management.service.MemberService;
 import com.ezen.management.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -26,7 +25,10 @@ import java.util.Map;
 public class TrainingController {
 
     private final TrainingService trainingService;
+    private final MemberService memberService;
 
+    private final CurriculumRepository curriculumRepository;
+    private final MemberRepository memberRepository;
     //----------------------------------------------------유형----------------------------------------------------
 
     //유형전체
@@ -103,7 +105,6 @@ public class TrainingController {
     @GetMapping("/curriculum")
     public String curriculumIndex(Model model, PageRequestDTO pageRequestDTO){
         PageResponseDTO<Curriculum> responseDTO = trainingService.searchCurriculum(pageRequestDTO);
-        log.info(String.valueOf(responseDTO));
         model.addAttribute("responseDTO", responseDTO);
         return "training/curriculum/index";
     }
@@ -112,10 +113,7 @@ public class TrainingController {
     @PostMapping(value = "/curriculum/insert")
     public String curriculumInsert(String name, String category, int time, int day){
 
-        log.info("Controller : " + name + " , " + category + " , " + String.valueOf(time) + " , " + String.valueOf(day));
-
         Category c = trainingService.getCategoryIdx(category);
-        log.info("Category : " + c);
 
         CurriculumDTO curriculumDTO = new CurriculumDTO();
         curriculumDTO.setName(name);
@@ -132,7 +130,6 @@ public class TrainingController {
     public String  curriculumUpdate(Long idx, String name, String category_name, Long category_idx, int time, int day){
 
         Category category = trainingService.getCategoryIdx(category_name);
-        log.info("Controller에서 Category : " + category);
 
         CurriculumDTO curriculumDTO = new CurriculumDTO();
         curriculumDTO.setIdx(idx);
@@ -140,8 +137,6 @@ public class TrainingController {
         curriculumDTO.setCategory(category);
         curriculumDTO.setTime(time);
         curriculumDTO.setDay(day);
-
-        log.info("Controller : " + curriculumDTO);
 
         trainingService.curriculumUpdate(curriculumDTO);
         return "redirect:/training/curriculum";
@@ -154,16 +149,63 @@ public class TrainingController {
         trainingService.curriculumDelete(idx);
     }
 
-
     //----------------------------------------------------수업----------------------------------------------------
 
     //수업전체
     @GetMapping("/lesson")
-    public String lessonIndex(){return "training/lesson/index"; }
+    public String lessonIndex(Model model, PageRequestDTO pageRequestDTO){
+
+        PageResponseDTO<Lesson> responseDTO = trainingService.searchLesson(pageRequestDTO);
+        model.addAttribute("responseDTO", responseDTO);
+
+        PageResponseDTO<Curriculum> responseCurriculum = trainingService.searchCurriculum(pageRequestDTO);
+        List<Curriculum> curriculum = responseCurriculum.getDtoList();
+        model.addAttribute("curriculum", curriculum);
+
+        PageResponseDTO<Member> responseMember = memberService.findAll(pageRequestDTO);
+        List<Member> member = responseMember.getDtoList();
+        model.addAttribute("member", member);
+
+        log.info("Controller responseDTO : " + responseDTO);
+        log.info("Controller curriculum : " + curriculum);
+
+        return "training/lesson/index";
+    }
 
     //수업상세
+    //수업유형, 수업과정, 수업세부정보 -> 클릭으로 해당 수업의 학생들까지 ㄱㄱ
+
 
     //수업추가
+    @PostMapping(value = "/lesson/insert")
+    public String lessonInsert(Long curriculum_idx, String member_id, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content){
+
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(curriculum_idx);
+        Curriculum curriculum = curriculumResult.orElseThrow();
+
+        Optional<Member> memberResult = memberRepository.findById(member_id);
+        Member member = memberResult.orElseThrow();
+
+        LessonDTO lessonDTO = new LessonDTO();
+            lessonDTO.setCurriculum_idx(curriculum.getIdx());
+            lessonDTO.setCurriculum_name(curriculum.getName());
+            lessonDTO.setCurriculum_time(curriculum.getTime());
+            lessonDTO.setCurriculum_day(curriculum.getDay());
+            lessonDTO.setMember_id(member.getId());
+            lessonDTO.setMember_name(member.getName());
+            lessonDTO.setNumber(number);
+            lessonDTO.setStartDay(startDay);
+            lessonDTO.setEndDay(endDay);
+            lessonDTO.setSurvey1(survey1);
+            lessonDTO.setSurvey2(survey2);
+            lessonDTO.setSurvey3(survey3);
+            lessonDTO.setClassRoom(classRoom);
+            lessonDTO.setContent(content);
+
+        trainingService.lessonInsert(lessonDTO);
+
+        return "redirect:/training/lesson";
+    }
 
     //수업수정
 

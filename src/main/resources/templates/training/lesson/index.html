@@ -15,15 +15,203 @@
 
         <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
-            <h1> 수업 </h1>
+            <h3 style="display: inline-flex">수업관리</h3>
+            <button style="display: inline-flex" class="btn btn-primary float-end insertBtn">수업등록</button>
 
-        </div>
+            <hr>
+            <br>
+
+            <!-- 검색 -->
+            <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+                <form action="/training/lesson" method="get">
+                    <div class="col">
+                        <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select class="form-select type" name="type">
+                                    <option value="">---</option>
+                                    <option th:selected="${pageRequestDTO.type == 'c'}" value="c">훈련유형</option>
+                                    <option th:selected="${pageRequestDTO.type == 'n'}" value="n">기수</option>
+                                    <option th:selected="${pageRequestDTO.type == 'm'}" value="m">교사</option>
+                                    <option th:selected="${pageRequestDTO.type == 'h'}" value="h">수강인원</option>
+                                    <option th:selected="${pageRequestDTO.type == 's'}" value="s">수업시작일</option>
+                                    <option th:selected="${pageRequestDTO.type == 'e'}" value="e">수업종료일</option>
+                                    <option th:selected="${pageRequestDTO.type == 'r'}" value="r">강의실</option>
+                                </select>
+                            </div>
+                            <input type="text" class="form-control keyword" name="keyword"
+                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
+
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
+                                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
 
 
+            <!-- 리스트 -->
+            <br>
+            <div style="display: inline-flex">총 [[${responseDTO.total}]]개</div>
 
+            <br>
+            <hr>
+            <div style="display: inline-flex">훈련유형</div>
+            <div style="display: inline-flex">과정명</div>
+            <div style="display: inline-flex">기수</div>
+            <div style="display: inline-flex">교사</div>
+            <div style="display: inline-flex">수강인원</div>
+            <div style="display: inline-flex">시작일</div>
+            <div style="display: inline-flex">종료일</div>
 
+            <div th:each="lesson: ${responseDTO.getDtoList()}">
+                <hr>
+                <div style="display: inline-flex" th:text="${lesson.curriculum.category.name}"></div> &nbsp; | &nbsp;
+                <div style="display: inline-flex" th:text="${lesson.curriculum.name}"></div> &nbsp; | &nbsp;
+                <div style="display: inline-flex" th:text="${lesson.number}"></div> &nbsp;기 &nbsp; | &nbsp;
+                <div style="display: inline-flex" th:text="${lesson.member.name}"></div> &nbsp; | &nbsp;
+                <div style="display: inline-flex" th:text="${lesson.head_count}"></div> &nbsp; 명 &nbsp; | &nbsp;
+                <div style="display: inline-flex" th:text="${lesson.startDay}"></div> &nbsp; | &nbsp;
+                <div style="display: inline-flex" th:text="${lesson.endDay}"></div>
 
-    </div>
+                <div class="float-end">
+                    <button style="display: inline-flex" class="btn btn-secondary" th:idx="${lesson.idx}"
+                            th:onclick="updateBtn(this.getAttribute('idx'))">수정
+                    </button>
+                    <button style="display: inline-flex" class="btn btn-danger" th:idx="${lesson.idx}"
+                            th:onclick="deleteBtn(this.getAttribute('idx'))">삭제
+                    </button>
+                </div>
+            </div>
+
+            <!-- 페이지 -->
+            <hr>
+            <br>
+            <ul class="pagination flex-wrap">
+                <li class="page-item" th:if="${responseDTO.prev}">
+                    <a class="page-link" th:data-num="${responseDTO.start -1}">이전</a>
+                </li>
+
+                <th:block th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                    <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                    </li>
+                </th:block>
+
+                <li class="page-item" th:if="${responseDTO.next}">
+                    <a class="page-link" th:data-num="${responseDTO.end + 1}">다음</a>
+                </li>
+
+            </ul>
+
+            <!--모달 -->
+
+            <!-- 등록 모달 -->
+            <div class="modal insertModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">수업 등록</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="/training/lesson/insert" method="post">
+                            <div class="modal-body">
+
+                                <br>
+
+                                <div class="input-group-prepend" >
+                                    <select class="form-select type" th:name="curriculum_idx" >
+                                        <option value="">---과정---</option>
+                                        <option th:each="curriculum : ${curriculum}" th:value="${curriculum.idx}" th:text="${curriculum.name}"></option>
+                                    </select>
+                                </div>
+
+                                <br>
+
+                                <div class="input-group mb-3">
+                                    <select class="form-select type" th:name="member_id" >
+                                        <option value="">---교사---</option>
+                                        <option th:each="member: ${member}" th:value="${member.id}" th:text="${member.name}"></option>
+                                    </select>
+                                    <input type="text" class="form-control lessonClassRoom" name="classRoom" placeholder="강의실">
+                                    <input type="text" class="form-control lessonNumber" name="number" placeholder="기수">
+                                </div>
+
+                                <br>
+
+                                <div class="input-group mb-2">
+<!--                                    <label class="form-control">시작일</label>
+<!--                                    <label class="form-control">종료일</label>-->
+                                </div>
+                                <div class="input-group mb-2">
+<!--                                    <label>시작일</label>-->
+                                    <input type="date" class="form-control lessonStartDay" name="startDay" placeholder="시작일">
+<!--                                    <label>종료일</label>-->
+                                    <input type="date" class="form-control lessonEndDay" name="endDay" placeholder="수료일">
+                                </div>
+
+                                <br>
+
+                                <div class="input-group mb-2">
+                                    <div class="form-control">설문1</div>
+                                    <div class="form-control">설문2</div>
+                                    <div class="form-control">설문3</div>
+                                </div>
+                                <div class="input-group mb-2">
+                                    <input type="date" class="form-control lessonSurvey1" name="survey1" placeholder="설문1">
+                                    <input type="date" class="form-control lessonSurvey2" name="survey2" placeholder="설문2">
+                                    <input type="date" class="form-control lessonSurvey3" name="survey3" placeholder="설문3">
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control lessonContent" name="content" placeholder="비고">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary lessonInsert">등록</button>
+                                <button type="button" class="btn btn-danger insertClose">닫기</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 수정 모달 -->
+            <!--            <div class="modal updateModal" tabindex="-1">-->
+            <!--                <div class="modal-dialog">-->
+            <!--                    <div class="modal-content">-->
+            <!--                        <div class="modal-header">-->
+            <!--                            <h5 class="modal-title">과정 수정</h5>-->
+            <!--                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            <!--                        </div>-->
+            <!--                        <form action="/training/lesson/update" method="post">-->
+            <!--                            <div class="modal-body">-->
+            <!--                                <div class="input-group mb-3">-->
+            <!--                                    <input type="hidden" class="form-control updateIdx" name="idx">-->
+            <!--                                    <input type="text" class="form-control updateName" name="name">-->
+            <!--                                </div>-->
+            <!--                                <div class="input-group mb-3">-->
+            <!--                                    <input type="hidden" class="form-control updateCategory_idx" name="category_idx">-->
+            <!--                                    <input type="text" class="form-control updateCategory_name" name="category_name">-->
+            <!--                                </div>-->
+            <!--                                <div class="input-group mb-3">-->
+            <!--                                    <input type="text" class="form-control updateTime" name="time">-->
+            <!--                                    <input type="text" class="form-control updateDay" name="day">-->
+            <!--                                </div>-->
+            <!--                            </div>-->
+            <!--                            <div class="modal-footer">-->
+            <!--                                <button type="submit" class="btn btn-secondary updateSubmit" >수정</button>-->
+            <!--                                <button type="button" class="btn btn-danger updateClose">닫기</button>-->
+            <!--                                <button type="button" class="btn btn-outline-light remove">초기화</button>-->
+            <!--                            </div>-->
+            <!--                        </form>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div> <!-- inner content end -->
+    </div> <!-- content end -->
     <!-- content end -->
 
 
@@ -36,9 +224,92 @@
 <!-- wrapper end-->
 
 
-
 <div th:replace="/layout/basic :: scriptSet">
 </div>
 
 </body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/training.js"></script>
+<script layout:fragment="script" th:inline="javascript">
+
+    const insertModal = new bootstrap.Modal(document.querySelector(".insertModal"))
+    const insertBtn = document.querySelector(".insertBtn")
+    const insertSubmit = document.querySelector(".insertSubmit")
+    const insertClose = document.querySelector(".insertClose")
+    const lessonClassRoom = document.querySelector(".lessonClassRoom")
+    const lessonNumber = document.querySelector(".lessonNumber")
+    const lessonStartDay = document.querySelector(".lessonStartDay")
+    const lessonEndDay = document.querySelector(".lessonEndDay")
+    const lessonSurvey1 = document.querySelector(".lessonSurvey1")
+    const lessonSurvey2 = document.querySelector(".lessonSurvey2")
+    const lessonSurvey3 = document.querySelector(".lessonSurvey3")
+    const lessonContent = document.querySelector(".lessonContent")
+
+
+
+    //수업 등록
+    //수업 등록 모달 뜨기
+    insertBtn.addEventListener("click", function (e) {
+         lessonClassRoom.value = ''
+         lessonNumber.value = ''
+         lessonStartDay.value = ''
+         lessonEndDay.value = ''
+         lessonSurvey1.value = ''
+         lessonSurvey2.value = ''
+         lessonSurvey3.value = ''
+         lessonContent.value=''
+         insertModal.show()
+    }, false)
+
+    //수업 등록 모달 닫기
+    insertClose.addEventListener("click", function (e) {
+        insertModal.hide()
+    }, false)
+
+
+    //수업 수정
+
+    //수업 삭제
+
+    //페이지 클릭
+    document.querySelector(".pagination").addEventListener("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const target = e.target;
+
+        if (target.tagName !== 'A') {
+            return;
+        }
+
+        const formObj = document.querySelector("form");
+
+        const num = target.getAttribute("data-num");
+        const keyword = document.querySelector(".keyword");
+        const type = document.querySelector(".type");
+
+        // 버튼 누르면 ?page=num
+        formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
+
+        // 검색 목록이면
+        if (keyword.value !== '') {
+            formObj.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
+            formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+        }
+
+        formObj.submit();
+
+    }, false);
+
+    //  검색 조건 초기화
+    document.querySelector(".clearBtn").addEventListener("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        self.location = '/training/lesson';
+
+    }, false)
+
+
+</script>
 </html>

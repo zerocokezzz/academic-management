@@ -1,8 +1,6 @@
 package com.ezen.management.service;
 
-import com.ezen.management.domain.Category;
-import com.ezen.management.domain.Curriculum;
-import com.ezen.management.domain.Subject;
+import com.ezen.management.domain.*;
 import com.ezen.management.dto.*;
 
 import java.util.List;
@@ -84,5 +82,39 @@ public interface TrainingService {
                 .build();
 
         return curriculum;
+    }
+
+    //----------------------------------------------------수업----------------------------------------------------
+
+    //수업전체 & 검색 & 페이징
+    public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO);
+
+    //수업 등록
+    public void lessonInsert(LessonDTO lessonDTO);
+
+    //수업 수정
+    public void lessonUpdate(LessonDTO lessonDTO);
+
+    //수업 삭제
+    public void lessonDelete(int idx);
+
+    default Lesson lessonDtoToEntity(LessonDTO lessonDTO, Curriculum curriculum, Member member){
+
+        Lesson lesson = Lesson.builder()
+                .idx(lessonDTO.getIdx())
+                .curriculum(curriculum)
+                .member(member)
+                .number(lessonDTO.getNumber())
+                .head_count(lessonDTO.getHead_count())
+                .startDay(lessonDTO.getStartDay())
+                .endDay(lessonDTO.getEndDay())
+                .survey1(lessonDTO.getSurvey1())
+                .survey2(lessonDTO.getSurvey2())
+                .survey3(lessonDTO.getSurvey3())
+                .classRoom(lessonDTO.getClassRoom())
+                .content(lessonDTO.getContent())
+                .build();
+
+        return lesson;
     }
 }

@@ -1,12 +1,8 @@
 package com.ezen.management.service;
 
-import com.ezen.management.domain.Category;
-import com.ezen.management.domain.Curriculum;
-import com.ezen.management.domain.Subject;
+import com.ezen.management.domain.*;
 import com.ezen.management.dto.*;
-import com.ezen.management.repository.CategoryRepository;
-import com.ezen.management.repository.CurriculumRepository;
-import com.ezen.management.repository.SubjectRepository;
+import com.ezen.management.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +22,9 @@ public class TrainingServiceImpl implements TrainingService{
     private final CategoryRepository categoryRepository;
     private final SubjectRepository subjectRepository;
     private final CurriculumRepository curriculumRepository;
+    private final LessonRepository lessonRepository;
+    private final SubjectHoldRepository subjectHoldRepository;
+    private final MemberRepository memberRepository;
 
     //----------------------------------------------------유형----------------------------------------------------
     //유형전체
@@ -150,8 +149,6 @@ public class TrainingServiceImpl implements TrainingService{
     //과정 등록
     @Override
     public void curriculumInsert(CurriculumDTO curriculumDTO) {
-        log.info("Service Insert : " + curriculumDTO);
-
         Curriculum curriculum = curriculumDtoTOEntity(curriculumDTO);
         curriculumRepository.save(curriculum);
     }
@@ -161,9 +158,6 @@ public class TrainingServiceImpl implements TrainingService{
     public void curriculumUpdate(CurriculumDTO curriculumDTO) {
         Optional<Curriculum> result = curriculumRepository.findById(curriculumDTO.getIdx());
         Curriculum curriculum = result.orElseThrow();
-
-        log.info("Service Entity : " + curriculum);
-        log.info("Service DTO : " + curriculumDTO);
 
             curriculum.changeName(curriculumDTO.getName());
             curriculum.changeCategory(curriculumDTO.getCategory());
@@ -179,5 +173,66 @@ public class TrainingServiceImpl implements TrainingService{
         curriculumRepository.deleteById(idx);
     }
 
+    //----------------------------------------------------수업----------------------------------------------------
+    
+    //수업 전체
+    @Override
+    public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.getPageable();
 
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+
+        Page<Lesson> lessonPage = lessonRepository.searchLesson(types, keyword, pageable);
+
+        List<Lesson> dtoList = lessonPage.getContent();
+
+        return PageResponseDTO.<Lesson>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)lessonPage.getTotalElements())
+                .build();
+    }
+    
+    //수업 등록
+    @Override
+    public void lessonInsert(LessonDTO lessonDTO) {
+
+        log.info("Service LessonDTO : 서비스 : " + lessonDTO);
+        Optional<Curriculum> result1 = curriculumRepository.findById(lessonDTO.getCurriculum_idx());
+        Curriculum curriculum = result1.orElseThrow();
+        lessonDTO.setCurriculum_name(curriculum.getName());
+        lessonDTO.setCurriculum_day(curriculum.getDay());
+        lessonDTO.setCurriculum_time(curriculum.getTime());
+
+        log.info("서비스 1 : Curriculum : " + curriculum);
+        
+        Optional<Member> result2 = memberRepository.findById(lessonDTO.getMember_id());
+        Member member= result2.orElseThrow();
+        lessonDTO.setMember_name(member.getName());
+
+        log.info("서비스 2 : Member : " + member);
+
+        log.info("서비스 3 : LessonDTO : " + lessonDTO);
+
+        Lesson lesson = lessonDtoToEntity(lessonDTO, curriculum, member);
+        
+        log.info("서비스 4 : Lesson : " + lesson);
+        
+        lessonRepository.save(lesson);
+        
+        log.info("서비스 5 여기가 마지마ㅏㅏㅏㅏㅏㅏㅏㅁ가");
+        
+    }
+
+    //수업 수정
+    @Override
+    public void lessonUpdate(LessonDTO lessonDTO) {
+    }
+    
+    //수업 삭제
+    @Override
+    public void lessonDelete(int idx) {
+
+    }
 }
