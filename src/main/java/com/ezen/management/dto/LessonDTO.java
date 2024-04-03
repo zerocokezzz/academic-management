@@ -27,7 +27,7 @@ public class LessonDTO {
 
     private int number;
 
-    private int head_count;
+    private int headCount;
 
     private LocalDate startDay;
 

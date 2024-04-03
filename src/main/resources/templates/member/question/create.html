@@ -56,13 +56,14 @@
       <div class="questionList">
             <!-- 문제 한개 -->
                   <div class="card">
-                    <div class="card-header">
+                    <div class="card-header" style="display: inline-flex">
                       <input type="hidden" name="number" value="1"/>
-                      1번
+                      <span style="font-weight: bolder; font-size: 14pt; margin-top: 9px; margin-right: 5px"><strong>1. </strong></span>
+                        <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제를 입력하세요." style="border: none; background: transparent; margin-top: 5px"/>
 
                     </div>
                     <div class="card-body">
-                      <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제"/>
+
                         <textarea name="example" class="card-title form-control" id="example" placeholder="보기"></textarea>
 
                     <br>
@@ -99,9 +100,7 @@
       </div> <!-- questionList -->
         <button class="btn btn-danger deleteBtn col-12">삭제</button>
           <br>
-          <br>
-          <br>
-        <button class="btn btn-primary plusBtn col-12"> 추가 </button>
+        <button class="btn btn-primary btn-square plusBtn col-12" style="text-align: center"> + </button>
           <br>
           <br>
           <br>
@@ -112,7 +111,7 @@
 
 
           <!-- 상태 카드 -->
-          <div class="col-5 float-end position-fixed" style="overflow: auto; border: 1px solid lightgray; border-radius: 5px; height: 60%; width: 30%; position: absolute; top: 22%; left: 55%; bottom: 30%; background-color: whitesmoke">
+          <div class="col-5 float-end position-fixed" style="overflow: auto; border: 1px solid lightgray; border-radius: 5px; height: 60%; width: 30%; position: absolute; top: 21%; left: 55%; bottom: 30%; background-color: whitesmoke">
 
               <div class="statusBar" style="margin: 40px">
                   <div style="border: 1px solid lightgray; border-radius: 5px; background-color: white;">
@@ -182,13 +181,13 @@
                     <br>
                     <br>
                      <div class="card">
-                    <div class="card-header">
+                    <div class="card-header" style="display: inline-flex">
                       <input type="hidden" name="number" value="${i}"/>
-                      ${i}번
+                      <span style="font-weight: bolder; font-size: 14pt; margin-top: 9px; margin-right: 5px"><strong>${i}. </strong></span>
+                        <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제를 입력하세요." style="border: none; background: transparent; margin-top: 5px"/>
 
                     </div>
                     <div class="card-body">
-                      <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제"/>
                         <textarea name="example" class="card-title form-control" id="example" placeholder="보기"></textarea>
 
                     <br>
@@ -213,7 +212,7 @@
 
 
 
-      $(".statusBar").append(`<div style="border: 1px solid lightgray; border-radius: 5px; background-color: white; margin-top: 5px">
+      $(".statusBar").append(`<div style="border: 1px solid lightgray; border-radius: 5px; background-color: white; margin-top: 5px" class="questionStatus">
                       <div style="margin: 10px; display: inline-flex">${i}.</div>
                       <div style="margin: 10px; display: inline-flex; white-space: nowrap; max-width: 80%; overflow: scroll; text-overflow: ellipsis;" class="statusContent"></div>
                   </div>`);
@@ -227,7 +226,7 @@
 
       contentList = Array.from(document.querySelectorAll(".questionContent"));
       statusContentList = Array.from(document.querySelectorAll(".statusContent"));
-      questionStatusList = Array.from(document.querySelectorAll(".questionStatus"));
+      // questionStatusList = Array.from(document.querySelectorAll(".questionStatus"));
       console.log(contentList);
       console.log(statusContentList);
       connectionContent();
@@ -256,10 +255,14 @@
 
       // "questionDiv" 클래스를 가진 요소들을 배열로 저장
       const questionDivs = Array.from(document.querySelectorAll('.questionDiv'));
+      statusContentList = Array.from(document.querySelectorAll(".statusContent"));
+      questionStatusList = Array.from(document.querySelectorAll(".questionStatus"));
+
 
       console.log(questionDivs);
       questionDivs[questionDivs.length - 1].remove();
       questionStatusList[questionStatusList.length - 1].remove();
+      // statusContentList[statusContentList.length - 1].remove();
 
 
       console.log('done');

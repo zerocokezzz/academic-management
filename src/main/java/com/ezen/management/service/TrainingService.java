@@ -105,7 +105,7 @@ public interface TrainingService {
                 .curriculum(curriculum)
                 .member(member)
                 .number(lessonDTO.getNumber())
-                .head_count(lessonDTO.getHead_count())
+                .headCount(lessonDTO.getHeadCount())
                 .startDay(lessonDTO.getStartDay())
                 .endDay(lessonDTO.getEndDay())
                 .survey1(lessonDTO.getSurvey1())

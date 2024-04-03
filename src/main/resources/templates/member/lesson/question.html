@@ -384,9 +384,17 @@
 
         let htmls = '';
         let htmls2 = '';
+
         getQuestionAnswerList(params).then(result => {
             console.log(result);
             console.log(result.dtoList);
+
+            if(result.dtoList === null){
+                htmls = `<p>검색 결과가 없습니다.</p>`;
+                questionAnswerList.innerHTML = htmls;
+                pageDiv.style.display = 'none';
+                return;
+            }
 
             for(const questionAnswer of result.dtoList){
 
@@ -404,34 +412,6 @@
                         </a>
                         <hr>`;
             }
-
-
-            if(result.dtoList.length === 0){
-                htmls = `<p>검색 결과가 없습니다.</p>`;
-            }
-
-
-            // 페이지 (미완) 4/2
-            // htmls2 +=  `<ul class="pagination flex-wrap">`;
-            // if(result.prev){
-            //     htmls2 += `<li class="page-item" >
-            //                     <a class="page-link" data-num="${result.start -1}">이전</a>
-            //                 </li>`;
-            // }
-            //
-            // for(let i = result.start; i <= result.end; i++){
-            //     htmls2 += result.page === i ?  `<li class="page-item active">` : `<li class="page-item">`;
-            //     htmls2 += `<a class="page-link" data-num="${i}" >${i}</a>
-            //               </li>`;
-            // }
-            //
-            // if(result.next){
-            //     htmls2 += `<li class="page-item">
-            //                 <a class="page-link" data-num="${result.end + 1}">다음</a>
-            //                 </li>`;
-            // }
-            //
-            // pageDiv.innerHTML = htmls2;
 
             questionAnswerList.innerHTML = htmls;
             pageDiv.style.display = 'none';

@@ -55,8 +55,6 @@ public class Lesson extends BaseEntity{
 
     private String questionName;
 
-    private String content;
-
     public void changeTeacher(Member member){
         this.member = member;
     }
