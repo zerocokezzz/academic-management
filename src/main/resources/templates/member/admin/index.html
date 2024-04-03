@@ -58,7 +58,7 @@
       <div th:each="member : ${pageResponseDTO.getDtoList()}" th:with="admin=${admin}">
 
             <hr>
-            <img class="rounded-circle" th:src="@{/img/{fileName}(fileName=${member.getFileName()})}" alt="" style="width: 40px; height: 40px;">
+            <img class="rounded-circle" th:src="${'/images/' + member.fileName}" alt="" style="width: 40px; height: 40px;">
         &nbsp;&nbsp;
             <div style="display: inline-flex" th:text="${member.name}"></div>&nbsp;&nbsp; | &nbsp;&nbsp;
             <div style="display: inline-flex" th:text="${#temporals.format(member.regDate, 'yy-MM-dd')}"></div>

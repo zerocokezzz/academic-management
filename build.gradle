@@ -54,6 +54,10 @@ dependencies {
             "jakarta.annotation:jakarta.annotation-api",
             "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     )
+
+
+//    modelMapper
+    implementation 'org.modelmapper:modelmapper:3.1.0'
 }
 
 tasks.named('test') {

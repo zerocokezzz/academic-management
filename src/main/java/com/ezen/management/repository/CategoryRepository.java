@@ -13,5 +13,4 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, Categ
 
     @Query("select c from Category c where c.name = :name")
     Optional<Category> getCategoryIdx(String name);
-
 }

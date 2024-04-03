@@ -32,3 +32,4 @@ public class Curriculum {
     public void changeDay(int day){this.day = day; }
 
 }
+

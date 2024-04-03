@@ -34,12 +34,16 @@ public class LessonRepositoryTests {
         Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
 
-        LocalDate start = LocalDate.of(2024, 3, 22);
+        log.info("curriculum {}", curriculum);
+
+
+        LocalDate start = LocalDate.of(2024, 9, 27);
 
         Lesson lesson = Lesson.builder()
                 .curriculum(curriculum)
                 .member(member)
-                .number(1)
+                .number(2)
+                .questionName("자바 풀스택")
                 .startDay(start)
                 .endDay(start.plusDays(curriculum.getDay()))
                 .survey1(start.plusMonths(1))
@@ -55,7 +59,8 @@ public class LessonRepositoryTests {
     @Test
     public void getByCurriculumNameAndNumber(){
 
-        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1l);
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
+
         Curriculum curriculum = curriculumResult.orElseThrow();
         int number = 1;
 
@@ -88,10 +93,18 @@ public class LessonRepositoryTests {
 
         LocalDate now = LocalDate.now();
 
-        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
-        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
+//        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
+        List<Lesson> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
+//        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
 
-        log.info("lessons...... " + lessons);
+//        log.info("lessons...... " + lessons);
+    }
+
+    @Test
+    public void 전체목록(){
+        List<Lesson> all = lessonRepository.findAll();
+
+        log.info("all lessons......" + all);
     }
 
 

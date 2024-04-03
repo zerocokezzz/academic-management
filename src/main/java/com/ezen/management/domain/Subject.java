@@ -27,3 +27,4 @@ public class Subject {
 
     public void changeMethod(String method){this.method = method;}
 }
+

@@ -24,7 +24,16 @@ public class StudentServiceImpl implements StudentService{
 
         Optional<Student> byLessonAndName = studentRepository.getByLessonAndName(lesson, name);
 
-        return byLessonAndName.orElseThrow();
+//        null 처리 해야함
+        return byLessonAndName.get();
 
+    }
+
+    @Override
+    public Student findById(int studentIdx) {
+        Optional<Student> byId = studentRepository.findById(studentIdx);
+
+//        null 처리 해야함!
+        return byId.get();
     }
 }

@@ -27,17 +27,19 @@ public class StudentRepositoryTests {
     @Test
     public void 학생추가(){
 
-        Optional<Curriculum> result = curriculumRepository.findById(1l);
+        Optional<Curriculum> result = curriculumRepository.findById(1L);
+
         Curriculum curriculum = result.orElseThrow();
 
-        Optional<Lesson> lessonResult = lessonRepository.getByCurriculumAndNumber(curriculum, 1);
+//        파라미터 (수업, 회차)
+        Optional<Lesson> lessonResult = lessonRepository.getByCurriculumAndNumber(curriculum, 2);
         Lesson lesson = lessonResult.orElseThrow();
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("새별")
+                .name("지영")
                 .email("byeol@gmail.com")
-                .birthday("960123")
+                .birthday("000000")
                 .build();
 
         studentRepository.save(student);
@@ -60,7 +62,7 @@ public class StudentRepositoryTests {
     @Test
     public void 학생선택2(){
 
-        Optional<Curriculum> result = curriculumRepository.findById(1l);
+        Optional<Curriculum> result = curriculumRepository.findById(1L);
         Curriculum curriculum = result.orElseThrow();
 
         Optional<Lesson> lessonResult = lessonRepository.getByCurriculumAndNumber(curriculum, 1);
