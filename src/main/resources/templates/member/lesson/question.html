@@ -68,7 +68,7 @@
             <div id="questionAnswerList">
             <div th:each="questionAnswer : ${pageResponseDTO.getDtoList()}">
             <br>
-            <a class="link-dark" href="#">
+            <a class="link-dark" href="#" th:questionAnswerIdx="${questionAnswer.idx}" th:studentIdx="${questionAnswer.getStudent().idx}" onclick="openPaper(this.getAttribute('questionAnswerIdx'), this.getAttribute('studentIdx'))">
                 <p th:text="${questionAnswer.getStudent().name}" style="display: inline-flex"></p>
                 &nbsp;|&nbsp;
                 <p style="display: inline-flex" th:text="${questionAnswer.getStudent().getLesson().number + '회차'}"></p>
@@ -108,6 +108,108 @@
             <br>
         </div>
         <!-- inner content-->
+
+
+
+
+        <!-- 답안지 모달 -->
+
+        <div class="modal fade" id="answerPaper" tabindex="-1" aria-labelledby="answerPaperLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="answerPaperLabel">답안지</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <!-- 학생 정보 -->
+                        <div class="studentInfo">
+
+                        </div>
+
+
+                        <!-- 문제 리스트 -->
+                        <div class="questionAnswerPaper" style="margin: 20px; display: inline-flex; max-width: 100%">
+
+                        <!-- 문제 하나 -->
+                            <div class="col-5">
+
+                                <input type="hidden" name="name"/>
+                                <strong>1. 문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제</strong>
+                                <br>
+
+                                <!--                    예 -->
+                                <div style="border: 1px solid #2a2d34; border-radius: 5px; max-width: 270px; margin: 30px">
+                                    보기
+                                    <div style="margin: 10px">보기보기보기보기</div>
+                                </div>
+
+                                <!--                    사진 -->
+    <!--                            <div>-->
+    <!--                                <img src="" style="max-width: 270px; margin: 30px">-->
+    <!--                            </div>-->
+
+                                <!--                    문항 -->
+                                <div>
+                                    <div>① 문항1문항1문항1문항1</div><br>
+                                    <div>② 문항2문항2문항2문항2</div><br>
+                                    <div>③ 문항3문항3문항3문항3</div><br>
+                                    <div>④ 문항4문항4문항4문항4</div><br>
+                                </div>
+
+
+                            </div>
+                        <!-- 문제 하나  끝-->
+
+
+
+                            <!-- 문제 하나 -->
+                            <div class="col-5">
+
+                                <input type="hidden" name="name"/>
+                                <strong>1. 문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제</strong>
+                                <br>
+
+                                <!--                    예 -->
+                                <div style="border: 1px solid #2a2d34; border-radius: 5px; max-width: 270px; margin: 30px">
+                                    보기
+                                    <div style="margin: 10px">보기보기보기보기</div>
+                                </div>
+
+                                <!--                    사진 -->
+                                <!--                            <div>-->
+                                <!--                                <img src="" style="max-width: 270px; margin: 30px">-->
+                                <!--                            </div>-->
+
+                                <!--                    문항 -->
+                                <div>
+                                    <div>① 문항1문항1문항1문항1문항1문항1문항1문항1문항1문항1문항1문항1</div><br>
+                                    <div>② 문항2문항2문항2문항2문항2문항2문항2문항2</div><br>
+                                    <div>③ 문항3문항3문항3문항3</div><br>
+                                    <div>④ 문항4문항4문항4문항4</div><br>
+                                </div>
+
+
+                            </div>
+                            <!-- 문제 하나  끝-->
+
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 답안지 모달 끝 -->
+
 
 
     </div>
@@ -309,6 +411,60 @@
     });
 
 
+
+//     모달
+
+    const answerPaper = document.querySelector("#answerPaper");
+
+    const studentInfo = document.querySelector(".studentInfo");
+    const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
+
+    function openPaper(questionAnswerIdx, studentIdx){
+        console.log('questionAnswerIdx : ' + questionAnswerIdx);
+
+        const studentParam = {
+            studentIdx : studentIdx
+        }
+
+        const questionAnswerParam = {
+            questionAnswerIdx : questionAnswerIdx
+        }
+
+        // 학생 정보
+        getStudent(studentParam).then(result => {
+            console.log(result);
+
+        }).catch( e => {
+
+        })
+
+
+        // 답안지
+        getQuestionAnswer(questionAnswerParam).then(result => {
+            console.log(result);
+
+        }).catch( e => {
+            console.log(e);
+        });
+
+
+        $("#answerPaper").modal('show');
+
+    }
+
+    async function getQuestionAnswer(paramList){
+        const response = await axios.get('/member/lesson/question/getQuestionAnswerAndAnswerList', {params: paramList});
+        console.log(response.data);
+
+        return response.data;
+    }
+
+    async function getStudent(paramList){
+        const response = await axios.get('/student/getStudent', {param : paramList});
+        console.log(response);
+
+        return response.data;
+    }
 
 </script>
 

@@ -18,6 +18,8 @@ public interface QuestionAnswerService {
 
     List<QuestionAnswer> findByLesson(int lessonIdx);
 
+    QuestionAnswerDTO findById(int questionAnswerIdx);
+
 
 
 }

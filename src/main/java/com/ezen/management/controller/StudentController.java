@@ -2,6 +2,7 @@ package com.ezen.management.controller;
 
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Question;
+import com.ezen.management.domain.QuestionAnswer;
 import com.ezen.management.domain.Student;
 import com.ezen.management.dto.QuestionAnswerDTO;
 import com.ezen.management.dto.StudentDTO;
@@ -11,11 +12,13 @@ import com.ezen.management.service.QuestionService;
 import com.ezen.management.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,7 +35,7 @@ public class StudentController {
     private final QuestionAnswerService questionAnswerService;
 
     @GetMapping("")
-    public String index(Model model){
+    public String index(Model model) {
 
 
 //        List<Lesson> lessonList = lessonService.findAll();
@@ -46,7 +49,7 @@ public class StudentController {
     }
 
     @PostMapping("/select")
-    public String question(Model model, StudentDTO studentDTO){
+    public String select(Model model, StudentDTO studentDTO) {
 
 //        레슨 인덱스와 받아온 이름으로 학생 조회
 //        뷰에서는 학생 정보를 보여주고 사전평가/설문조사 중 하나를 클릭하면 거기로 student idx를 넘겨줌
@@ -54,7 +57,7 @@ public class StudentController {
 
 
 //        학생이 존재하지 않으면 문제를 풀 수 없음
-        if(student == null){
+        if (student == null) {
             return "redirect:/student";
         }
 
@@ -67,14 +70,14 @@ public class StudentController {
     }
 
     @PostMapping("/question")
-    public String testPaper(Model model, StudentDTO studentDTO){
+    public String testPaper(Model model, StudentDTO studentDTO) {
 
         log.info("studentDTO : {} ", studentDTO);
 
         Student student = studentService.findByLessonIdxAndName(studentDTO.getLessonIdx(), studentDTO.getName());
 
 //        학생이 존재하지 않으면 문제를 풀 수 없음
-        if(student == null){
+        if (student == null) {
             return "redirect:/student";
         }
 
@@ -100,7 +103,7 @@ public class StudentController {
 
 
     @PostMapping("/question/insert")
-    public String insert(QuestionAnswerDTO questionAnswerDTO){
+    public String insert(QuestionAnswerDTO questionAnswerDTO) {
 
         log.info("questionAnswerDTO : {}", questionAnswerDTO);
 
@@ -131,9 +134,8 @@ public class StudentController {
 //        return null;
 
 
-
 //        이렇게 보내면 뷰에서 파라미터 받은 후 자바스크립트로 처리
-        if(result == 1){
+        if (result == 1) {
             return "redirect:/student?code=success";
         }
 
@@ -156,6 +158,15 @@ public class StudentController {
 
     }
 
+
+    @GetMapping("/getStudent")
+    @ResponseBody
+    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'TEACHER')")
+    public Student getStudent(int studentIdx) {
+
+        return studentService.findById(studentIdx);
+
+    }
 
 
 }

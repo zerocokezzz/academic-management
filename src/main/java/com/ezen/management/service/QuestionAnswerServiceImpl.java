@@ -58,8 +58,8 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
 
 //        채점
         int score = 0;
-        for(int i = 0; i < testPaper.size(); i++){
-            if(Integer.parseInt(testPaper.get(i)) == (questions.get(i).getAnswer())){
+        for (int i = 0; i < testPaper.size(); i++) {
+            if (Integer.parseInt(testPaper.get(i)) == (questions.get(i).getAnswer())) {
                 score += 5;
                 log.info(i + "");
                 log.info("점수 {} ", score);
@@ -90,7 +90,7 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         return PageResponseDTO.<QuestionAnswer>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-                .total((int)all.getTotalElements())
+                .total((int) all.getTotalElements())
                 .build();
 
     }
@@ -104,7 +104,15 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
 
     }
 
-    QuestionAnswer dtoToEntity(QuestionAnswerDTO questionAnswerDTO){
+    @Override
+    public QuestionAnswerDTO findById(int questionAnswerIdx) {
+        Optional<QuestionAnswer> byId = questionAnswerRepository.findById(questionAnswerIdx);
+        QuestionAnswer questionAnswer = byId.orElseThrow();
+
+        return entityToDTO(questionAnswer);
+    }
+
+    QuestionAnswer dtoToEntity(QuestionAnswerDTO questionAnswerDTO) {
 
         Optional<Student> byId = studentRepository.findById(questionAnswerDTO.getStudentIdx());
         Student student = byId.orElseThrow();
@@ -134,4 +142,39 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
                 .an20(questionAnswerDTO.getAn20())
                 .build();
     }
+
+
+    QuestionAnswerDTO entityToDTO(QuestionAnswer questionAnswer){
+
+        Optional<QuestionAnswer> byId = questionAnswerRepository.findById(questionAnswer.getIdx());
+        QuestionAnswer entity = byId.orElseThrow();
+
+        return QuestionAnswerDTO.builder()
+                .studentIdx(entity.getStudent().getIdx())
+                .an1(entity.getAn1())
+                .an2(entity.getAn2())
+                .an3(entity.getAn3())
+                .an4(entity.getAn4())
+                .an5(entity.getAn5())
+                .an6(entity.getAn6())
+                .an7(entity.getAn7())
+                .an8(entity.getAn8())
+                .an9(entity.getAn9())
+                .an10(entity.getAn10())
+                .an11(entity.getAn11())
+                .an12(entity.getAn12())
+                .an13(entity.getAn13())
+                .an14(entity.getAn14())
+                .an15(entity.getAn15())
+                .an16(entity.getAn16())
+                .an17(entity.getAn17())
+                .an18(entity.getAn18())
+                .an19(entity.getAn19())
+                .an20(entity.getAn20())
+                .name(entity.getName())
+                .build();
+
+    }
+
+
 }
