@@ -8,4 +8,6 @@ public interface QuestionNameService {
 
     List<QuestionName> findAll();
 
+    void save(String name);
+
 }

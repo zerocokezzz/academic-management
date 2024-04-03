@@ -27,7 +27,7 @@
       <form>
         <div style="max-width: 300px">
             <select class="form-select questionKeywordSelect" name="name">
-              <option selected>분류 선택</option>
+              <option selected value="전체">전체</option>
               <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>
             </select>
         </div>
@@ -268,6 +268,11 @@
 
     const param = {
       name : questionKeywordSelect.value
+    }
+
+    if(questionKeywordSelect.value === '전체'){
+      location.href = '/member/question';
+      return;
     }
 
     let htmls = '';
@@ -656,6 +661,20 @@
   createBtn.addEventListener("click", function() {
     location.href = '/member/question/create';
   })
+
+
+  const url = new URL(window.location.href);
+  const urlSearchParams = url.searchParams;
+  const code = urlSearchParams.get("code");
+
+  switch (code){
+    case 'success' :
+      alert('등록되었습니다.');
+      location.replace("/member/question");
+      break;
+    case 'fail' :
+      alert('등록에 실패하였습니다. 다시 시도해주세요.');
+  }
 
 
 

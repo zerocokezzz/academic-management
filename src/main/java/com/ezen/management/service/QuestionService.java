@@ -19,4 +19,6 @@ public interface QuestionService {
 
     void delete(int questionIdx);
 
+    void multiSave(List<QuestionDTO> questionDTOList);
+
 }

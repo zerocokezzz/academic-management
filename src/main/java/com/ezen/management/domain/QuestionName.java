@@ -18,4 +18,8 @@ public class QuestionName {
     @Column(nullable = false)
     private String name;
 
+    public void changeName(String name){
+        this.name = name;
+    }
+
 }
