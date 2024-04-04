@@ -55,7 +55,7 @@ public class Question {
         this.item4 = item4;
     }
 
-    public void changeAnswer(int answer){
+    public void changeAnswer(String answer){
         this.answer = answer;
     }
 }

@@ -42,7 +42,7 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
                         booleanBuilder.or(lesson.member.name.contains(keyword));
                         break;
                     case "h":
-                        booleanBuilder.or(lesson.head_count.eq(Integer.parseInt(keyword)));
+                        booleanBuilder.or(lesson.headCount.eq(Integer.parseInt(keyword)));
                         break;
                     case  "s":
                         booleanBuilder.or(lesson.startDay.eq(LocalDate.parse(keyword)));

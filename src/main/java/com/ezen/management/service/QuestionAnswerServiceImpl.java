@@ -67,7 +67,7 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
 //        채점
         int score = 0;
         for (int i = 0; i < testPaper.size(); i++) {
-            if (Integer.parseInt(testPaper.get(i)) == (questions.get(i).getAnswer())) {
+            if (Integer.parseInt(testPaper.get(i)) == Integer.parseInt(questions.get(i).getAnswer())) {
                 score += 5;
                 log.info(i + "");
                 log.info("점수 {} ", score);
