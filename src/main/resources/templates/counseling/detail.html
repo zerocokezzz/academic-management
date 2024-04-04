@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>상담 상세</h5>
+                            <div class="card-body">
+                                <!-- counselingDTO 의 전달-->
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담No</span>
+                                    <input type="text" class="form-control" th:value="${dto.idx}" readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">학생No</span>
+                                    <input type="text" class="form-control" th:value="${dto.studentIdx}" readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담회차</span>
+                                    <input type="text" class="form-control" placeholder="상담count?" readonly>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담내용</span>
+                                    <textarea class="form-control col-sm-5" rows="5">[[${dto.content}]]</textarea>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담방법</span>
+                                    <input type="text" class="form-control" th:value="${dto.method}">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">담당자</span>
+                                    <input type="text" class="form-control" th:value="${dto.writer}">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담날짜</span>
+                                    <input type="text" class="form-control" th:value="${#temporals.format(dto.counselingDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                                </div>
+
+                                <div class="my-4">
+                                    <div class="float-end">
+                                            <button type="button" class="btn btn-primary">List</button>
+                                            <button type="button" class="btn btn-secondary">Modify</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><!-- end card-header -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end inner-content -->
+
+
+
+
+
+    </div><!--end content -->
+
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script content="script" th:inline="javascript">
+
+    console.log("안녕 여기 상세페이지");
+
+
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

@@ -32,13 +32,13 @@ public class StudentRepositoryTests {
         Curriculum curriculum = result.orElseThrow();
 
 //        파라미터 (수업, 회차)
-        Optional<Lesson> lessonResult = lessonRepository.getByCurriculumAndNumber(curriculum, 2);
+        Optional<Lesson> lessonResult = lessonRepository.getByCurriculumAndNumber(curriculum, 1);
         Lesson lesson = lessonResult.orElseThrow();
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("지영")
-                .email("byeol@gmail.com")
+                .name("공공")
+                .email("gongong@gmail.com")
                 .birthday("000000")
                 .build();
 
