@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class survey {
+public class SurveyDTO {
 
     //PK
-    private long idx;
+    private int idx;
 
     //보기(1~7 만족도?)
     private String item1;
@@ -23,6 +23,9 @@ public class survey {
     private String item6;
     private String item7;
 
-    private long number;
-    private long round;
+    private String number;
+    private int round;
+
+    private String content;
+    private String type;
 }
