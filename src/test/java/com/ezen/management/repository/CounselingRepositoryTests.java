@@ -8,7 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -64,4 +69,94 @@ public class CounselingRepositoryTests {
 
 
     }
+
+
+
+
+    @Test
+    public void testSearchAll2(){
+        String[] types = {"t", "c", "w","n"};
+
+        String keyword = "2024-04-02";
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("idx").descending());
+
+        Page<Counseling> result = counselingRepository.searchAll(types, keyword, pageable);
+
+        //total pages
+        log.info("result.getTotalPages= " + result.getTotalPages());
+
+        //pag size
+        log.info("result.getSize= " + result.getSize());
+
+        //pageNumber
+        log.info("result.getNumber= " + result.getNumber());
+
+        //prev next
+        log.info(result.hasPrevious() + ": " + result.hasNext());
+
+        result.getContent().forEach(counseling -> log.info("counseling= " + counseling));
+
+
+    }
+
+    @Test
+    public void 상담학생조인(){
+        Optional<Student> byId = studentRepository.findById(1L);
+        Student student = byId.orElseThrow();
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Counseling> counselingWithStudentName = counselingRepository.getCounselingWithStudentName(student, pageable);
+
+//        log.info("result : {}", counselingWithStudentName);
+
+        //객체를 까본다? 확인해볼 수 있는 방법 => counseling이 studentIdx를 외래키로 가지고 있기 때문에 굳이 조인을 하지 않아도 가지고 올 수 있다. = counseling.getStudent.name
+        List<Counseling> content = counselingWithStudentName.getContent();
+        content.forEach(counseling -> {
+            log.info("counseling : {}", counseling);
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+    @Test
+    public void testSearchAll(){
+
+        String[] types = {"t","c","w"};
+
+        String keyword = "2024-04-02";
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("idx").descending());
+
+        Page<Counseling> result = counselingRepository.searchAll(types, keyword, pageable);
+
+        log.info("result= " + result);
+
+    }
+
+
+
+    @Test
+    public void testPaging(){
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("idx").descending());
+        Page<Counseling> result = counselingRepository.findAll(pageable);
+
+        log.info("total count= " + result.getTotalElements());
+        log.info("total pages= " + result.getTotalPages());
+        log.info("page number= " + result.getSize());
+
+        List<Counseling> todoList = result.getContent();
+
+        todoList.forEach(counseling -> log.info("counseling= " + counseling));
+
+    }
+
 }

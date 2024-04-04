@@ -1,14 +1,13 @@
 package com.ezen.management.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,6 +23,9 @@ public class Counseling extends BaseEntity{
     private Student student;
 
     @Column(nullable = false)
+    private LocalDateTime counselingDate;
+
+    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
@@ -33,8 +35,9 @@ public class Counseling extends BaseEntity{
 //    0은 대면, 1 전화, 2 온라인
     private int method;
 
-    public void changeContent(String content){
+    public void changeContent(String content, int method){
         this.content = content;
+        this.method = method;
     }
 
 }
