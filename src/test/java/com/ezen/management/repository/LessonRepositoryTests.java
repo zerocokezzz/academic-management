@@ -34,6 +34,7 @@ public class LessonRepositoryTests {
         Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
 
+
         log.info("curriculum {}", curriculum);
 
 
@@ -96,6 +97,7 @@ public class LessonRepositoryTests {
 //        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
         List<Lesson> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
 //        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
+
 
 //        log.info("lessons...... " + lessons);
     }

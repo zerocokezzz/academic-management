@@ -17,6 +17,7 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+
     //과목명 -> 변경 X 그냥 새로생성 혹은 삭제
     @Column(nullable = false)
     private String name;
@@ -26,5 +27,6 @@ public class Subject {
     private String method;
 
     public void changeMethod(String method){this.method = method;}
+
 }
 

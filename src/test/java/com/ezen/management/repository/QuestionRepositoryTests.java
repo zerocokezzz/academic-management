@@ -47,6 +47,7 @@ public class QuestionRepositoryTests {
             log.info(question.getNumber() + "");
             log.info(question.getContent());
         });
+
     }
 
     @Test
@@ -70,7 +71,6 @@ public class QuestionRepositoryTests {
         //when
 
         //then
-
 
     }
 }

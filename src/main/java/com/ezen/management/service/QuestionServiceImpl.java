@@ -1,6 +1,7 @@
 package com.ezen.management.service;
 
 import com.ezen.management.domain.Question;
+
 import com.ezen.management.dto.QuestionDTO;
 import com.ezen.management.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class QuestionServiceImpl implements QuestionService{
 
     private final QuestionRepository questionRepository;
+
     private final ModelMapper modelMapper;
 
 
@@ -24,6 +26,7 @@ public class QuestionServiceImpl implements QuestionService{
     public List<Question> findQuestionByName(String questionName) {
         return questionRepository.getQuestionsByName(questionName);
     }
+
 
     @Override
     public List<Question> findAll() {
