@@ -21,7 +21,7 @@
                 <div class="card">
                         <div class="card-header">
                             <h5>상담 목록</h5>
-                            <button type="button" class="btn btn-primary creatBtn" style="text-align: right">추가하기</button>
+                            <button type="button" class="btn btn-primary creatBtn">추가하기</button>
                             <form action="/counseling/list" method="get">
                                 <div class="col">
                                     <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
@@ -64,7 +64,9 @@
                                     <th scope="col">상담 내용</th>
                                     <th scope="col">상담 방식</th>
                                     <th scope="col">담당자</th>
-                                    <th scope="col">상담횟차</th>`
+                                    <th scope="col">상담회차</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
                                 </tr>
                                 </thead>
 <!--counseling이 studentIdx를 foreign key로 가지고 있기 때문에 JPA의 JPQL로 join처리해 불러올 수 있다. -->
