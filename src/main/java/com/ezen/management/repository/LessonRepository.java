@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface LessonRepository extends JpaRepository<Lesson, Integer> , LessonSearch {
+public interface LessonRepository extends JpaRepository<Lesson, Long> , LessonSearch {
 
     @Query("select l from Lesson l where l.curriculum = :curriculum and l.number = :number")
     Optional<Lesson> getByCurriculumAndNumber(Curriculum curriculum, int number);

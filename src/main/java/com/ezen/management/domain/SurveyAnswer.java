@@ -13,9 +13,9 @@ public class SurveyAnswer {//    설문 답변
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Lesson lesson;
 
 //    객관식 답변

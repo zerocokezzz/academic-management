@@ -71,7 +71,7 @@ public class QuestionController {
 
     @GetMapping("/getQuestion")
     @ResponseBody
-    public Question getQuestion(int questionIdx){
+    public Question getQuestion(Long questionIdx){
 
         log.info("questionIdx : {}", questionIdx);
         log.info("question : {}", questionService.findById(questionIdx));
@@ -116,7 +116,7 @@ public class QuestionController {
 
     @PostMapping("/delete")
     @ResponseBody
-    public List<Question> deletePOST(int questionIdx){
+    public List<Question> deletePOST(Long questionIdx){
 
         log.info("questionIdx : {}", questionIdx);
         log.info("question : {}", questionService.findById(questionIdx));

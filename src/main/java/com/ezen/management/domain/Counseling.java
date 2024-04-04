@@ -16,9 +16,9 @@ public class Counseling extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Student student;
 
@@ -34,6 +34,8 @@ public class Counseling extends BaseEntity{
     @Column(nullable = false)
 //    0은 대면, 1 전화, 2 온라인
     private int method;
+
+    private int round;
 
     public void changeContent(String content, int method){
         this.content = content;

@@ -13,9 +13,9 @@ public class HoldSubject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Lesson lesson;
 
     private String name;

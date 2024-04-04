@@ -18,9 +18,9 @@ public interface QuestionAnswerService {
 
     PageResponseDTO<QuestionAnswer> findAll(Lesson lesson, String keyword, PageRequestDTO pageRequestDTO);
 
-    List<QuestionAnswer> findByLesson(int lessonIdx);
+    List<QuestionAnswer> findByLesson(Long lessonIdx);
 
-    QuestionAnswerDTO findById(int questionAnswerIdx);
+    QuestionAnswerDTO findById(Long questionAnswerIdx);
 
 
 }

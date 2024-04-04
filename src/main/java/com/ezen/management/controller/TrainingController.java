@@ -178,7 +178,7 @@ public class TrainingController {
     //수업상세
     //수업유형, 수업과정, 수업세부정보 -> 클릭으로 해당 수업의 학생들까지 ㄱㄱ
     @GetMapping(value = "/lesson/detail")
-    public String lessonDetail(Model model,Integer idx){
+    public String lessonDetail(Model model, Long idx){
         Lesson detail = trainingService.getLessonByIdx(idx);
         model.addAttribute("detail", detail);
 
@@ -221,7 +221,7 @@ public class TrainingController {
     //수업수정
 
     @PostMapping(value = "/lesson/update")
-    public String lessonUpdate(int idx,Long curriculumIdx, String memberId, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content, String questionName){
+    public String lessonUpdate(Long idx, Long curriculumIdx, String memberId, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content, String questionName){
 
         LessonDTO lessonDTO = new LessonDTO();
             lessonDTO.setIdx(idx);
@@ -247,7 +247,7 @@ public class TrainingController {
     //수업삭제
     @ResponseBody
     @DeleteMapping(value = "/lesson/{idx}")
-    public void lessonDelete(@PathVariable int idx){
+    public void lessonDelete(@PathVariable Long idx){
         trainingService.lessonDelete(idx);
     }
 

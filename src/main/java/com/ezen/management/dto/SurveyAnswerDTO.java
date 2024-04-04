@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class SurveyAnswerDTO {
 
     // 설문 답변
-    private int idx;
+    private Long idx;
 
     // 객관식 답변
     private int an1;
