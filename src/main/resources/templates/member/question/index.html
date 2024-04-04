@@ -27,7 +27,7 @@
       <form>
         <div style="max-width: 300px">
             <select class="form-select questionKeywordSelect" name="name">
-              <option selected>분류 선택</option>
+              <option selected value="전체">전체</option>
               <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>
             </select>
         </div>
@@ -59,6 +59,8 @@
 
       </div>
         <!-- <div  th:each="question : ${questions}">  end -->
+
+
 
 
 
@@ -270,6 +272,11 @@
       name : questionKeywordSelect.value
     }
 
+    if(questionKeywordSelect.value === '전체'){
+      location.href = '/member/question';
+      return;
+    }
+
     let htmls = '';
 
     getQuestionList(param).then(result => {
@@ -337,14 +344,15 @@
     getQuestion(paramList).then( result => {
       console.log(result);
       console.log(result.idx);
+      content.value = result.content;
+      item1.value = result.item1;
+      item2.value = result.item2;
+      item3.value = result.item3;
+      item4.value = result.item4;
       number.value = result.number;
       idx.value = result.idx;
       $("select[id=updateQuestionKeyword]").val(result.name).prop("selected", true);
-      content.innerText = result.content;
-      item1.innerText = result.item1;
-      item2.innerText = result.item2;
-      item3.innerText = result.item3;
-      item4.innerText = result.item4;
+
       $("select[id=answer]").val(result.answer).prop("selected", true);
       $("#modifyModal").modal('show');
 
@@ -619,7 +627,6 @@
     let htmls = '';
     deleteQuestion(deleteParams).then(result => {
 
-      //   문제 리스트가 리턴되면 새로운 문제 리스트를 출력하고 모달 초기화한 뒤 모달을 닫음
       for(const question of result){
 
         htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
@@ -656,6 +663,20 @@
   createBtn.addEventListener("click", function() {
     location.href = '/member/question/create';
   })
+
+
+  const url = new URL(window.location.href);
+  const urlSearchParams = url.searchParams;
+  const code = urlSearchParams.get("code");
+
+  switch (code){
+    case 'success' :
+      alert('등록되었습니다.');
+      location.replace("/member/question");
+      break;
+    case 'fail' :
+      alert('등록에 실패하였습니다. 다시 시도해주세요.');
+  }
 
 
 

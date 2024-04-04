@@ -31,9 +31,9 @@
   <div class="content">
     <div th:replace="/layout/basic :: navbar"></div>
 
+      <form action="/member/question/create" method="post">
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
-      <form action="/member/question/create" method="post">
         <h3 style="display: inline-flex">문제 등록</h3>
         <button class="btn btn-primary float-end" style="display: inline-flex" type="submit">등록</button>
         <hr>
@@ -48,21 +48,19 @@
 <!--          <option>프론트 엔드</option>-->
 <!--        </select>-->
 
-        <input class="form-control" name="name" placeholder="분류 입력"/>
-
-        <br>
-        <br>
+<!--        <input class="form-control" name="name" placeholder="분류 입력"/>-->
 
       <div class="questionList">
             <!-- 문제 한개 -->
                   <div class="card">
-                    <div class="card-header">
+                    <div class="card-header" style="display: inline-flex">
                       <input type="hidden" name="number" value="1"/>
-                      1번
+                      <span style="font-weight: bolder; font-size: 14pt; margin-top: 9px; margin-right: 5px"><strong>1. </strong></span>
+                        <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제를 입력하세요." style="border: none; background: transparent; margin-top: 5px"/>
 
                     </div>
                     <div class="card-body">
-                      <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제"/>
+
                         <textarea name="example" class="card-title form-control" id="example" placeholder="보기"></textarea>
 
                     <br>
@@ -99,9 +97,7 @@
       </div> <!-- questionList -->
         <button class="btn btn-danger deleteBtn col-12">삭제</button>
           <br>
-          <br>
-          <br>
-        <button class="btn btn-primary plusBtn col-12"> 추가 </button>
+        <button class="btn btn-primary btn-square plusBtn col-12" style="text-align: center"> + </button>
           <br>
           <br>
           <br>
@@ -112,23 +108,26 @@
 
 
           <!-- 상태 카드 -->
-          <div class="col-5 float-end position-fixed" style="overflow: auto; border: 1px solid lightgray; border-radius: 5px; height: 60%; width: 30%; position: absolute; top: 22%; left: 55%; bottom: 30%; background-color: whitesmoke">
+          <div class="col-5 float-end position-fixed form-control statusBarDiv" style="overflow: auto; border: 1px solid lightgray; border-radius: 5px; height: 600px; width: 30%; left: 55%; position: absolute; background-color: whitesmoke">
+
+              <div>
+                  <input class="" style="margin: 40px 40px 0 40px; width: 85%; border : none; border-bottom: 1px solid lightgray; background-color: transparent; font-size: 15pt" name="name" placeholder="분류를 입력하세요.">
+              </div>
 
               <div class="statusBar" style="margin: 40px">
                   <div style="border: 1px solid lightgray; border-radius: 5px; background-color: white;">
                       <div style="margin: 10px; display: inline-flex">1.</div>
-                      <div style="margin: 10px; display: inline-flex; white-space: nowrap; max-width: 80%; overflow: scroll; text-overflow: ellipsis;" class="statusContent"></div>
+                      <div style="margin: 10px; display: inline-flex; white-space: nowrap; overflow: scroll; text-overflow: ellipsis;" class="statusContent"></div>
                   </div>
+              <button class="btn btn-primary col-6 position-fixed" style="position: absolute; height: 5%; width: 30%; top: 88%; left: 55%; bottom: 30%;" type="submit">등록</button>
               </div>
           </div>
 
-          <button class="btn btn-primary col-6 position-fixed" style="position: absolute; height: 5%; width: 30%; top: 85%; left: 55%; bottom: 30%;" type="submit">등록</button>
           <!-- 상태 카드 끝-->
 
 
 
 
-      </form>
 
 
 
@@ -136,6 +135,7 @@
 
     </div>
     <!-- inner content-->
+      </form>
 
 
   </div>
@@ -157,8 +157,16 @@
 
 <script>
 
+
+    document.addEventListener( "DOMContentLoaded", function () {
+        connectionContent();
+    });
+
+
   const plusBtn = document.querySelector(".plusBtn");
   const questionList = document.querySelector(".questionList");
+
+    const statusBarDiv = document.querySelector(".statusBarDiv");
 
   const scrollToBottom = (element) => element.scrollIntoView({ behavior: "smooth", block: "end" });
 
@@ -182,13 +190,13 @@
                     <br>
                     <br>
                      <div class="card">
-                    <div class="card-header">
+                    <div class="card-header" style="display: inline-flex">
                       <input type="hidden" name="number" value="${i}"/>
-                      ${i}번
+                      <span style="font-weight: bolder; font-size: 14pt; margin-top: 9px; margin-right: 5px"><strong>${i}. </strong></span>
+                        <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제를 입력하세요." style="border: none; background: transparent; margin-top: 5px"/>
 
                     </div>
                     <div class="card-body">
-                      <input name="content" class="card-title form-control questionContent" id="content" placeholder="문제"/>
                         <textarea name="example" class="card-title form-control" id="example" placeholder="보기"></textarea>
 
                     <br>
@@ -213,13 +221,10 @@
 
 
 
-      $(".statusBar").append(`<div style="border: 1px solid lightgray; border-radius: 5px; background-color: white; margin-top: 5px">
+      $(".statusBar").append(`<div style="border: 1px solid lightgray; border-radius: 5px; background-color: white; margin-top: 5px" class="questionStatus">
                       <div style="margin: 10px; display: inline-flex">${i}.</div>
                       <div style="margin: 10px; display: inline-flex; white-space: nowrap; max-width: 80%; overflow: scroll; text-overflow: ellipsis;" class="statusContent"></div>
                   </div>`);
-
-      // scrollToBottom(statusBar);
-      scrollToBottom(document.querySelector("html"));
 
 
         i++;
@@ -233,8 +238,11 @@
       connectionContent();
 
 
-    // deleteBtns = document.querySelectorAll(".deleteBtn");
-    //   deleteAddEvent(deleteBtns);
+
+      statusBarDiv.scrollTop = statusBarDiv.scrollHeight;
+      // 상태바 스크롤 맨 아래로(statusBar);
+      scrollToBottom(document.querySelector("html"));
+
 
   })
 
@@ -256,10 +264,14 @@
 
       // "questionDiv" 클래스를 가진 요소들을 배열로 저장
       const questionDivs = Array.from(document.querySelectorAll('.questionDiv'));
+      statusContentList = Array.from(document.querySelectorAll(".statusContent"));
+      questionStatusList = Array.from(document.querySelectorAll(".questionStatus"));
+
 
       console.log(questionDivs);
       questionDivs[questionDivs.length - 1].remove();
       questionStatusList[questionStatusList.length - 1].remove();
+      // statusContentList[statusContentList.length - 1].remove();
 
 
       console.log('done');
@@ -293,13 +305,14 @@
   function connectionContent(){
     for(let i = 0; i < contentList.length; i++){
       contentList[i].addEventListener("input", function (){
+          console.log("changed!");
           statusContentList[i].innerText = contentList[i].value;
       })
     }
   }
 
 
-  connectionContent();
+
 
 
 

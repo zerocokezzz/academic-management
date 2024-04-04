@@ -1,6 +1,6 @@
 package com.ezen.management.domain;
 
-import com.ezen.management.repository.QuestionKeywordRepository;
+import com.ezen.management.repository.QuestionNameRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import java.util.Optional;
 class QuestionKeywordTest {
 
     @Autowired
-    QuestionKeywordRepository questionKeywordRepository;
+    QuestionNameRepository questionKeywordRepository;
 
     @Test
     public void 문제키워드추가() throws Exception {

@@ -70,4 +70,27 @@ public class QuestionServiceImpl implements QuestionService{
         questionRepository.delete(question);
 
     }
+
+    @Override
+    public void multiSave(List<QuestionDTO> questionDTOList) {
+
+        questionDTOList.forEach(questionDTO -> {
+            Question question = Question.builder()
+                    .name(questionDTO.getName())
+                    .item1(questionDTO.getItem1())
+                    .item2(questionDTO.getItem3())
+                    .item3(questionDTO.getItem3())
+                    .item4(questionDTO.getItem4())
+                    .content(questionDTO.getContent())
+                    .number(questionDTO.getNumber())
+                    .answer(questionDTO.getAnswer())
+                    .fileName(questionDTO.getFileName())
+                    .example(questionDTO.getExample())
+                    .build();
+
+            questionRepository.save(question);
+
+        });
+
+    }
 }
