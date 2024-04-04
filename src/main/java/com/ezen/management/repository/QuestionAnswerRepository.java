@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface QuestionAnswerRepository extends JpaRepository<QuestionAnswer, Integer>, QuestionAnswerSearch {
+public interface QuestionAnswerRepository extends JpaRepository<QuestionAnswer, Long>, QuestionAnswerSearch {
 
     @Query("select qa from QuestionAnswer qa")
     Page<QuestionAnswer> findAll(Pageable pageable);

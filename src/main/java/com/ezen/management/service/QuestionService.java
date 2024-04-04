@@ -15,12 +15,12 @@ public interface QuestionService {
 
     List<Question> findAll();
 
-    Question findById(int questionIdx);
+    Question findById(Long questionIdx);
     int insert(QuestionDTO questionDTO);
 
     int update(QuestionDTO questionDTO);
 
-    void delete(int questionIdx);
+    void delete(Long questionIdx);
 
     void multiSave(List<QuestionDTO> questionDTOList);
 

@@ -171,7 +171,7 @@ public class StudentController {
     @GetMapping("/getStudent")
     @ResponseBody
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'TEACHER')")
-    public Student getStudent(int studentIdx) {
+    public Student getStudent(Long studentIdx) {
 
         return studentService.findById(studentIdx);
 

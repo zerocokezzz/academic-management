@@ -16,14 +16,15 @@ public class Student extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Lesson lesson;
 
     private String name;
     private String birthday;
     private String email;
+    private String phone;
 
     @Builder.Default
     private String fileName = "default_profile.jpg";

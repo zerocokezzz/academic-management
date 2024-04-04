@@ -34,7 +34,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public Question findById(int questionIdx) {
+    public Question findById(Long questionIdx) {
         Optional<Question> byId = questionRepository.findById(questionIdx);
         return byId.get();
     }
@@ -63,7 +63,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public void delete(int questionIdx) {
+    public void delete(Long questionIdx) {
         Optional<Question> byId = questionRepository.findById(questionIdx);
         Question question = byId.orElseThrow();
 

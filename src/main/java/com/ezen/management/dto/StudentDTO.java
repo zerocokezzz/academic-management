@@ -12,9 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class StudentDTO {
 
-    private int idx;
+    private Long idx;
 
-    private int lessonIdx;
+    private Long lessonIdx;
     private String name;
 
 }

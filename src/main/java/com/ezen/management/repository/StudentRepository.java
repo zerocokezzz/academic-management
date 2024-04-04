@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface StudentRepository extends JpaRepository<Student, Integer> {
+public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @EntityGraph(attributePaths = "lesson")
     @Query("select s from Student s where s.lesson = :lesson and s.name = :name")

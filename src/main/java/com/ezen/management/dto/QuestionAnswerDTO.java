@@ -19,7 +19,7 @@ public class QuestionAnswerDTO {
 
 //    private Student student;
 
-    private int studentIdx;
+    private Long studentIdx;
 
 //    ex) 자바 풀스택
     private String name;

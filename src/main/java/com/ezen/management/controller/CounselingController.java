@@ -111,7 +111,7 @@ public class CounselingController {
 
     //삭제하기
     @PostMapping("/delete")
-    public void delete(int idx){
+    public void delete(Long idx){
 
         log.info("counseling delete gogo");
 

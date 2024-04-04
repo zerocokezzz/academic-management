@@ -13,7 +13,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
 //    주제
 //    동일한 주제가 20개 -> 한 수업의 문제가 됨

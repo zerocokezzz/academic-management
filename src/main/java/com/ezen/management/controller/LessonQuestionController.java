@@ -59,7 +59,7 @@ public class LessonQuestionController {
 
 
     @GetMapping("")
-    public String index(Model model, PageRequestDTO pageRequestDTO, @RequestParam(defaultValue = "0") int lessonIdx){
+    public String index(Model model, PageRequestDTO pageRequestDTO, @RequestParam(defaultValue = "0") Long lessonIdx){
 
         Lesson lesson = lessonService.findById(lessonIdx);
 
@@ -84,7 +84,7 @@ public class LessonQuestionController {
 
     @GetMapping("/list")
     @ResponseBody
-    public PageResponseDTO<QuestionAnswer> list(PageRequestDTO pageRequestDTO, @RequestParam(defaultValue = "0") int lessonIdx){
+    public PageResponseDTO<QuestionAnswer> list(PageRequestDTO pageRequestDTO, @RequestParam(defaultValue = "0") Long lessonIdx){
 
 //        PageRequestDTO pageRequestDTO = new PageRequestDTO();
 
@@ -113,7 +113,7 @@ public class LessonQuestionController {
 
     @GetMapping("/getQuestionAnswerAndAnswerList")
     @ResponseBody
-    public Map<String, Object> getQuestionAnswerAndAnswerList(int questionAnswerIdx){
+    public Map<String, Object> getQuestionAnswerAndAnswerList(Long questionAnswerIdx){
 
         log.info("questionAnswerIdx : {} ", questionAnswerIdx);
 
