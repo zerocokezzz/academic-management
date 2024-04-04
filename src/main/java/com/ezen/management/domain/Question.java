@@ -28,7 +28,7 @@ public class Question {
 
     private int number;
 
-    private String answer;
+    private int answer;
 
     private String item1;
     private String item2;
@@ -55,7 +55,7 @@ public class Question {
         this.item4 = item4;
     }
 
-    public void changeAnswer(String answer){
+    public void changeAnswer(int answer){
         this.answer = answer;
     }
 }

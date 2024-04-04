@@ -13,9 +13,24 @@
     <div class="content">
         <div th:replace="/layout/basic :: navbar"></div>
 
-        <div class="inner-content" style="margin: 0 4vw 0 12vh; max-width: 80%">
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%;">
 
-                <h1> content here!</h1>
+            <h3 style="display: inline-flex">수업</h3>
+            <hr>
+            <br>
+            <div style="max-width: 300px">
+                <select class="form-select questionKeywordSelect" name="name">
+                    <option selected>전체</option>
+                    <option value="진행">진행 중</option>
+                    <option value="완료">완료</option>
+                </select>
+            </div>
+
+
+            <br>
+            <br>
+            <h1>수업 목록</h1>
+
 
         </div>
 
