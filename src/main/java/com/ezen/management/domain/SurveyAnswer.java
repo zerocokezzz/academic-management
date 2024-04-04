@@ -1,19 +1,15 @@
 package com.ezen.management.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString(exclude = "lesson")
-public class SurveyAnswer {
-
-//    설문 답변
+public class SurveyAnswer {//    설문 답변
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +18,7 @@ public class SurveyAnswer {
     @ManyToOne
     private Lesson lesson;
 
-//    문항
+//    객관식 답변
     @Column(nullable = false)
     private int an1;
     @Column(nullable = false)

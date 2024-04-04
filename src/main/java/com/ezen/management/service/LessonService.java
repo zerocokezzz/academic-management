@@ -12,4 +12,5 @@ public interface LessonService {
     List<Lesson> findAllGreaterThan(LocalDate day);
 
     Lesson findById(int lessonIdx);
+
 }

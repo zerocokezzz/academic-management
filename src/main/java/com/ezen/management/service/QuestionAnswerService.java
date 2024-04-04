@@ -1,5 +1,6 @@
 package com.ezen.management.service;
 
+
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.QuestionAnswer;
 import com.ezen.management.dto.PageRequestDTO;
@@ -14,12 +15,12 @@ public interface QuestionAnswerService {
 
     int grading(QuestionAnswerDTO questionAnswerDTO);
 
+
     PageResponseDTO<QuestionAnswer> findAll(Lesson lesson, String keyword, PageRequestDTO pageRequestDTO);
 
     List<QuestionAnswer> findByLesson(int lessonIdx);
 
     QuestionAnswerDTO findById(int questionAnswerIdx);
-
 
 
 }

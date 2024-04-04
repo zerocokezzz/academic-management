@@ -3,7 +3,9 @@ package com.ezen.management.dto;
 import com.ezen.management.domain.QuestionAnswer;
 import com.ezen.management.domain.Student;
 import jakarta.persistence.Column;
+
 import lombok.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +73,4 @@ public class QuestionAnswerDTO {
         return testPaper;
 
     }
-
-
 }
