@@ -37,8 +37,8 @@ public class StudentRepositoryTests {
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("공공")
-                .email("gongong@gmail.com")
+                .name("새별")
+                .email("forbyeol@gmail.com")
                 .birthday("000000")
                 .build();
 
@@ -51,7 +51,7 @@ public class StudentRepositoryTests {
     public void 학생선택(){
         
         int lessonIdx = 1;
-        Optional<Lesson> result = lessonRepository.findById(1);
+        Optional<Lesson> result = lessonRepository.findById(1L);
         Lesson lesson = result.orElseThrow();
 
         Optional<Student> byLessonAndName = studentRepository.getByLessonAndName(lesson, "새별");

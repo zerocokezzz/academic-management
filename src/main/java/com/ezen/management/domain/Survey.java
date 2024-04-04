@@ -13,7 +13,7 @@ public class Survey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
 //    설문 번호
     private int number;

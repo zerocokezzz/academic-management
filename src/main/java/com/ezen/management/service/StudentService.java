@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface StudentService {
 
-    Student findByLessonIdxAndName(int lessonIdx, String name);
+    Student findByLessonIdxAndName(Long lessonIdx, String name);
 
-    Student findById(int studentIdx);
+    Student findById(Long studentIdx);
 
 
 }

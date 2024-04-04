@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @ToString
 public class LessonDTO {
 
-    private int idx;
+    private Long idx;
 
     private Long curriculum_idx;
 

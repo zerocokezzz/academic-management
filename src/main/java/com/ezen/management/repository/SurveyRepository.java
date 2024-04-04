@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface SurveyRepository extends JpaRepository<Survey, Integer> {
+public interface SurveyRepository extends JpaRepository<Survey, Long> {
 
     List<Survey> findAllByRound(int round);
 

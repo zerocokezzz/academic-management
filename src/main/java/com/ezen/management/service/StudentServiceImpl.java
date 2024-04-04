@@ -18,7 +18,7 @@ public class StudentServiceImpl implements StudentService{
     private final LessonRepository lessonRepository;
 
     @Override
-    public Student findByLessonIdxAndName(int lessonIdx, String name) {
+    public Student findByLessonIdxAndName(Long lessonIdx, String name) {
         Optional<Lesson> result = lessonRepository.findById(lessonIdx);
         Lesson lesson = result.orElseThrow();
 
@@ -30,7 +30,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public Student findById(int studentIdx) {
+    public Student findById(Long studentIdx) {
         Optional<Student> byId = studentRepository.findById(studentIdx);
 
 //        null 처리 해야함!

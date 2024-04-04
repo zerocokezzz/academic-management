@@ -105,7 +105,7 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
     }
 
     @Override
-    public List<QuestionAnswer> findByLesson(int lessonIdx) {
+    public List<QuestionAnswer> findByLesson(Long lessonIdx) {
         Optional<Lesson> byId = lessonRepository.findById(lessonIdx);
         Lesson lesson = byId.orElseThrow();
 
@@ -114,7 +114,7 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
     }
 
     @Override
-    public QuestionAnswerDTO findById(int questionAnswerIdx) {
+    public QuestionAnswerDTO findById(Long questionAnswerIdx) {
         Optional<QuestionAnswer> byId = questionAnswerRepository.findById(questionAnswerIdx);
         QuestionAnswer questionAnswer = byId.orElseThrow();
 

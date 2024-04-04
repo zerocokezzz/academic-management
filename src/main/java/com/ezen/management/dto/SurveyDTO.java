@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class SurveyDTO {
 
     //PK
-    private int idx;
+    private Long idx;
 
     //보기(1~7 만족도?)
     private String item1;

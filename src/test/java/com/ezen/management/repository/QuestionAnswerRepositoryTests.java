@@ -32,7 +32,7 @@ public class QuestionAnswerRepositoryTests {
     @Test
     public void 사전조사등록(){
 
-        Optional<Lesson> byId = lessonRepository.findById(1);
+        Optional<Lesson> byId = lessonRepository.findById(1L);
         Lesson lesson = byId.orElseThrow();
 
         log.info("lesson...... " + lesson);
@@ -72,12 +72,12 @@ public class QuestionAnswerRepositoryTests {
     @Test
     public void 채점(){
 
-        Optional<Lesson> byId = lessonRepository.findById(1);
+        Optional<Lesson> byId = lessonRepository.findById(1L);
         Lesson lesson = byId.orElseThrow();
         Optional<Student> byLessonAndName = studentRepository.getByLessonAndName(lesson, "새별");
         Student student = byLessonAndName.orElseThrow();
 
-        Optional<QuestionAnswer> byId1 = questionAnswerRepository.findById(1);
+        Optional<QuestionAnswer> byId1 = questionAnswerRepository.findById(1L);
         QuestionAnswer questionAnswer = byId1.orElseThrow();
 
         List<String> answerList = new ArrayList<>();
@@ -121,7 +121,7 @@ public class QuestionAnswerRepositoryTests {
     public void 전체목록() throws Exception {
         //given
 
-        Optional<Lesson> byId = lessonRepository.findById(1);
+        Optional<Lesson> byId = lessonRepository.findById(1L);
         Lesson lesson = byId.orElseThrow();
         Pageable pageable = PageRequest.of(0, 10);
 //        Page<QuestionAnswer> all = questionAnswerRepository.findAll(pageable);
@@ -143,7 +143,7 @@ public class QuestionAnswerRepositoryTests {
     public void 레슨인덱스학생이름으로검색() throws Exception {
         //given
 
-        Optional<Lesson> byId = lessonRepository.findById(1);
+        Optional<Lesson> byId = lessonRepository.findById(1L);
         Lesson lesson = byId.orElseThrow();
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -165,7 +165,7 @@ public class QuestionAnswerRepositoryTests {
     @Test
     public void 레슨으로조회() throws Exception {
 
-        Optional<Lesson> byId = lessonRepository.findById(1);
+        Optional<Lesson> byId = lessonRepository.findById(1L);
         Lesson lesson = byId.orElseThrow();
 
         log.info("lesson : {}", lesson);

@@ -15,9 +15,9 @@ public class Lesson extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Curriculum curriculum;
 
@@ -25,7 +25,7 @@ public class Lesson extends BaseEntity{
     private String content;
 
     //교사
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     //기수

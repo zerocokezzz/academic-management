@@ -43,7 +43,7 @@ public class LessonRepositoryTests {
         Lesson lesson = Lesson.builder()
                 .curriculum(curriculum)
                 .member(member)
-                .number(2)
+                .number(1)
                 .questionName("자바 풀스택")
                 .startDay(start)
                 .endDay(start.plusDays(curriculum.getDay()))

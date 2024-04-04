@@ -17,7 +17,7 @@ public class Curriculum {
 
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
     private int time;

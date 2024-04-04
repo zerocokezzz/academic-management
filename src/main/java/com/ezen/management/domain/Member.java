@@ -36,6 +36,7 @@ public class Member extends BaseEntity{
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private Set<MemberRole> roleSet = new HashSet<>();
 
     public void addRole(MemberRole memberRole){

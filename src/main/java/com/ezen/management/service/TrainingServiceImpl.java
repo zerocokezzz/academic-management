@@ -222,7 +222,7 @@ public class TrainingServiceImpl implements TrainingService{
 
     //수업 상세
     @Override
-    public Lesson getLessonByIdx(Integer idx){
+    public Lesson getLessonByIdx(Long idx){
 
         Optional<Lesson> lesson = lessonRepository.findById(idx);
 
@@ -259,5 +259,5 @@ public class TrainingServiceImpl implements TrainingService{
 
     //수업 삭제
     @Override
-    public void lessonDelete(int idx) { lessonRepository.deleteById(idx);}
+    public void lessonDelete(Long idx) { lessonRepository.deleteById(idx);}
 }

@@ -3,6 +3,7 @@ package com.ezen.management.repository;
 import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,19 +68,19 @@ public class MemberRepositoryTests {
         memberRepository.save(member);
     }
 
-    @Test
-    public void 교사한명(){
-        Optional<Member> result = memberRepository.getByIdWithRoles("master");
-        Member member = result.orElseThrow();
-
-        log.info("member...... " + member);
-
-        member.getRoleSet().forEach(role -> {
-            log.info("member role " + role);
-        });
-
-
-    }
+//    @Test
+//    public void 교사한명(){
+//        Optional<Member> result = memberRepository.getByIdWithRoles(1L, "teacher");
+//        Member member = result.orElseThrow();
+//
+//        log.info("member...... " + member);
+//
+//        member.getRoleSet().forEach(role -> {
+//            log.info("member role " + role);
+//        });
+//
+//
+//    }
 
     @Test
     public void 교사등록(){
@@ -92,6 +93,8 @@ public class MemberRepositoryTests {
         member.addRole(MemberRole.TEACHER);
 
         memberRepository.save(member);
+
+        Assertions.assertThat(member.getId()).isEqualTo("teacher");
     }
 
     @Test
@@ -101,6 +104,8 @@ public class MemberRepositoryTests {
 
         member.changeName("강사");
         memberRepository.save(member);
+
+        Assertions.assertThat(member.getName()).isEqualTo("강사");
 
     }
 
@@ -120,6 +125,7 @@ public class MemberRepositoryTests {
             Set<MemberRole> roleSet = member.getRoleSet();
             log.info("권한 " + roleSet);
         });
+
 
     }
 

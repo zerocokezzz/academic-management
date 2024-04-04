@@ -31,7 +31,7 @@ public class LessonServiceImpl implements LessonService{
 
 
     @Override
-    public Lesson findById(int lessonIdx) {
+    public Lesson findById(Long lessonIdx) {
         Optional<Lesson> byId = lessonRepository.findById(lessonIdx);
 
         return byId.orElse(null);

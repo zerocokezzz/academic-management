@@ -93,7 +93,7 @@ public interface TrainingService {
     public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO);
 
     //수업 상세
-    public Lesson getLessonByIdx(Integer idx);
+    public Lesson getLessonByIdx(Long idx);
 
     //수업 등록
     public void lessonInsert(LessonDTO lessonDTO);
@@ -102,7 +102,7 @@ public interface TrainingService {
     public void lessonUpdate(LessonDTO lessonDTO);
 
     //수업 삭제
-    public void lessonDelete(int idx);
+    public void lessonDelete(Long idx);
 
     default Lesson lessonDtoToEntity(LessonDTO lessonDTO, Curriculum curriculum, Member member){
 
