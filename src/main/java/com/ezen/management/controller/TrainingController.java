@@ -5,6 +5,8 @@ import com.ezen.management.dto.*;
 import com.ezen.management.repository.CurriculumRepository;
 import com.ezen.management.repository.MemberRepository;
 import com.ezen.management.service.MemberService;
+import com.ezen.management.service.QuestionNameService;
+import com.ezen.management.service.QuestionNameServiceImpl;
 import com.ezen.management.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class TrainingController {
 
     private final TrainingService trainingService;
     private final MemberService memberService;
+    private final QuestionNameService questionNameService;
 
     private final CurriculumRepository curriculumRepository;
     private final MemberRepository memberRepository;
@@ -166,19 +169,26 @@ public class TrainingController {
         List<Member> member = responseMember.getDtoList();
         model.addAttribute("member", member);
 
-        log.info("Controller responseDTO : " + responseDTO);
-        log.info("Controller curriculum : " + curriculum);
+        List<QuestionName> questionName = questionNameService.findAll();
+        model.addAttribute("questionName", questionName);
 
         return "training/lesson/index";
     }
 
     //수업상세
     //수업유형, 수업과정, 수업세부정보 -> 클릭으로 해당 수업의 학생들까지 ㄱㄱ
+    @GetMapping(value = "/lesson/detail")
+    public String lessonDetail(Model model,Integer idx){
+        Lesson detail = trainingService.getLessonByIdx(idx);
+        model.addAttribute("detail", detail);
+
+        return "training/lesson/index";
+    }
 
 
     //수업추가
     @PostMapping(value = "/lesson/insert")
-    public String lessonInsert(Long curriculum_idx, String member_id, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content){
+    public String lessonInsert(Long curriculum_idx, String member_id, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content, String questionName){
 
         Optional<Curriculum> curriculumResult = curriculumRepository.findById(curriculum_idx);
         Curriculum curriculum = curriculumResult.orElseThrow();
@@ -201,6 +211,7 @@ public class TrainingController {
             lessonDTO.setSurvey3(survey3);
             lessonDTO.setClassRoom(classRoom);
             lessonDTO.setContent(content);
+            lessonDTO.setQuestionName(questionName);
 
         trainingService.lessonInsert(lessonDTO);
 
@@ -209,6 +220,35 @@ public class TrainingController {
 
     //수업수정
 
+    @PostMapping(value = "/lesson/update")
+    public String lessonUpdate(int idx,Long curriculumIdx, String memberId, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content, String questionName){
+
+        LessonDTO lessonDTO = new LessonDTO();
+            lessonDTO.setIdx(idx);
+            lessonDTO.setCurriculum_idx(curriculumIdx);
+            lessonDTO.setMember_id(memberId);
+            lessonDTO.setClassRoom(classRoom);
+            lessonDTO.setNumber(number);
+            lessonDTO.setStartDay(startDay);
+            lessonDTO.setEndDay(endDay);
+            lessonDTO.setSurvey1(survey1);
+            lessonDTO.setSurvey2(survey2);
+            lessonDTO.setSurvey3(survey3);
+            lessonDTO.setContent(content);
+            lessonDTO.setQuestionName(questionName);
+
+            trainingService.lessonUpdate(lessonDTO);
+
+            log.info("Controller : " + lessonDTO);
+
+        return "redirect:/training/lesson";
+    }
+
     //수업삭제
+    @ResponseBody
+    @DeleteMapping(value = "/lesson/{idx}")
+    public void lessonDelete(@PathVariable int idx){
+        trainingService.lessonDelete(idx);
+    }
 
 }
