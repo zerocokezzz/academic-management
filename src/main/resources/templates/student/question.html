@@ -3,6 +3,14 @@
       xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/layout/student/basic :: head"></head>
 
+<style>
+
+    *{
+        max-height: max-content;
+        overflow: visible;
+    }
+</style>
+
 <body>
 <!-- warpper start -->
 <div class="wrapper">
@@ -13,6 +21,7 @@
     <!-- content start -->
     <div class="content">
         <br>
+
         <br>
         <br>
         <div class="inner-content" style="margin: 0 4vw 0 12vh; max-width: 80%">
@@ -26,6 +35,7 @@
             </div>
 
             <br>
+
             <hr>
             <br>
 
@@ -36,6 +46,7 @@
                 <br>
 
                 <div th:each="question : ${questions}" style="margin: 10px;" class="col-md-6">
+
 
                     <input th:if="${question.number == 1}"
                            type="hidden"

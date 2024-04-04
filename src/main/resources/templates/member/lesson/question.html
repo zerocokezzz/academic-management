@@ -4,6 +4,14 @@
 <head th:replace="/layout/basic :: head">
 
 </head>
+
+<style>
+    img {
+        max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 너비 설정 */
+        max-height: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 높이 설정 */
+    }
+
+</style>
 <body>
 <!-- warpper start -->
 <div class="wrapper">
@@ -124,79 +132,125 @@
                     <div class="modal-body">
 
                         <!-- 학생 정보 -->
-                        <div class="studentInfo">
+                        <div class="studentInfo" style="display: inline-flex; margin-top: 40px; margin-left: 10%">
+
+                            <div style=" border: 1px solid lightgray; margin-right: 50px">
+                                <img src="" style="width: 150px; height: 200px; margin: 10px;">
+                            </div>
+                            <table class="table table-borderless" style="width: 800px; flex-wrap: wrap">
+
+                                <tr>
+                                    <td>이름</td>
+                                    <td colspan="2">이름임</td>
+                                    <td rowspan="5"><div style="margin: 60px 0 60px 0; font-size: 20pt; display: inline-flex">70점/</div><p style="display: inline-flex">100점</p></td>
+                                </tr>
+                                <tr>
+                                    <td>생년월일</td>
+                                    <td colspan="2">960123</td>
+                                </tr>
+                                <tr>
+                                    <td>연락처</td>
+                                    <td colspan="2">010-0000-0000</td>
+                                </tr>
+                                <tr>
+                                    <td>이메일</td>
+                                    <td colspan="2">byeol@gmail.com</td>
+                                </tr>
+                                <tr>
+                                    <td>과정</td>
+                                    <td colspan="2"><div style="max-width: 300px; overflow: scroll">과정이름과정이름과정이름과정이름과정이름과정이름과정이름</div></td>
+                                </tr>
+
+                            </table>
+
+
 
                         </div>
 
+
+                        <br>
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
 
                         <!-- 문제 리스트 -->
-                        <div class="questionAnswerPaper" style="margin: 20px; display: inline-flex; max-width: 100%">
+                        <div class="questionAnswerPaper" style="margin: 20px; ">
 
-                        <!-- 문제 하나 -->
-                            <div class="col-5">
+<!--                        &lt;!&ndash; 문제 하나 &ndash;&gt;-->
+<!--                            <img src="/images/correct.png"-->
+<!--                                 style=" position: absolute; max-width: 130px;">-->
+<!--                            <div class="col-lg-5" style="margin : 40px; display: inline-flex;">-->
 
-                                <input type="hidden" name="name"/>
-                                <strong>1. 문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제</strong>
-                                <br>
+<!--                                <div>-->
+<!--                                    <input type="hidden" name="name"/>-->
+<!--                                    <strong>1. 문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제</strong>-->
+<!--                                    <br><br>-->
 
-                                <!--                    예 -->
-                                <div style="border: 1px solid #2a2d34; border-radius: 5px; max-width: 270px; margin: 30px">
-                                    보기
-                                    <div style="margin: 10px">보기보기보기보기</div>
-                                </div>
+<!--                                    &lt;!&ndash;                    예 &ndash;&gt;-->
+<!--                                    <div style="border: 1px solid #2a2d34; border-radius: 5px; max-width: 90%; margin: 30px">-->
+<!--                                        <div style="margin: 10px;">보기보기보기보기보기보기보기보기보기보기보기보기보기보기보기보기</div>-->
+<!--                                    </div>-->
 
-                                <!--                    사진 -->
-    <!--                            <div>-->
-    <!--                                <img src="" style="max-width: 270px; margin: 30px">-->
-    <!--                            </div>-->
+<!--                                    &lt;!&ndash;                    사진 &ndash;&gt;-->
+<!--        &lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--        &lt;!&ndash;                                <img src="" style="max-width: 270px; margin: 30px">&ndash;&gt;-->
+<!--        &lt;!&ndash;                            </div>&ndash;&gt;-->
 
-                                <!--                    문항 -->
-                                <div>
-                                    <div>① 문항1문항1문항1문항1</div><br>
-                                    <div>② 문항2문항2문항2문항2</div><br>
-                                    <div>③ 문항3문항3문항3문항3</div><br>
-                                    <div>④ 문항4문항4문항4문항4</div><br>
-                                </div>
+<!--                                    &lt;!&ndash;                    문항 &ndash;&gt;-->
 
 
-                            </div>
-                        <!-- 문제 하나  끝-->
+<!--                                    <div>-->
+<!--                                        <div>① 문항1문항1문항1문항1</div><br>-->
+<!--                                        <div>② 문항2문항2문항2문항2</div><br>-->
+<!--                                        <div>③ 문항3문항3문항3문항3</div><br>-->
+<!--                                        <div>④ 문항4문항4문항4문항4</div><br>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 
 
-
-                            <!-- 문제 하나 -->
-                            <div class="col-5">
-
-                                <input type="hidden" name="name"/>
-                                <strong>1. 문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제</strong>
-                                <br>
-
-                                <!--                    예 -->
-                                <div style="border: 1px solid #2a2d34; border-radius: 5px; max-width: 270px; margin: 30px">
-                                    보기
-                                    <div style="margin: 10px">보기보기보기보기</div>
-                                </div>
-
-                                <!--                    사진 -->
-                                <!--                            <div>-->
-                                <!--                                <img src="" style="max-width: 270px; margin: 30px">-->
-                                <!--                            </div>-->
-
-                                <!--                    문항 -->
-                                <div>
-                                    <div>① 문항1문항1문항1문항1문항1문항1문항1문항1문항1문항1문항1문항1</div><br>
-                                    <div>② 문항2문항2문항2문항2문항2문항2문항2문항2</div><br>
-                                    <div>③ 문항3문항3문항3문항3</div><br>
-                                    <div>④ 문항4문항4문항4문항4</div><br>
-                                </div>
+<!--                            </div>-->
+<!--                        &lt;!&ndash; 문제 하나  끝&ndash;&gt;-->
 
 
-                            </div>
-                            <!-- 문제 하나  끝-->
+<!--                            &lt;!&ndash; 문제 하나 &ndash;&gt;-->
+<!--                            <img src="/images/wrong.png"-->
+<!--                                 style=" position: absolute; max-width: 80px;">-->
+<!--                            <div class="col-lg-5" style="margin : 40px; display: inline-flex;">-->
 
+<!--                                <div>-->
+<!--                                    <input type="hidden" name="name"/>-->
+<!--                                    <strong>1. 문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제문제</strong>-->
+<!--                                    <br><br>-->
+
+<!--                                    &lt;!&ndash;                    예 &ndash;&gt;-->
+<!--                                    <div style="border: 1px solid #2a2d34; border-radius: 5px; max-width: 90%; margin: 30px">-->
+<!--                                        <div style="margin: 10px;">보기보기보기보기보기보기보기보기보기보기보기보기보기보기보기보기</div>-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash;                    사진 &ndash;&gt;-->
+<!--                                    &lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                                <img src="" style="max-width: 270px; margin: 30px">&ndash;&gt;-->
+<!--                                    &lt;!&ndash;                            </div>&ndash;&gt;-->
+
+<!--                                    &lt;!&ndash;                    문항 &ndash;&gt;-->
+
+
+<!--                                    <div>-->
+<!--                                        <div>① 문항1문항1문항1문항1</div><br>-->
+<!--                                        <div>② 문항2문항2문항2문항2</div><br>-->
+<!--                                        <div>③ 문항3문항3문항3문항3</div><br>-->
+<!--                                        <div>④ 문항4문항4문항4문항4</div><br>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+
+<!--                            </div>-->
+<!--                            &lt;!&ndash; 문제 하나  끝&ndash;&gt;-->
 
 
                         </div>
+                        <!-- 문제 리스트 끝 -->
 
 
                     </div>
@@ -322,9 +376,17 @@
 
         let htmls = '';
         let htmls2 = '';
+
         getQuestionAnswerList(params).then(result => {
             console.log(result);
             console.log(result.dtoList);
+
+            if(result.dtoList === null){
+                htmls = `<p>검색 결과가 없습니다.</p>`;
+                questionAnswerList.innerHTML = htmls;
+                pageDiv.style.display = 'none';
+                return;
+            }
 
             for(const questionAnswer of result.dtoList){
 
@@ -342,34 +404,6 @@
                         </a>
                         <hr>`;
             }
-
-
-            if(result.dtoList.length === 0){
-                htmls = `<p>검색 결과가 없습니다.</p>`;
-            }
-
-
-            // 페이지 (미완) 4/2
-            // htmls2 +=  `<ul class="pagination flex-wrap">`;
-            // if(result.prev){
-            //     htmls2 += `<li class="page-item" >
-            //                     <a class="page-link" data-num="${result.start -1}">이전</a>
-            //                 </li>`;
-            // }
-            //
-            // for(let i = result.start; i <= result.end; i++){
-            //     htmls2 += result.page === i ?  `<li class="page-item active">` : `<li class="page-item">`;
-            //     htmls2 += `<a class="page-link" data-num="${i}" >${i}</a>
-            //               </li>`;
-            // }
-            //
-            // if(result.next){
-            //     htmls2 += `<li class="page-item">
-            //                 <a class="page-link" data-num="${result.end + 1}">다음</a>
-            //                 </li>`;
-            // }
-            //
-            // pageDiv.innerHTML = htmls2;
 
             questionAnswerList.innerHTML = htmls;
             pageDiv.style.display = 'none';
@@ -431,17 +465,70 @@
         }
 
         // 학생 정보
-        getStudent(studentParam).then(result => {
-            console.log(result);
-
-        }).catch( e => {
-
-        })
+        // getStudent(studentParam).then(result => {
+        //     console.log(result);
+        //
+        // }).catch( e => {
+        //
+        // })
 
 
         // 답안지
         getQuestionAnswer(questionAnswerParam).then(result => {
             console.log(result);
+            console.log('questionAnswer!')
+            console.log(result.questionAnswer);
+            console.log(result.answerList);
+            console.log(result.questionAnswer[0]);
+            console.log('1. answer : ' + result.answerList[0].answer.toString());
+            console.log(result.answerList[0].answer.toString() === result.questionAnswer[0]);
+
+            let htmls = '';
+
+            for(let i = 0; i < 20; i++){
+                // $(".questionAnswerPaper").append()
+
+                htmls += `<div style="display: inline-flex; width: 500px; flex-wrap: nowrap">
+
+                        ${(result.questionAnswer[i]) === (result.answerList[i].answer.toString()) ?
+                        `<img src="/images/correct.png" style=" width: 120px; position: absolute;">` :
+                        `<img src="/images/wrong.png" style="width: 70px; position: absolute;">`}
+
+                        <div style="margin : 40px;  overflow: scroll;">
+
+                            <div>
+                                <div><strong>${result.answerList[i].number}. ${result.answerList[i].content}</strong></div>
+                                <br><br>
+
+                        ${result.answerList[i].example !== null ? `<div style="border: 1px solid #2a2d34; border-radius: 5px; margin: 0 0 30px 30px">
+                                      <div style="margin: 10px;">${result.answerList[i].example}</div>
+                                      </div>` : ``}
+
+                        ${result.answerList[i].fileName !== null ? `<div>
+                                        <img src="/images/question/${result.answerList[i].fileName}" style="max-width: 270px; margin: 0 0 30px 30px">
+                                    </div>` : ``}
+
+                                    <!--                    문항 -->
+                                    <div>
+                                    ${result.answerList[i].answer === 1 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '1' ? '❶' : '①'}  ${result.answerList[i].item1}</div><br>
+                                    ${result.answerList[i].answer === 2 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '2' ? '❷' : '②'} ${result.answerList[i].item2}</div><br>
+                                    ${result.answerList[i].answer === 3 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '3' ? '❸' : '③'} ${result.answerList[i].item3}</div><br>
+                                    ${result.answerList[i].answer === 4 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '4' ? '❹' : '④'} ${result.answerList[i].item4}</div><br>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            </div>
+                        <!-- 문제 하나  끝-->`;
+
+                questionAnswerPaper.innerHTML = htmls;
+
+            }
 
         }).catch( e => {
             console.log(e);
@@ -454,17 +541,22 @@
 
     async function getQuestionAnswer(paramList){
         const response = await axios.get('/member/lesson/question/getQuestionAnswerAndAnswerList', {params: paramList});
-        console.log(response.data);
-
         return response.data;
     }
 
-    async function getStudent(paramList){
-        const response = await axios.get('/student/getStudent', {param : paramList});
-        console.log(response);
+    // async function getStudent(paramList){
+    //     const response = await axios.get('/student/getStudent', {param : paramList});
+    //     console.log(response);
+    //
+    //     return response.data;
+    // }
 
-        return response.data;
+
+    const 몰 = {
+        루 : "??"
     }
+
+    console.log(몰?.루);
 
 </script>
 

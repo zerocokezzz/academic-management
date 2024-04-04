@@ -1,6 +1,7 @@
 package com.ezen.management.service;
 
 import com.ezen.management.domain.Question;
+
 import com.ezen.management.dto.QuestionDTO;
 import com.ezen.management.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class QuestionServiceImpl implements QuestionService{
 
     private final QuestionRepository questionRepository;
+
     private final ModelMapper modelMapper;
 
 
@@ -24,6 +26,7 @@ public class QuestionServiceImpl implements QuestionService{
     public List<Question> findQuestionByName(String questionName) {
         return questionRepository.getQuestionsByName(questionName);
     }
+
 
     @Override
     public List<Question> findAll() {
@@ -65,6 +68,29 @@ public class QuestionServiceImpl implements QuestionService{
         Question question = byId.orElseThrow();
 
         questionRepository.delete(question);
+
+    }
+
+    @Override
+    public void multiSave(List<QuestionDTO> questionDTOList) {
+
+        questionDTOList.forEach(questionDTO -> {
+            Question question = Question.builder()
+                    .name(questionDTO.getName())
+                    .item1(questionDTO.getItem1())
+                    .item2(questionDTO.getItem3())
+                    .item3(questionDTO.getItem3())
+                    .item4(questionDTO.getItem4())
+                    .content(questionDTO.getContent())
+                    .number(questionDTO.getNumber())
+                    .answer(questionDTO.getAnswer())
+                    .fileName(questionDTO.getFileName())
+                    .example(questionDTO.getExample())
+                    .build();
+
+            questionRepository.save(question);
+
+        });
 
     }
 }

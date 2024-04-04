@@ -63,9 +63,6 @@ public class Lesson extends BaseEntity{
         this.classRoom = classRoom;
     }
 
-
-    public void changeCurriculum(Curriculum curriculum){this.curriculum = curriculum;}
-
     public void changeQuestionName(String questionName){
         this.questionName = questionName;
     }
@@ -73,6 +70,10 @@ public class Lesson extends BaseEntity{
     public void headCountUp(){
         this.headCount++;
     }
+
+
+    public void changeCurriculum(Curriculum curriculum){this.curriculum = curriculum;}
+
 
     public void changeContent(String content){
         this.content = content;

@@ -37,7 +37,7 @@ public class CounselingRepositoryTests {
         log.info("curriculum...... " + curriculum);
 
 //        과정, 회차로 수업 찾아옴
-        Optional<Lesson> byCurriculumAndNumber = lessonRepository.getByCurriculumAndNumber(curriculum, 1);
+        Optional<Lesson> byCurriculumAndNumber = lessonRepository.findById(1);
         Lesson lesson = byCurriculumAndNumber.orElseThrow();
 
         log.info("lesson...... " + lesson);

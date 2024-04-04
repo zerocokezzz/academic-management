@@ -151,38 +151,33 @@ public class QuestionController {
         log.info("number : {}", number);
         log.info("content : {}", content);
         log.info("answer : {}", answer);
-//
-//        List<QuestionDTO> questionDTOList = new ArrayList<>();
-//
-//        for(int i = 0; i < content.size(); i++){
-//            QuestionDTO questionDTO = QuestionDTO.builder()
-//                    .name(name)
-//                    .number(number.get(i))
-//                    .content(content.get(i))
-//                    .item1(item1.get(i))
-//                    .item2(item2.get(i))
-//                    .item3(item3.get(i))
-//                    .item4(item4.get(i))
-//                    .answer(answer.get(i))
-//                    .build();
-//
-//            if(example != null && example.get(i) != null){
-//                questionDTO.setExample(example.get(i));
-//            }
-//
-//            questionDTOList.add(questionDTO);
-//        }
-//
-//        questionDTOList.forEach(questionDTO -> {
-//            log.info("questionDTO : {}", questionDTO);
-//        });
 
-//
-//        questionBlockDTO.getQuestionDTOList().forEach(questionDTO -> {
-//            log.info("questionDTO : {}", questionDTO);
-//        });
+        questionNameService.save(name);
 
-        return null;
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+
+        for(int i = 0; i < content.size(); i++){
+            QuestionDTO questionDTO = QuestionDTO.builder()
+                    .name(name)
+                    .number(number.get(i))
+                    .content(content.get(i))
+                    .item1(item1.get(i))
+                    .item2(item2.get(i))
+                    .item3(item3.get(i))
+                    .item4(item4.get(i))
+                    .answer(answer.get(i))
+                    .build();
+
+            if(example != null && example.get(i) != null){
+                questionDTO.setExample(example.get(i));
+            }
+
+            questionDTOList.add(questionDTO);
+        }
+
+        questionService.multiSave(questionDTOList);
+
+        return "redirect:/member/question?code=success";
     }
 
 

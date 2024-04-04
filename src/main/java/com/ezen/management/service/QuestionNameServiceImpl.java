@@ -1,7 +1,7 @@
 package com.ezen.management.service;
 
 import com.ezen.management.domain.QuestionName;
-import com.ezen.management.repository.QuestionKeywordRepository;
+import com.ezen.management.repository.QuestionNameRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -14,10 +14,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionNameServiceImpl implements QuestionNameService {
 
-    private final QuestionKeywordRepository questionKeywordRepository;
+    private final QuestionNameRepository questionNameRepository;
     @Override
     public List<QuestionName> findAll() {
-        return questionKeywordRepository.findAll(Sort.by("name"));
+        return questionNameRepository.findAll(Sort.by("name"));
+    }
+
+    @Override
+    public void save(String name) {
+
+        QuestionName questionName = new QuestionName();
+        questionName.changeName(name);
+
+        questionNameRepository.save(questionName);
     }
 
 }
