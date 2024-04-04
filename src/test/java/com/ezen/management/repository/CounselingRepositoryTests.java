@@ -31,13 +31,13 @@ public class CounselingRepositoryTests {
     public void 상담추가(){
 
 //        과정 고유 이름으로 과정 찾아옴
-        Optional<Curriculum> findCurriculumById = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정");
+        Optional<Curriculum> findCurriculumById = curriculumRepository.findById(1L);
         Curriculum curriculum = findCurriculumById.orElseThrow();
 
         log.info("curriculum...... " + curriculum);
 
 //        과정, 회차로 수업 찾아옴
-        Optional<Lesson> byCurriculumAndNumber = lessonRepository.getByCurriculumAndNumber(curriculum, 1);
+        Optional<Lesson> byCurriculumAndNumber = lessonRepository.findById(1);
         Lesson lesson = byCurriculumAndNumber.orElseThrow();
 
         log.info("lesson...... " + lesson);

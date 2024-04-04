@@ -31,7 +31,7 @@ public class LessonRepositoryTests {
         Optional<Member> memberResult = memberRepository.getByIdWithRoles("teacher");
         Member member = memberResult.orElseThrow();
 
-        Optional<Curriculum> curriculumResult = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정");
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
 
         LocalDate start = LocalDate.of(2024, 9, 27);
@@ -55,7 +55,7 @@ public class LessonRepositoryTests {
     @Test
     public void getByCurriculumNameAndNumber(){
 
-        Optional<Curriculum> curriculumResult = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정 ");
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
         int number = 1;
 

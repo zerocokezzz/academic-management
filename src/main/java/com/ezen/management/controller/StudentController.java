@@ -27,7 +27,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/student")
 @RequiredArgsConstructor
-public class QuestionController {
+public class StudentController {
 
     private final StudentService studentService;
     private final LessonService lessonService;
@@ -139,7 +139,5 @@ public class QuestionController {
         return null;
 
     }
-
-
 
 }
