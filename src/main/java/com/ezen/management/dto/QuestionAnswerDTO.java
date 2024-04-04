@@ -3,12 +3,18 @@ package com.ezen.management.dto;
 import com.ezen.management.domain.QuestionAnswer;
 import com.ezen.management.domain.Student;
 import jakarta.persistence.Column;
-import lombok.Data;
+
+import lombok.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuestionAnswerDTO {
 
 //    private Student student;
@@ -39,6 +45,7 @@ public class QuestionAnswerDTO {
     private String an19;
     private String an20;
 
+//    private List<String> testPaper = new ArrayList<>();
 
     public List<String> getTestPaper(){
         List<String> testPaper = new ArrayList<>();
@@ -66,7 +73,4 @@ public class QuestionAnswerDTO {
         return testPaper;
 
     }
-
-
-
 }

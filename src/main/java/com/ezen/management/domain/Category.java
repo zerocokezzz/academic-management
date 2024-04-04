@@ -19,4 +19,6 @@ public class Category {
 
     // 유형 수정
     public void changeName(String putname){ this.name = putname; }
+
 }
+

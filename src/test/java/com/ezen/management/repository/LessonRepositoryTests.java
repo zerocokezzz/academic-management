@@ -34,12 +34,17 @@ public class LessonRepositoryTests {
         Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
 
+
+        log.info("curriculum {}", curriculum);
+
+
         LocalDate start = LocalDate.of(2024, 9, 27);
 
         Lesson lesson = Lesson.builder()
                 .curriculum(curriculum)
                 .member(member)
                 .number(2)
+                .questionName("자바 풀스택")
                 .startDay(start)
                 .endDay(start.plusDays(curriculum.getDay()))
                 .survey1(start.plusMonths(1))
@@ -56,6 +61,7 @@ public class LessonRepositoryTests {
     public void getByCurriculumNameAndNumber(){
 
         Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
+
         Curriculum curriculum = curriculumResult.orElseThrow();
         int number = 1;
 
@@ -91,6 +97,7 @@ public class LessonRepositoryTests {
 //        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
         List<Lesson> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
 //        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
+
 
 //        log.info("lessons...... " + lessons);
     }

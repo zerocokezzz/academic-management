@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+  <div th:replace="/layout/basic :: sidebar">
+
+  </div>
+
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
+
+    <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+
+      <h3 style="display: inline-flex">사전 평가 문제 리스트</h3>
+      <div class="float-end">
+      <button style="display: inline-flex" class="btn btn-primary insertBtn"> 문제 추가 </button>
+      <button style="display: inline-flex" class="btn btn-primary createBtn"> 새 문제 등록 </button>
+      </div>
+
+      <hr>
+      <br>
+
+      <form>
+        <div style="max-width: 300px">
+            <select class="form-select questionKeywordSelect" name="name">
+              <option selected>분류 선택</option>
+              <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>
+            </select>
+        </div>
+
+
+      </form>
+
+
+
+
+      <!-- 문제 리스트 -->
+
+      <br>
+      <div class="questionList">
+      <div  th:each="question : ${questions}">
+
+        <div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px"> [[${question.name}]]</p></div>
+        &nbsp;
+        <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">[[${question.number}]]. [[${question.content}]]</a></div>
+        <div class="float-end" style="display: inline-flex">
+<!--          <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">수정</button>-->
+          <button class="btn btn-secondary" th:questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+          &nbsp;
+          <button class="btn btn-danger" th:questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+        </div>
+        <hr>
+
+
+
+      </div>
+        <!-- <div  th:each="question : ${questions}">  end -->
+
+
+
+      </div>
+      <br>
+
+      <!-- 문제 끝 -->
+
+
+
+
+
+    </div>
+    <!-- inner content -->
+
+
+
+    <!-- 수정 모달 -->
+
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modifyModalLabel">문제 수정</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+
+              <div style="max-width: 300px">
+                <select class="form-select questionKeywordSelect" id="updateQuestionKeyword" name="name" required>
+                  <option value="" selected>분류 선택</option>
+                  <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>
+                </select>
+              </div>
+              <br>
+
+              <input type="hidden" name="idx" id="idx"/>
+              <label for="number" class="col-form-label">번호</label>
+              <input class="form-control" type="number" name="number" id="number" style="max-width: 300px"/>
+
+              <br>
+
+              <div class="mb-3">
+                <label for="content" class="col-form-label">문제</label>
+                <textarea type="text" rows="2" class="form-control" id="content" name="content"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="item1" class="col-form-label">1번:</label>
+                <textarea class="form-control" rows="1"  id="item1"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="item2" class="col-form-label">2번:</label>
+                <textarea class="form-control" rows="1"  id="item2"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="item3" class="col-form-label">3번:</label>
+                <textarea class="form-control" rows="1"  id="item3"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="item4" class="col-form-label">4번: </label>
+                <textarea class="form-control" rows="1"  id="item4"></textarea>
+              </div>
+
+              <label for="answer" class="col-form-label">정답</label>
+              <select class="form-select" name="answer" id="answer" style="max-width: 300px">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+              </select>
+
+
+
+
+
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="modifyBtn">수정</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 수정 모달 끝 -->
+
+
+
+    <!-- 등록 모달 -->
+
+    <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="insertModalLabel">문제 등록</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/member/question/insert" method="post" id="insertForm">
+
+              <input type="hidden" name="number" id="insertNumber"/>
+
+              <div style="max-width: 300px">
+                <select class="form-select questionKeywordSelect" id="insertQuestionKeyword" name="name" required>
+                  <option value="" selected>분류 선택</option>
+                  <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>
+                </select>
+              </div>
+
+              <br>
+
+              <div class="mb-3">
+                <label for="insertContent" class="col-form-label">문제</label>
+                <textarea type="text" rows="2" class="form-control" id="insertContent" name="content" required></textarea>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="insertExample" class="col-form-label">보기</label>
+                <textarea type="text" rows="2" class="form-control" id="insertExample" name="example"></textarea>
+              </div>
+
+
+
+              <div class="mb-3">
+                <label for="insertItem1" class="col-form-label">1번:</label>
+                <textarea class="form-control" rows="1"  id="insertItem1" name="item1" required></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="insertItem2" class="col-form-label">2번:</label>
+                <textarea class="form-control" rows="1"  id="insertItem2" name="item2" required></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="insertItem3" class="col-form-label">3번:</label>
+                <textarea class="form-control" rows="1"  id="insertItem3" name="item3" required></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="insertItem4" class="col-form-label">4번: </label>
+                <textarea class="form-control" rows="1"  id="insertItem4" name="item4" required></textarea>
+              </div>
+
+              <label for="insertAnswer" class="col-form-label">정답</label>
+              <select class="form-select" name="answer" id="insertAnswer" style="max-width: 300px">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+              </select>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="registerBtn">등록</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 등록 모달 끝 -->
+
+
+
+  </div>
+  <!-- content end -->
+
+
+  <!-- 진짜 개 천천히 top으로 올라가네요-->
+  <!--    좀 빠르게 고침 -->
+  <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+  <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script>
+
+  // 카테고리 선택했을 때 문제 리스트 불러와서 출력
+  const questionKeywordSelect = document.querySelector(".questionKeywordSelect");
+  const questionList = document.querySelector(".questionList");
+
+  questionKeywordSelect.addEventListener("change", printQuestionList);
+
+
+  // questionList 출력하는 함수
+  function printQuestionList(){
+
+    console.log(questionKeywordSelect.value);
+
+    const param = {
+      name : questionKeywordSelect.value
+    }
+
+    let htmls = '';
+
+    getQuestionList(param).then(result => {
+      console.log("[result] " +  result);
+
+      for(const question of result){
+
+        htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+                  &nbsp;
+                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+                  <div class="float-end" style="display: inline-flex">
+                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+                  &nbsp;
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+                  </div>
+                  <hr>`;
+      }// for
+
+      questionList.innerHTML = htmls;
+
+    }).catch( e => {
+      console.log(e);
+      console.log('error!');
+    });
+
+
+  }
+
+
+
+
+
+  // 문제 리스트 불러옴
+  async function getQuestionList(paramList){
+
+    console.log(paramList);
+    console.log(paramList.name);
+
+    const response = await axios.get('/member/question/list', {params : paramList});
+    console.log(response);
+
+    return response.data;
+  }// getQuestionList
+
+
+
+
+//   수정 모달 띄우기
+  const modifyModal = document.querySelector("#modifyModal");
+  const idx = document.querySelector("#idx");
+  const number = document.querySelector("#number");
+  const name = document.querySelector("#updateQuestionKeyword");
+  const content = document.querySelector("#content");
+  const item1 = document.querySelector("#item1");
+  const item2 = document.querySelector("#item2");
+  const item3 = document.querySelector("#item3");
+  const item4 = document.querySelector("#item4");
+  const answer = document.querySelector("#answer");
+  function questionModify(index){
+
+    const paramList = {
+      questionIdx : index
+    }
+
+    getQuestion(paramList).then( result => {
+      console.log(result);
+      console.log(result.idx);
+      number.value = result.number;
+      idx.value = result.idx;
+      $("select[id=updateQuestionKeyword]").val(result.name).prop("selected", true);
+      content.innerText = result.content;
+      item1.innerText = result.item1;
+      item2.innerText = result.item2;
+      item3.innerText = result.item3;
+      item4.innerText = result.item4;
+      $("select[id=answer]").val(result.answer).prop("selected", true);
+      $("#modifyModal").modal('show');
+
+    }).catch( e => {
+      console.log('error!');
+
+    })
+
+  }
+
+
+//   문제 수정
+//   수정 모달에 작성된 모든 값 파라미터로 보내서 수정 후 해당 분류 이름의 문제들 리턴 받으면 리스트 교체
+  async function updateQuestion(paramList){
+    const response = await axios.post(`/member/question/update`, null, {params : paramList});
+    return response.data;
+  }
+
+
+  const modifyBtn = document.querySelector("#modifyBtn");
+  modifyBtn.addEventListener("click", function (){
+
+    let htmls = '';
+
+    if(name.value === ''){
+      alert('분류가 선택되지 않았습니다.');
+      return;
+    }
+
+    // trim
+    content.value = content.value.trim();
+    item1.value = item1.value.trim();
+    item2.value = item2.value.trim();
+    item3.value = item3.value.trim();
+    item4.value = item4.value.trim();
+
+    // 공백 검증
+    if(content.value === ''){
+      alert('문제가 작성되지 않았습니다.');
+      return;
+    }
+    if(item1.value === ''){
+      alert('1번 문항이 작성되지 않았습니다.');
+      return;
+    }
+    if(item2.value === ''){
+      alert('2번 문항이 작성되지 않았습니다.');
+      return;
+    }
+    if(item3.value === ''){
+      alert('3번 문항이 작성되지 않았습니다.');
+      return;
+    }
+    if(item4.value === ''){
+      alert('4번 문항이 작성되지 않았습니다.');
+      return;
+    }
+
+    const modifyParam = {
+      idx : idx.value,
+      name : name.value,
+      content : content.value,
+      item1 : item1.value,
+      item2 : item2.value,
+      item3 : item3.value,
+      item4 : item4.value,
+      answer : answer.value
+    }
+
+    updateQuestion(modifyParam).then(result => {
+
+      console.log("update result");
+      console.log(result);
+
+      for(const question of result){
+
+        htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+                  &nbsp;
+                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+                  <div class="float-end" style="display: inline-flex">
+                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+                  &nbsp;
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+                  </div>
+                  <hr>`;
+      }// for
+
+      questionList.innerHTML = htmls;
+
+      alert('[' + name.value + '] ' + number.value + '번 문제가 수정되었습니다.');
+      $("#modifyModal").modal('hide');
+
+
+
+    })
+
+  })
+
+
+
+
+
+//   문제 idx로 문제 정보 불러옴
+  async function getQuestion(paramList){
+    const response = await axios.get(`/member/question/getQuestion`, {params : paramList});
+    console.log(response);
+    return response.data;
+  }
+
+
+  // 문제 등록 모달 띄우기
+  const insertModal = document.querySelector("#insertModal");
+  document.querySelector(".insertBtn").addEventListener("click", function (){
+
+    $("#insertModal").modal('show');
+  })
+
+
+  // 문제 등록
+  const insertNumber = document.querySelector("#insertNumber");
+  const registerBtn = document.querySelector("#registerBtn");
+  const insertContent = document.querySelector("#insertContent");
+  const insertExample = document.querySelector("#insertExample");
+  const insertItem1 = document.querySelector("#insertItem1");
+  const insertItem2 = document.querySelector("#insertItem2");
+  const insertItem3 = document.querySelector("#insertItem3");
+  const insertItem4 = document.querySelector("#insertItem4");
+  const insertAnswer = document.querySelector("#insertAnswer");
+  const insertQuestionKeyword = document.querySelector("#insertQuestionKeyword");
+  // const insertForm = document.querySelector("#insertForm");
+
+  // 등록 버튼을 누르면
+  registerBtn.addEventListener("click", function () {
+
+    // 분류 공백 검증
+    if(insertQuestionKeyword.value === ''){
+      alert('분류가 선택되지 않았습니다.');
+      return;
+    }
+
+    // 선택한 분류의 이름으로
+    const param = {
+      name : insertQuestionKeyword.value
+    }
+
+    console.log("insertQuestionKeyword");
+    console.log(insertQuestionKeyword.value);
+
+    // 리스트를 가져와서 그 크기에 +1로 number를 설정
+    getQuestionList(param).then(result => {
+
+      console.log(result);
+      console.log(result.length + 1);
+      insertNumber.value = result.length + 1;
+
+      // trim
+      insertContent.value = insertContent.value.trim();
+      insertItem1.value = insertItem1.value.trim();
+      insertItem2.value = insertItem2.value.trim();
+      insertItem3.value = insertItem3.value.trim();
+      insertItem4.value = insertItem4.value.trim();
+
+      // 분류 공백 검증
+      if(insertContent.value === ''){
+        alert('문제가 작성되지 않았습니다.');
+        return;
+      }
+      if(insertItem1.value === ''){
+        alert('1번 문항이 작성되지 않았습니다.');
+        return;
+      }
+      if(insertItem2.value === ''){
+        alert('2번 문항이 작성되지 않았습니다.');
+        return;
+      }
+      if(insertItem3.value === ''){
+        alert('3번 문항이 작성되지 않았습니다.');
+        return;
+      }
+      if(insertItem4.value === ''){
+        alert('4번 문항이 작성되지 않았습니다.');
+        return;
+      }
+
+      // param을 작성 후 /member/question/insert로 Post 요청
+      // insertForm.submit();
+      const insertParam = {
+        name : insertQuestionKeyword.value,
+        number : insertNumber.value,
+        content : insertContent.value,
+        example : insertExample.value,
+        item1 : insertItem1.value,
+        item2 : insertItem2.value,
+        item3 : insertItem3.value,
+        item4 : insertItem4.value,
+        answer : insertAnswer.value
+      }
+
+      console.log(insertParam);
+
+      let htmls = '';
+
+      insertQuestion(insertParam).then(result => {
+
+        console.log("insertQuestion result");
+        console.log(result);
+
+    //   문제 리스트가 리턴되면 새로운 문제 리스트를 출력하고 모달 초기화한 뒤 모달을 닫음
+        for(const question of result){
+
+          htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+                  &nbsp;
+                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+                  <div class="float-end" style="display: inline-flex">
+                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+                  &nbsp;
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+                  </div>
+                  <hr>`;
+        }// for
+
+        // [분류] n번 문제가 등록되었습니다.
+        alert('[' + insertQuestionKeyword.value + '] ' + insertNumber.value + '번 문제가 등록되었습니다.');
+
+        // 문제 리스트 교체
+        questionList.innerHTML = htmls;
+
+        // 모달 초기화
+        insertNumber.value = '';
+        registerBtn.value = '';
+        insertContent.value = '';
+        insertExample.value = '';
+        insertItem1.value = '';
+        insertItem2.value = '';
+        insertItem3.value = '';
+        insertItem4.value = '';
+        insertAnswer.value = '';
+        insertQuestionKeyword.value = '';
+
+        // 모달 닫기
+        $("#insertModal").modal('hide');
+
+      })
+
+
+    })
+
+
+  })// registerBtn.addEventListener
+
+
+  async function insertQuestion(paramList){
+    const response = await axios.post(`/member/question/insert`, null, {params : paramList});
+    console.log(response);
+
+    return response.data;
+  }
+
+
+  // 삭제
+  function questionDelete(index){
+
+    if(!confirm('삭제하시겠습니까?')){
+      alert('취소되었습니다.');
+      return;
+    }
+
+    const deleteParams = {
+      questionIdx : index
+    }
+
+    let htmls = '';
+    deleteQuestion(deleteParams).then(result => {
+
+      //   문제 리스트가 리턴되면 새로운 문제 리스트를 출력하고 모달 초기화한 뒤 모달을 닫음
+      for(const question of result){
+
+        htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+                  &nbsp;
+                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+                  <div class="float-end" style="display: inline-flex">
+                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+                  &nbsp;
+                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+                  </div>
+                  <hr>`;
+      }// for
+
+      alert('삭제되었습니다.');
+
+      // 문제 리스트 교체
+      questionList.innerHTML = htmls;
+
+    })
+
+  }
+
+
+
+  async function deleteQuestion(paramList){
+    const response = await axios.post(`/member/question/delete`, null, {params : paramList});
+    console.log(response);
+
+    return response.data;
+  }
+
+
+  const createBtn = document.querySelector(".createBtn")
+  createBtn.addEventListener("click", function() {
+    location.href = '/member/question/create';
+  })
+
+
+
+</script>
+
+</body>
+</html>

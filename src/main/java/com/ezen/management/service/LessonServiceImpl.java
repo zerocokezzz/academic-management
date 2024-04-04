@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import java.util.Optional;
+
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,4 +28,13 @@ public class LessonServiceImpl implements LessonService{
         return lessonRepository.getLessonsByEndDayGreaterThan(day);
 
     }
+
+
+    @Override
+    public Lesson findById(int lessonIdx) {
+        Optional<Lesson> byId = lessonRepository.findById(lessonIdx);
+
+        return byId.orElse(null);
+    }
+
 }
