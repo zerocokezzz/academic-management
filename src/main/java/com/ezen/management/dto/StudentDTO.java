@@ -1,5 +1,6 @@
 package com.ezen.management.dto;
 
+import com.ezen.management.domain.Lesson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +16,20 @@ public class StudentDTO {
     private Long idx;
 
     private Long lessonIdx;
+//    private Lesson lesson;
+
+    private String lessonName;
+    private int lessonNumber;
     private String name;
+    private String birthday;
+    private String email;
+    private String phone;
+    private String fileName;
+    private int counseling;
+    private boolean pretest;
+    private int score;
+    private int survey;
+    private int done;
+    private String etc;
 
 }

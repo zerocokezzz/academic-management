@@ -46,7 +46,7 @@
                 <div style="display: inline-flex" th:text="${category.name}"></div>
 
                 <div class="float-end">
-                    <button style="display: inline-flex" class="btn btn-secondary" th:name="${category.name}" th:idx="${category.idx}" th:onclick="updateBtn(this.getAttribute('name'),this.getAttribute('idx'))" >수정</button>
+                    <button style="display: inline-flex" class="btn btn-secondary" th:name="${category.name}" th:idx="${category.idx}" th:onclick="updateBtn(this.getAttribute('name'),this.getAttribute('idx'))" >수정</button>&nbsp;
                     <button style="display: inline-flex" class="btn btn-danger deleteBtn" th:index="${category.idx}" th:onclick="deleteBtn(this.getAttribute('index'))">삭제</button>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary insertSubmit">등록</button>
+                            <button type="button" class="btn btn-primary insertSubmit">등록</button>&nbsp;
                             <button type="button" class="btn btn-danger insertClose">닫기</button>
                         </div>
                     </div>
@@ -109,8 +109,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary updateSubmit" >수정</button>
-                            <button type="button" class="btn btn-danger updateClose">닫기</button>
+                            <button type="button" class="btn btn-secondary updateSubmit" >수정</button>&nbsp;
+                            <button type="button" class="btn btn-danger updateClose">닫기</button>&nbsp;
                             <button type="button" class="btn btn-outline-light remove">초기화</button>
                         </div>
                     </div>

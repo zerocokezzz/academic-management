@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+  <div th:replace="/layout/basic :: sidebar"></div>
+
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
+
+    <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+
+      <h3 style="display: inline-flex" > [[${student.name}]] </h3>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">상담내역</button>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end">사전평가결과지</button>
+
+      <hr>
+      <br>
+
+      <!-- 본문 -->
+      <div style="display: inline-flex"></div>
+
+      <div th:each="student : ${student}">
+        <a th:href="@{/lesson/studentDetail(idx=${student.idx})}" style="color: black">
+          <div>
+            <hr>
+            <input type="hidden" class="studentIdx" >
+            <div style="display: inline-flex" th:text="${student.lesson.curriculum.category.name}"></div>
+            <div style="display: inline-flex" th:text="${student.lesson.curriculum.name}"></div>
+            <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
+            <div style="display: inline-flex" th:text="${student.name}"></div>
+            <div style="display: inline-flex" th:text="${student.done}"></div>
+            <div style="display: inline-flex" th:text="${student.pretest}"></div>
+            <div style="display: inline-flex" th:text="${student.survey}"></div>
+            <div style="display: inline-flex" th:text="${student.counseling}"></div>
+          </div>
+        </a>
+      </div>
+
+
+
+
+
+      <br>
+
+      <div class="float-end" style="display: inline-flex">
+
+        <button style="display: inline-flex" class="btn btn-outline-dark backList" >목록</button>
+      </div>
+
+
+    </div> <!-- inner content end -->
+  </div> <!-- content end -->
+  <a th:replace="/layout/basic :: back-to-top"></a>
+</div>
+<!-- wrapper end-->
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/training.js"></script>
+<script layout:fragment="script" th:inline="javascript">
+
+  const studentIdx = document.querySelector(".studentIdx")
+  document.querySelector(".backList").addEventListener("click", function (e){
+    const idx = studentIdx.value
+    window.location.href = '/lesson/studentList?idx=' + idx;
+
+  })
+
+</script>
+</html>

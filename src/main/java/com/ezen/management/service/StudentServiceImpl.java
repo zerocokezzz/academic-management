@@ -2,12 +2,18 @@ package com.ezen.management.service;
 
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import com.ezen.management.domain.Subject;
+import com.ezen.management.dto.PageRequestDTO;
+import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,4 +42,8 @@ public class StudentServiceImpl implements StudentService{
 //        null 처리 해야함!
         return byId.get();
     }
+
+
+
+
 }
