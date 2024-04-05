@@ -34,7 +34,7 @@
                     </div><!--end col-12-->
 
                     <!-- 설문항목 반복 출력 -->
-                    <div th:each="i : ${#numbers.sequence(0, 9)}">
+                    <div th:each="i : ${#numbers.sequence(0, 14)}">
                         <div class="col-12" th:name="'answer' + ${surveys[i].number}">
                             <div class="bg-light rounded h-100 p-4">
                                 <div class="table-responsive">

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%;">
+
+            <h3 style="display: inline-flex">Survey Result</h3>
+
+            <hr>
+            <br>
+
+            <!-- 검색 -->
+            <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+
+            </div>
+            <!-- 검색 끝-->
+
+
+            <br>
+
+
+            <!--      페이지 -->
+            <hr>
+            <br>
+
+            <br>
+
+
+            <h2>언젠가 차트가 나올거에요</h2>
+
+            <div>
+                여기에??
+            </div>
+        </div>
+        <!--    inner content end -->
+
+
+
+
+    </div>
+    <!-- content end -->
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+</body>
+</html>
