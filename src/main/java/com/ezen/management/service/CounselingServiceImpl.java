@@ -62,7 +62,7 @@ public class CounselingServiceImpl implements CounselingService {
     @Override
     public CounselingStudentDTO detail(Long idx) {
 
-        Optional<Counseling> result = counselingRepository.findById(1L);
+        Optional<Counseling> result = counselingRepository.findById(idx);
         Counseling counseling = result.orElseThrow();
 
         // Counseling 객체에서 studentIdx 가져오기

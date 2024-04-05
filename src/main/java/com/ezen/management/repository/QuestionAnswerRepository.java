@@ -25,5 +25,8 @@ public interface QuestionAnswerRepository extends JpaRepository<QuestionAnswer, 
     @Query("select qa from QuestionAnswer qa left join Student s on qa.student.idx = s.idx where s.lesson = :lesson")
     List<QuestionAnswer> findByLesson(Lesson lesson);
 
+    @Query("select qa from QuestionAnswer qa where qa.student.idx = :studentIdx")
+    QuestionAnswer findByStudentIdx(Long studentIdx);
+
 
 }

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+  <div th:replace="/layout/basic :: sidebar">
+
+  </div>
+
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
+
+    <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+
+      <h3 style="display: inline-flex">학생 관리</h3>
+      <button style="display: inline-flex" class="btn btn-primary float-end studentInsertBtn"> 학생 등록 </button>
+
+      <hr>
+      <br>
+
+      <!-- 검색 -->
+      <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+        <form action="/member/student" method="get">
+          <div class="col">
+            <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <select class="form-select type" name="type">
+                  <option value="">---</option>
+                  <option th:selected="${pageRequestDTO.type == 'n'}" value="n">이름</option>
+<!--                  <option th:selected="${pageRequestDTO.type == 'i'}" value="i">아이디</option>-->
+<!--                  <option th:selected="${pageRequestDTO.type == 'ni'}" value="ni">이름/아이디</option>-->
+                </select>
+              </div>
+
+              &nbsp;&nbsp;
+              <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
+              &nbsp;&nbsp;
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
+                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
+              </div>
+
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <!-- 검색 끝-->
+
+      <br>
+      <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]명</div>
+      <div th:each="student : ${pageResponseDTO.getDtoList()}">
+
+          <hr>
+          <img class="rounded-circle" th:src="${'/images/' + student.fileName}" alt="" style="width: 40px; height: 40px;">
+        &nbsp;&nbsp;
+          <div style="display: inline-flex" th:text="${student.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
+          <div style="display: inline-flex" th:text="${#temporals.format(student.regDate, 'yy-MM-dd')}"></div>
+          <div class="float-end">
+            <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${student.idx}" th:onclick="studentUpdate(this.getAttribute('data-name'))">수정</button>
+            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${student.idx}" th:onclick="studentdelete(this.getAttribute('data-name'))">삭제</button>
+          </div>
+      </div>
+
+
+<!--      페이지-->
+      <hr>
+      <br>
+      <div class="">
+        <ul class="pagination flex-wrap">
+          <li class="page-item" th:if="${pageResponseDTO.prev}">
+            <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
+          </li>
+
+          <th:block th:each="i : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+            <li th:class="${pageResponseDTO.page == i} ? 'page-item active' : 'page-item'">
+              <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
+            </li>
+          </th:block>
+
+          <li class="page-item" th:if="${pageResponseDTO.next}">
+            <a class="page-link" th:data-num="${pageResponseDTO.end + 1}">다음</a>
+          </li>
+
+        </ul>
+      </div>
+      <br>
+
+    </div>
+<!--    inner content end-->
+
+
+  </div>
+  <!-- content end -->
+
+
+  <!-- 진짜 개 천천히 top으로 올라가네요-->
+  <!--    좀 빠르게 고침 -->
+  <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+  <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+
+<div th:replace="/layout/basic :: scriptSet"></div>
+
+<script>
+
+  //  삭제 버튼
+  function teacherDelete(memberId) {
+    if(confirm('삭제하시겠습니까?')){
+      location.href='/member/teacher/delete?id=' + memberId;
+    }
+  }
+
+
+  //  수정 버튼
+  function teacherUpdate(memberId) {
+    location.href='/member/teacher/update?id=' + memberId;
+  }
+
+  //   페이지 클릭 이벤트 처리
+  //   clear 버튼 누르면 검색 조건 사라진 목록(/member/teacher) 출력
+  document.querySelector(".pagination").addEventListener("click", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const target = e.target;
+
+    if (target.tagName !== 'A') {
+      return;
+    }
+
+    const formObj = document.querySelector("form");
+
+    const num = target.getAttribute("data-num");
+    const keyword = document.querySelector(".keyword");
+    const type = document.querySelector(".type");
+
+    // 버튼 누르면 ?page=num
+    formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
+
+    // 검색 목록이면
+    if(keyword.value !== ''){
+      formObj.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
+      formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+    }
+
+    formObj.submit();
+
+  }, false);
+  //  페이지 클릭 end
+
+
+  //  검색 조건 초기화
+  document.querySelector(".clearBtn").addEventListener("click", function (e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    self.location = '/member/student';
+
+  }, false)
+  //  검색 초기화 end
+
+
+  // nav 활성화
+  // document.querySelector(".teacherManagement").classList.add("active");
+  // document.querySelector(".memberManagement").classList.add("active");
+
+</script>
+</body>
+</html>

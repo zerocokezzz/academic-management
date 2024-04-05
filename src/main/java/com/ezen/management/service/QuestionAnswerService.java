@@ -22,5 +22,7 @@ public interface QuestionAnswerService {
 
     QuestionAnswerDTO findById(Long questionAnswerIdx);
 
+    QuestionAnswerDTO findByStudentIdx(Long studentIdx);
+
 
 }

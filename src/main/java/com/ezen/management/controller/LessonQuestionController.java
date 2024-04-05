@@ -113,13 +113,15 @@ public class LessonQuestionController {
 
     @GetMapping("/getQuestionAnswerAndAnswerList")
     @ResponseBody
-    public Map<String, Object> getQuestionAnswerAndAnswerList(Long questionAnswerIdx){
+    public Map<String, Object> getQuestionAnswerAndAnswerList(Long studentIdx){
 
-        log.info("questionAnswerIdx : {} ", questionAnswerIdx);
+//        log.info("questionAnswerIdx : {} ", questionAnswerIdx);
 
 //        return questionAnswerService.findById(questionAnswerIdx);
 
-        QuestionAnswerDTO questionAnswerDTO = questionAnswerService.findById(questionAnswerIdx);
+//        QuestionAnswerDTO questionAnswerDTO = questionAnswerService.findById(questionAnswerIdx);
+        QuestionAnswerDTO questionAnswerDTO = questionAnswerService.findByStudentIdx(studentIdx);
+
         List<String> testPaper = questionAnswerDTO.getTestPaper();
         log.info("QuestionAnswerDTO : {} ", questionAnswerDTO);
 

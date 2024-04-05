@@ -1,8 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head th:replace="/layout/basic :: head"></head>
+<head th:replace="/layout/basic :: head">
+</head>
+<style>
+  img {
+    max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 너비 설정 */
+    max-height: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 높이 설정 */
+  }
+
+  /*스크롤바 지우기*/
+  ::-webkit-scrollbar{
+    display: none;
+  }
+</style>
 <body>
+
+
 <!-- warpper start -->
 <div class="wrapper">
   <div th:replace="/layout/basic :: sidebar"></div>
@@ -15,7 +29,7 @@
 
       <h3 style="display: inline-flex" > [[${student.name}]] </h3>
       <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">상담내역</button>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end">사전평가결과지</button>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
 
       <hr>
       <br>
@@ -53,6 +67,90 @@
 
 
     </div> <!-- inner content end -->
+
+
+
+
+
+
+
+
+
+    <!-- 답안지 모달 -->
+
+    <div class="modal fade" id="answerPaper" tabindex="-1" aria-labelledby="answerPaperLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="answerPaperLabel">답안지</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <!-- 학생 정보 -->
+            <div class="studentInfo" style="display: inline-flex; margin-top: 40px; margin-left: 10%">
+
+              <div style=" border: 1px solid lightgray; margin-right: 50px; max-width: 150px; max-height: 200px; width : 150px; height: 200px" class="studentFilename">
+                <img src="">
+                <!--                                image here-->
+              </div>
+              <table class="table table-borderless" style="width: 600px; flex-wrap: wrap">
+
+                <tr>
+                  <td>이름</td>
+                  <td colspan="2" class="studentName">이름임</td>
+                  <td rowspan="5"><div class="studentScore" style="margin: 60px 0 60px 0; font-size: 20pt; display: inline-flex">00점/</div><p style="display: inline-flex">/100점</p></td>
+                </tr>
+                <tr>
+                  <td>생년월일</td>
+                  <td colspan="2" class="studentBirthday">960123</td>
+                </tr>
+                <tr>
+                  <td>연락처</td>
+                  <td colspan="2" class="studentPhone">010-0000-0000</td>
+                </tr>
+                <tr>
+                  <td>이메일</td>
+                  <td colspan="2" class="studentEmail">byeol@gmail.com</td>
+                </tr>
+                <tr>
+                  <td>과정</td>
+                  <td colspan="2"><div style="max-width: 300px; overflow: scroll; display: inline-flex; word-break: keep-all" class="studentLesson">과정이름과정이름과정이름과정이름과정이름과정이름과정이름</div></td>
+                </tr>
+
+              </table>
+
+
+
+            </div>
+
+
+            <br>
+            <br>
+            <br>
+            <hr>
+            <br>
+
+            <!-- 문제 리스트 -->
+            <div class="questionAnswerPaper" style="margin: 20px; ">
+
+            </div>
+            <!-- 문제 리스트 끝 -->
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 답안지 모달 끝 -->
+
+
+
   </div> <!-- content end -->
   <a th:replace="/layout/basic :: back-to-top"></a>
 </div>
@@ -73,6 +171,130 @@
     window.location.href = '/lesson/studentList?idx=' + idx;
 
   })
+
+
+
+
+
+  // 답안지 모달
+  async function getQuestionAnswer(paramList){
+    const response = await axios.get('/member/lesson/question/getQuestionAnswerAndAnswerList', {params: paramList});
+    return response.data;
+  }
+
+  async function getStudent(paramList){
+    const response = await axios.get('/student/getStudent', {params : paramList});
+    console.log("done!");
+    console.log(response);
+
+    return response.data;
+  }
+
+  const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
+
+  const studentName = document.querySelector(".studentName");
+  const studentBirthday = document.querySelector(".studentBirthday");
+  const studentPhone = document.querySelector(".studentPhone");
+  const studentLesson = document.querySelector(".studentLesson");
+  const studentFileName = document.querySelector('.studentFilename');
+  const studentScore = document.querySelector(".studentScore");
+
+  function openPaper(studentIdx){
+    // console.log('questionAnswerIdx : ' + questionAnswerIdx);
+    console.log('studentIdx : ' + studentIdx);
+
+    const params = {
+      studentIdx : studentIdx
+    }
+
+
+    // 학생 정보
+    getStudent(params).then(result => {
+      console.log("student info!");
+      console.log(result);
+
+      studentName.innerText = result.name;
+      studentLesson.innerText = result.lessonName + ' ' +  result.lessonNumber + '회차';
+      studentPhone.innerText = result.phone;
+      studentBirthday.innerText = result.birthday;
+      studentFileName.innerHTML = `<img src="/images/${result.fileName}" style="object-fit: fill">`;
+      studentScore.innerText = result.score + '점';
+
+
+    }).catch( e => {
+      alert('student error!');
+
+    })
+
+
+    // 답안지
+    getQuestionAnswer(params).then(result => {
+      console.log(result);
+      console.log('questionAnswer!')
+      console.log(result.questionAnswer);
+      console.log(result.answerList);
+      console.log(result.questionAnswer[0]);
+      console.log('1. answer : ' + result.answerList[0].answer.toString());
+      console.log(result.answerList[0].answer.toString() === result.questionAnswer[0]);
+
+      let htmls = '';
+
+      for(let i = 0; i < 20; i++){
+        // $(".questionAnswerPaper").append()
+
+        htmls += `<div style="display: inline-flex; width: 500px; flex-wrap: nowrap">
+
+                        ${(result.questionAnswer[i]) === (result.answerList[i].answer.toString()) ?
+                `<img src="/images/correct.png" style=" width: 120px; position: absolute;">` :
+                `<img src="/images/wrong.png" style="width: 70px; position: absolute;">`}
+
+                        <div style="margin : 40px;  overflow: scroll;">
+
+                            <div>
+                                <div><strong>${result.answerList[i].number}. ${result.answerList[i].content}</strong></div>
+                                <br><br>
+
+                        ${result.answerList[i].example !== null ? `<div style="border: 1px solid #2a2d34; border-radius: 5px; margin: 0 0 30px 30px">
+                                      <div style="margin: 10px;">${result.answerList[i].example}</div>
+                                      </div>` : ``}
+
+                        ${result.answerList[i].fileName !== null ? `<div>
+                                        <img src="/images/question/${result.answerList[i].fileName}" style="max-width: 270px; margin: 0 0 30px 30px">
+                                    </div>` : ``}
+
+                                    <!--                    문항 -->
+                                    <div>
+                                    ${result.answerList[i].answer === 1 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '1' ? '❶' : '①'}  ${result.answerList[i].item1}</div><br>
+                                    ${result.answerList[i].answer === 2 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '2' ? '❷' : '②'} ${result.answerList[i].item2}</div><br>
+                                    ${result.answerList[i].answer === 3 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '3' ? '❸' : '③'} ${result.answerList[i].item3}</div><br>
+                                    ${result.answerList[i].answer === 4 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '4' ? '❹' : '④'} ${result.answerList[i].item4}</div><br>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            </div>
+                        <!-- 문제 하나  끝-->`;
+
+        questionAnswerPaper.innerHTML = htmls;
+
+      }
+
+    }).catch( e => {
+      console.log(e);
+    });
+
+
+    $("#answerPaper").modal('show');
+
+  }
+
+
+
 
 </script>
 </html>
