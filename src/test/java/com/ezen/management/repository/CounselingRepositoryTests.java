@@ -12,7 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +36,8 @@ public class CounselingRepositoryTests {
     private CurriculumRepository curriculumRepository;
 
     @Test
+    @Transactional
+    @Rollback(value = false)
     public void 상담추가(){
 
 //        과정 고유 이름으로 과정 찾아옴
@@ -63,6 +68,7 @@ public class CounselingRepositoryTests {
                 .method(1)
                 .writer("교사2")
                 .student(student)
+                .counselingDate(LocalDateTime.now())
                 .build();
 
         counselingRepository.save(counseling);

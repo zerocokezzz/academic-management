@@ -44,12 +44,15 @@ public class Student extends BaseEntity{
 
 //    설문 조사 여부
 //    설문 조사 등록 시 true
+//    @Builder.Default
+//    private boolean survey1 = false;
+//    @Builder.Default
+//    private boolean survey2 = false;
+//    @Builder.Default
+//    private boolean survey3 = false;
+
     @Builder.Default
-    private boolean survey1 = false;
-    @Builder.Default
-    private boolean survey2 = false;
-    @Builder.Default
-    private boolean survey3 = false;
+    private int survey = 0;
 
     @Builder.Default
 //    0 진행중 / 1 수료 / 2 하차
@@ -67,6 +70,10 @@ public class Student extends BaseEntity{
     public void grading(int score){
         this.pretest = true;
         this.score = score;
+    }
+
+    public void insertSurvey(){
+        this.survey++;
     }
 
 

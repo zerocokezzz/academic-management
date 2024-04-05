@@ -5,12 +5,14 @@ import com.ezen.management.domain.Student;
 import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService{
 
@@ -32,6 +34,10 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public Student findById(Long studentIdx) {
         Optional<Student> byId = studentRepository.findById(studentIdx);
+        Student student = byId.get();
+
+        log.info("student : {}", student);
+
 
 //        null 처리 해야함!
         return byId.get();
