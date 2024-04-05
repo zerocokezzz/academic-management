@@ -35,6 +35,7 @@ public class Counseling extends BaseEntity{
 //    0은 대면, 1 전화, 2 온라인
     private int method;
 
+    //상담회차
     private int round;
 
     public void changeContent(String content, int method){

@@ -29,7 +29,11 @@
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">학생이름</span>
-                                    <input type="text" name="studentName" class="form-control" placeholder="이름">
+                                    <input type="text" name="name" class="form-control" placeholder="이름">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담회차</span>
+                                    <input type="text" name="round" class="form-control" placeholder="상담회차">
                                 </div>
                                 <div class="bs-body-color-rgb">
                                     <span class="input-group-text">내용</span>
@@ -51,14 +55,7 @@
                                         <button type="button" class="btn btn-outline-dark clearBtn">back</button>
                                     </div>
                                 </div>
-
                             </form>
-
-
-
-
-
-
                         </div>
 
                         </div><!-- end card-header -->
@@ -97,7 +94,7 @@
         e.preventDefault()
         e.stopPropagation()
 
-        self.location ='/counseling/insert'
+        self.location ='/counseling/list'
     }, false)
 
     //List 돌아가기

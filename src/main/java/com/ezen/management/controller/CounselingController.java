@@ -8,11 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.swing.*;
+import java.util.List;
 
 
 @Slf4j
@@ -33,10 +35,8 @@ public class CounselingController {
     public void counselingList(PageRequestDTO pageRequestDTO
             , Model model){
 
-
         //상담목록
         PageResponseDTO<Counseling> responseDTO = counselingService.counselingList(pageRequestDTO);
-
         model.addAttribute("responseDTO", responseDTO);
 
         log.info("responseDTO= " + responseDTO);
@@ -46,16 +46,26 @@ public class CounselingController {
 
     //학생 상세조회
     @GetMapping("/detail")
-    public void detail(Long idx, Model model, PageRequestDTO pageRequestDTO){
+    public void detail(Long idx, Model model, Long studentIdx){
 
         CounselingDTO counselingDTO = counselingService.detail(idx);
-
         log.info("counselingDTO= " + counselingDTO);
-
-        model.addAttribute("dto", counselingDTO);
-
+        //model.addAttribute("dto", counselingDTO);
+        Counseling counseling = counselingService.findById(counselingDTO.getStudentIdx());
+        log.info("counseling= " + counseling);
+        model.addAttribute("dto", counseling);
     }
 
+//    @GetMapping("/detail/{studentIdx}")
+//    public void getCounselingDetail(@PathVariable Long studentIdx, Model model) {
+//
+//        //List<CounselingDTO> counselingDTOList = (List<CounselingDTO>) counselingService.getCounselingDetailByStudentIdx(studentIdx);
+//        List<CounselingDTO> counselingDTOList = counselingService.getCounselingListByStudentIdx(studentIdx);
+//
+//        model.addAttribute("dto", counselingDTOList);
+//        log.info("counselingDTOList= " + counselingDTOList);
+//
+//    }
 
 
     //추가하기
@@ -78,15 +88,12 @@ public class CounselingController {
             return "redirect:/counseling/insert";
         }
 
+
         log.info("counselingDTO= " + counselingDTO);
-
         Long idx = counselingService.insert(counselingDTO);
-
         redirectAttributes.addFlashAttribute("result", idx);
 
         return "redirect:/coundeling/list";
-
-
 
     }
 

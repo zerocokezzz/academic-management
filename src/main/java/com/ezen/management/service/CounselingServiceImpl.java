@@ -55,16 +55,62 @@ public class CounselingServiceImpl implements CounselingService {
     public CounselingDTO detail(Long idx) {
 
         Optional<Counseling> result = counselingRepository.findById(idx);
-
         Counseling counseling = result.orElseThrow();
-
         CounselingDTO counselingDTO = modelMapper.map(counseling, CounselingDTO.class);
-
         log.info("counselingDTO= " + counselingDTO);
-
-
         return counselingDTO;
     }
+
+    @Override
+    public Counseling findById(Long studentIdx) {
+
+        Optional<Counseling> findBystudentId = Optional.ofNullable(counselingRepository.findByStudentIdx(studentIdx));
+
+        return findBystudentId.get();
+    }
+
+
+//    public CounselingDTO getCounselingDetailByStudentIdx(Long studentIdx) {
+//        Counseling counseling = counselingRepository.findByStudentIdx(studentIdx); // 해당 학생의 상담 정보 조회
+//        // Counseling 객체를 CounselingDTO로 변환
+//        CounselingDTO counselingDTO = counselingDTO(counseling);
+//
+//        return counselingDTO;
+//    }
+//
+//    private CounselingDTO counselingDTO(Counseling counseling) {
+//        return CounselingDTO.builder()
+//                .idx(counseling.getIdx())
+//                .studentIdx(counseling.getStudent().getIdx())
+//                .counselingDate(counseling.getCounselingDate())
+//                .content(counseling.getContent())
+//                .method(counseling.getMethod())
+//                .writer(counseling.getWriter())
+//                .regDate(counseling.getRegDate())
+//                .modDate(counseling.getModDate())
+//                .build();
+//    }
+
+
+
+//    public List<CounselingDTO> getCounselingListByStudentIdx(Long studentIdx) {
+//        List<Counseling> counselingList = counselingRepository.findByStudentIdx(studentIdx);
+//        return counselingList.stream()
+//                .map(this::counselingDTO)
+//                .collect(Collectors.toList());
+//    }
+//    private CounselingDTO counselingDTO(Counseling counseling) {
+//        return CounselingDTO.builder()
+//                .idx(counseling.getIdx())
+//                .studentIdx(counseling.getStudent().getIdx())
+//                .counselingDate(counseling.getCounselingDate())
+//                .content(counseling.getContent())
+//                .method(counseling.getMethod())
+//                .writer(counseling.getWriter())
+//                .regDate(counseling.getRegDate())
+//                .modDate(counseling.getModDate())
+//                .build();
+//    }
 
 
 
@@ -107,5 +153,7 @@ public class CounselingServiceImpl implements CounselingService {
 
         counselingRepository.deleteById(idx);
     }
+
+
 
 }

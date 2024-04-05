@@ -21,7 +21,7 @@
                         <div class="card-header">
                             <h5>상담 상세</h5>
                             <div class="card-body">
-                                <!-- counselingDTO 의 전달-->
+<!-- counselingDTO 의 전달-->
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">상담No</span>
                                     <input type="text" class="form-control" name="idx" th:value="${dto.idx}" readonly>
@@ -35,8 +35,12 @@
                                     <input type="text" class="form-control" name="name" th:value="${dto.student.name}" readonly>
                                 </div>
                                 <div class="input-group mb-3">
+                                    <span class="input-group-text">전화번호</span>
+                                    <input type="text" class="form-control" name="phone" th:value="${dto.student.phone}" readonly>
+                                </div>
+                                <div class="input-group mb-3">
                                     <span class="input-group-text">상담회차</span>
-                                    <input type="text" class="form-control" name="round"  placeholder="상담count?" readonly>
+                                    <input type="text" class="form-control" name="round"  th:value="${dto.round}" readonly>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">상담내용</span>
@@ -54,14 +58,13 @@
                                     <span class="input-group-text">상담날짜</span>
                                     <input type="text" class="form-control" name="counselingDate" th:value="${#temporals.format(dto.counselingDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
                                 </div>
-
+                            </div>
+                            </div>
                                 <div class="my-4">
                                     <div class="float-end">
-                                            <button type="button" class="btn btn-outline-dark">List</button>
-                                            <button type="button" class="btn btn-secondary">Modify</button>
+                                        <button type="button" class="btn btn-outline-dark">List</button>
+                                        <button type="button" class="btn btn-secondary">Modify</button>
                                     </div>
-                                </div>
-                            </div>
 
                         </div><!-- end card-header -->
                     </div><!-- end card -->
