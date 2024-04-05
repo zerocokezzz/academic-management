@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ public class HomeController {
     public String index(){
         return "/index";
     }
+
 
     @GetMapping("/member/login")
     public void loginGET(String error, String logout){
@@ -53,6 +55,39 @@ public class HomeController {
 
         return "/member/index";
     }
+
+
+//    로그인 리다이렉트
+//    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'TEACHER')")
+    @GetMapping("/redirect")
+    public String redirect(Authentication authentication) {
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        for (GrantedAuthority authority : userDetails.getAuthorities()) {
+            String authorityName = authority.getAuthority();
+
+            log.info(authorityName);
+
+
+            return switch (authorityName) {
+                case "ROLE_MASTER", "ROLE_ADMIN" -> "redirect:/member";
+                case "ROLE_TEACHER" -> "redirect:/lesson";
+                default -> "redirect:/member/login?error";
+            };
+        }
+
+        return "redirect:/member";
+
+    }
+
+//    @GetMapping("/logout")
+//    public String logout(){
+//
+//        return null;
+//    }
+
+
+
 
 
 

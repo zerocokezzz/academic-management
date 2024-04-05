@@ -5,6 +5,7 @@ import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,10 +41,10 @@ public class StudentRepositoryTests {
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("지영")
-                .email("youngyoung@gmail.com")
-                .phone("010-0000-0000")
-                .birthday("202020")
+                .name("이름")
+                .email("forbyeol@gmail.com")
+                .birthday("000000")
+
                 .build();
 
         studentRepository.save(student);
@@ -56,7 +57,7 @@ public class StudentRepositoryTests {
     @Test
     public void 학생선택(){
         
-        int lessonIdx = 1;
+        Long lessonIdx = 1L;
         Optional<Lesson> result = lessonRepository.findById(1L);
         Lesson lesson = result.orElseThrow();
 
@@ -84,6 +85,21 @@ public class StudentRepositoryTests {
 
         studentRepository.save(student);
 
+
+    }
+
+    @Test
+    public void 학생idx로선택() throws Exception {
+        //given
+
+        //when
+        Optional<Student> byId = studentRepository.findById(1L);
+        Student student = byId.get();
+        log.info("student : {}", student);
+
+
+        //then
+        Assertions.assertThat(student).isNotNull();
 
     }
 }

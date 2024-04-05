@@ -5,6 +5,7 @@ import com.ezen.management.domain.Question;
 
 import com.ezen.management.domain.QuestionAnswer;
 import com.ezen.management.domain.Student;
+import com.ezen.management.dto.LessonDTO;
 import com.ezen.management.dto.QuestionAnswerDTO;
 import com.ezen.management.dto.StudentDTO;
 import com.ezen.management.service.LessonService;
@@ -17,12 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -76,7 +75,6 @@ public class StudentController {
     }
 
     @PostMapping("/question")
-
     public String testPaper(Model model, StudentDTO studentDTO) {
 
         log.info("studentDTO : {} ", studentDTO);
@@ -110,7 +108,6 @@ public class StudentController {
 
 
     @PostMapping("/question/insert")
-
     public String insert(QuestionAnswerDTO questionAnswerDTO) {
 
         log.info("questionAnswerDTO : {}", questionAnswerDTO);
@@ -169,10 +166,40 @@ public class StudentController {
 
     @GetMapping("/getStudent")
     @ResponseBody
-    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'TEACHER')")
-    public Student getStudent(Long studentIdx) {
+//    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN', 'TEACHER')")
+    public StudentDTO getStudent(Long studentIdx) {
 
-        return studentService.findById(studentIdx);
+        log.info("student Idx : {}", studentIdx);
+
+        Student student = studentService.findById(studentIdx);
+        log.info("student! {}", student);
+        log.info("lesson {} ", student.getLesson());
+
+        LessonDTO lessonDTO = LessonDTO.builder()
+                .curriculum_name(student.getLesson().getCurriculum().getName())
+                .number(student.getLesson().getNumber())
+                .build();
+
+        StudentDTO studentDTO = StudentDTO.builder()
+                .name(student.getName())
+                .email(student.getEmail())
+                .idx(student.getIdx())
+                .birthday(student.getBirthday())
+                .phone(student.getPhone())
+                .fileName(student.getFileName())
+                .counseling(student.getCounseling())
+                .pretest(student.isPretest())
+                .score(student.getScore())
+                .lessonName(lessonDTO.getCurriculum_name())
+                .lessonNumber(lessonDTO.getNumber())
+                .survey(student.getSurvey())
+                .done(student.getDone())
+                .etc(student.getEtc())
+                .build();
+
+        log.info("studentDTO : {}", studentDTO);
+
+        return studentDTO;
 
     }
 
