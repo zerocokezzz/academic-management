@@ -53,5 +53,5 @@ public class SurveyAnswer {//    설문 답변
     private String com13;
     private String com14;
     private String com15;
-
 }
+

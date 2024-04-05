@@ -3,10 +3,12 @@ package com.ezen.management.repository;
 import com.ezen.management.domain.Curriculum;
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.Optional;
 
@@ -25,10 +27,11 @@ public class StudentRepositoryTests {
     private CurriculumRepository curriculumRepository;
 
     @Test
+    @Transactional
+    @Rollback(value = false)  //fetch 전 까지는 DB에 안들어감. test + Transactional 하면 rollback이 true여서 그걸 false로 바꿔줘야 함
     public void 학생추가(){
 
         Optional<Curriculum> result = curriculumRepository.findById(1L);
-
         Curriculum curriculum = result.orElseThrow();
 
 //        파라미터 (수업, 회차)
@@ -37,12 +40,15 @@ public class StudentRepositoryTests {
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("새별")
-                .email("forbyeol@gmail.com")
-                .birthday("000000")
+                .name("지영")
+                .email("youngyoung@gmail.com")
+                .phone("010-0000-0000")
+                .birthday("202020")
                 .build();
 
         studentRepository.save(student);
+
+        log.info("student= " + student);
 
 
     }
