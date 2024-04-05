@@ -24,7 +24,7 @@
 <!-- counselingDTO 의 전달-->
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">상담No</span>
-                                    <input type="text" class="form-control" name="idx" th:value="${dto.idx}" readonly>
+                                    <input type="text" class="form-control" name="idx" th:value="${dto.counselingIdx}" readonly>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">학생No</span>
@@ -32,12 +32,17 @@
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">이름</span>
-                                    <input type="text" class="form-control" name="name" th:value="${dto.student.name}" readonly>
+                                    <input type="text" class="form-control" name="name" th:value="${dto.name}" readonly>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">전화번호</span>
-                                    <input type="text" class="form-control" name="phone" th:value="${dto.student.phone}" readonly>
+                                    <input type="text" class="form-control" name="phone" th:value="${dto.phone}" readonly>
                                 </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">이메일</span>
+                                    <input type="text" class="form-control" name="email" th:value="${dto.email}" readonly>
+                                </div>
+
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">상담회차</span>
                                     <input type="text" class="form-control" name="round"  th:value="${dto.round}" readonly>
@@ -62,8 +67,9 @@
                             </div>
                                 <div class="my-4">
                                     <div class="float-end">
-                                        <button type="button" class="btn btn-outline-dark">List</button>
-                                        <button type="button" class="btn btn-secondary">Modify</button>
+                                        <button type="button" class="btn btn-outline-dark clearBtn ">List</button>
+                                        <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                                        <button type="button" class="btn btn-danger delBtn">삭제하기</button>
                                     </div>
 
                         </div><!-- end card-header -->
@@ -97,7 +103,30 @@
 
     console.log("안녕 여기 상세페이지");
 
+    //List 돌아가기
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
 
+        self.location ='/counseling/list'
+    }, false)
+
+    //수정하기
+    document.querySelector(".modBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        self.location ='/counseling/list'
+    }, false)
+
+
+    //개별 상담 삭제하기
+    document.querySelector(".delBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+
+    }, false)
 
 
 

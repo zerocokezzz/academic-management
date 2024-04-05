@@ -3,18 +3,18 @@ package com.ezen.management.controller;
 import com.ezen.management.domain.Counseling;
 import com.ezen.management.dto.*;
 import com.ezen.management.service.CounselingService;
+import com.ezen.management.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.swing.*;
-import java.util.List;
 
 
 @Slf4j
@@ -22,7 +22,9 @@ import java.util.List;
 @RequestMapping("/counseling")
 public class CounselingController {
 
+    @Autowired
     private final CounselingService counselingService;
+
 
     public CounselingController(CounselingService counselingService) {
         this.counselingService = counselingService;
@@ -46,14 +48,15 @@ public class CounselingController {
 
     //학생 상세조회
     @GetMapping("/detail")
-    public void detail(Long idx, Model model, Long studentIdx){
+    public void detail(Long idx, Model model, Long studentIdx, PageRequestDTO pageRequestDTO){
 
-        CounselingDTO counselingDTO = counselingService.detail(idx);
-        log.info("counselingDTO= " + counselingDTO);
-        //model.addAttribute("dto", counselingDTO);
-        Counseling counseling = counselingService.findById(counselingDTO.getStudentIdx());
-        log.info("counseling= " + counseling);
-        model.addAttribute("dto", counseling);
+       CounselingStudentDTO counselingStudentDTO = counselingService.detail(idx);
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+        model.addAttribute("dto", counselingStudentDTO);
+        //Counseling counseling = counselingService.findById(counselingDTO.getStudentIdx());
+        //log.info("counseling= " + counseling);
+        //model.addAttribute("dto", counseling);
+
     }
 
 //    @GetMapping("/detail/{studentIdx}")

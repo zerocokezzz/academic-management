@@ -4,9 +4,12 @@ import com.ezen.management.domain.Counseling;
 import com.ezen.management.domain.Curriculum;
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import com.ezen.management.dto.CounselingStudentDTO;
+import com.ezen.management.dto.StudentDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,9 @@ public class CounselingRepositoryTests {
 
     @Autowired
     private CurriculumRepository curriculumRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Test
     @Transactional
@@ -64,12 +70,12 @@ public class CounselingRepositoryTests {
 
 //        상담 DB 저장
         Counseling counseling = Counseling.builder()
-                .content("매일은 금요일같은 마음으로 살기로 함")
+                .content("인생이란 뭘꽈")
                 .method(0)
-                .writer("김수한무")
+                .writer("김도넛")
                 .student(student)
                 .counselingDate(LocalDateTime.now())
-                .round(2)
+                .round(1)
                 .build();
 
         counselingRepository.save(counseling);
@@ -92,6 +98,41 @@ public class CounselingRepositoryTests {
         content.forEach(counseling -> {
             log.info("counseling : {}", counseling);
         });
+    }
+
+    @Test
+    @Transactional
+    public void 상담학생확인(){
+
+        Optional<Counseling> result = counselingRepository.findById(1L);
+        Counseling counseling = result.orElseThrow();
+
+        // Counseling 객체에서 studentIdx 가져오기
+        Long studentIdx = counseling.getStudent().getIdx();
+
+        // studentIdx를 사용하여 해당 학생 조회
+        Optional<Student> studentResult = studentRepository.findById(studentIdx);
+        Student student = studentResult.orElseThrow();
+
+        //웩 수동매핑
+        CounselingStudentDTO counselingStudentDTO = new CounselingStudentDTO();
+        counselingStudentDTO.setCounselingIdx(counseling.getIdx());
+        counselingStudentDTO.setStudentIdx(studentIdx);
+        counselingStudentDTO.setName(student.getName());
+        counselingStudentDTO.setFileName(student.getFileName());
+        counselingStudentDTO.setPhone(student.getPhone());
+        counselingStudentDTO.setCounselingDate(counseling.getCounselingDate());
+        counselingStudentDTO.setContent(counseling.getContent());
+        counselingStudentDTO.setMethod(counseling.getMethod());
+        counselingStudentDTO.setModDate(counseling.getModDate());
+        counselingStudentDTO.setRegDate(counseling.getRegDate());
+        counselingStudentDTO.setWriter(counseling.getWriter());
+        counselingStudentDTO.setRound(counseling.getRound());
+        counselingStudentDTO.setEmail(student.getEmail());
+
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+
+
     }
 
 

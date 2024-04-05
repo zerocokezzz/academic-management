@@ -39,7 +39,7 @@ public class StudentRepositoryTests {
                 .lesson(lesson)
                 .name("지혜")
                 .email("gongong@gmail.com")
-                .birthday("000000")
+                .birthday("999999")
                 .build();
 
         studentRepository.save(student);

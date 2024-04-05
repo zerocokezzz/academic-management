@@ -75,7 +75,7 @@
                                         <th scope="row">[[${dto.idx}]]</th>
                                         <td>[[${dto.student.idx}]]</td>
                                         <td>
-                                            <a th:href="|@{/counseling/detail(idx=${dto.idx})}&${link}|">[[${dto.student.name}]]</a>
+                                            <a th:href="|@{/counseling/detail(counselingIdx=${dto.idx})}&${link}|">[[${dto.student.name}]]</a>
                                         </td>
                                         <td>[[${dto.student.fileName}]]</td>
                                         <td>[[${#temporals.format(dto.counselingDate, 'yyyy-MM-dd')}]]</td>
@@ -83,8 +83,8 @@
                                         <td>[[${dto.method}]]</td>
                                         <td>[[${dto.writer}]]</td>
                                         <td>[[${dto.round}]]</td>
-                                        <td><button type="button" class="btn btn-secondary">수정하기</button></td>
-                                        <td><button type="button" class="btn btn-danger">삭제하기</button></td>
+                                        <!--<td><button type="button" class="btn btn-secondary modBtn">수정하기</button></td>
+                                        <td><button type="button" class="btn btn-danger delBtn">삭제하기</button></td>-->
                                     </tr>
                                 </tbody>
                             </table>
@@ -161,6 +161,8 @@
     }, false)
 
 
+
+    //검색 clean
     document.querySelector(".clearBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
@@ -169,12 +171,15 @@
     }, false)
 
 
+    //상담 추가하기
     document.querySelector(".creatBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
 
         self.location ='/counseling/insert'
     }, false)
+
+
 
 
 </script>

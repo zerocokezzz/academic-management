@@ -2,18 +2,23 @@ package com.ezen.management.service;
 
 
 import com.ezen.management.domain.Counseling;
+import com.ezen.management.domain.Student;
 import com.ezen.management.dto.CounselingDTO;
+import com.ezen.management.dto.CounselingStudentDTO;
 import com.ezen.management.dto.PageRequestDTO;
 import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.repository.CounselingRepository;
+import com.ezen.management.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.management.monitor.CounterMonitorMBean;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,9 +30,12 @@ import java.util.stream.Collectors;
 @Transactional
 public class CounselingServiceImpl implements CounselingService {
 
+    @Autowired
     private final CounselingRepository counselingRepository;
+    @Autowired
     private final ModelMapper modelMapper;
-
+    @Autowired
+    private  final StudentRepository studentRepository;
 
     @Override
     public PageResponseDTO<Counseling> counselingList(PageRequestDTO pageRequestDTO) {
@@ -52,22 +60,48 @@ public class CounselingServiceImpl implements CounselingService {
 
 
     @Override
-    public CounselingDTO detail(Long idx) {
+    public CounselingStudentDTO detail(Long idx) {
 
-        Optional<Counseling> result = counselingRepository.findById(idx);
+        Optional<Counseling> result = counselingRepository.findById(1L);
         Counseling counseling = result.orElseThrow();
-        CounselingDTO counselingDTO = modelMapper.map(counseling, CounselingDTO.class);
-        log.info("counselingDTO= " + counselingDTO);
-        return counselingDTO;
+
+        // Counseling 객체에서 studentIdx 가져오기
+        Long studentIdx = counseling.getStudent().getIdx();
+
+        // studentIdx를 사용하여 해당 학생 조회
+        Optional<Student> studentResult = studentRepository.findById(studentIdx);
+        Student student = studentResult.orElseThrow();
+
+        //웩 수동매핑
+        CounselingStudentDTO counselingStudentDTO = new CounselingStudentDTO();
+        counselingStudentDTO.setCounselingIdx(counseling.getIdx());
+        counselingStudentDTO.setStudentIdx(studentIdx);
+        counselingStudentDTO.setName(student.getName());
+        counselingStudentDTO.setFileName(student.getFileName());
+        counselingStudentDTO.setPhone(student.getPhone());
+        counselingStudentDTO.setCounselingDate(counseling.getCounselingDate());
+        counselingStudentDTO.setContent(counseling.getContent());
+        counselingStudentDTO.setMethod(counseling.getMethod());
+        counselingStudentDTO.setModDate(counseling.getModDate());
+        counselingStudentDTO.setRegDate(counseling.getRegDate());
+        counselingStudentDTO.setWriter(counseling.getWriter());
+        counselingStudentDTO.setRound(counseling.getRound());
+        counselingStudentDTO.setEmail(student.getEmail());
+
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+
+        return counselingStudentDTO;
+
     }
 
-    @Override
-    public Counseling findById(Long studentIdx) {
-
-        Optional<Counseling> findBystudentId = Optional.ofNullable(counselingRepository.findByStudentIdx(studentIdx));
-
-        return findBystudentId.get();
-    }
+//    @Override
+//    public Counseling findById(Long studentIdx) {
+//
+//        Optional<Counseling> byStudentIdx = Optional.ofNullable(counselingRepository.findByStudentIdx(studentIdx));
+//        Counseling counseling = byStudentIdx.orElseThrow();
+//
+//        return counseling;
+//    }
 
 
 //    public CounselingDTO getCounselingDetailByStudentIdx(Long studentIdx) {
