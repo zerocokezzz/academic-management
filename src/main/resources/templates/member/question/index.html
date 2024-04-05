@@ -701,7 +701,7 @@
 
 
   })// registerBtn.addEventListener
-  
+
   async function insertQuestion(paramList){
     const response = await axios.post(`/member/question/insert`, null, {params : paramList});
     console.log(response);

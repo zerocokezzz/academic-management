@@ -121,6 +121,16 @@ public class QuestionAnswerServiceImpl implements QuestionAnswerService {
         return entityToDTO(questionAnswer);
     }
 
+    @Override
+    public QuestionAnswerDTO findByStudentIdx(Long studentIdx){
+
+
+        QuestionAnswer byStudentIdx = questionAnswerRepository.findByStudentIdx(studentIdx);
+
+        return entityToDTO(byStudentIdx);
+    }
+
+
     QuestionAnswer dtoToEntity(QuestionAnswerDTO questionAnswerDTO) {
 
         Optional<Student> byId = studentRepository.findById(questionAnswerDTO.getStudentIdx());
