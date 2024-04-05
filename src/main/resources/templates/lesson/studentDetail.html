@@ -15,7 +15,7 @@
 
       <h3 style="display: inline-flex" > [[${student.name}]] </h3>
       <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">상담내역</button>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end">사전평가결과지</button>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end counselingBtn">사전평가결과지</button>
 
       <hr>
       <br>
@@ -27,7 +27,7 @@
         <a th:href="@{/lesson/studentDetail(idx=${student.idx})}" style="color: black">
           <div>
             <hr>
-            <input type="hidden" class="studentIdx" >
+            <input type="hidden" class="studentIdx" th:value="${student.idx}">
             <div style="display: inline-flex" th:text="${student.lesson.curriculum.category.name}"></div>
             <div style="display: inline-flex" th:text="${student.lesson.curriculum.name}"></div>
             <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
@@ -73,6 +73,16 @@
     window.location.href = '/lesson/studentList?idx=' + idx;
 
   })
+
+
+//학생 개별 상담내역 검색
+  const studentIdx = document.querySelector(".studentIdx")
+  document.querySelector(".counselingBtn").addEventListener("click", function (e){
+    const idx = studentIdx.value
+    window.location.href = '/counseling/detail?idx=' + idx;
+
+  })
+
 
 </script>
 </html>

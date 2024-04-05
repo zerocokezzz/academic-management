@@ -38,9 +38,11 @@ public class Counseling extends BaseEntity{
     //상담회차
     private int round;
 
-    public void changeContent(String content, int method){
-        this.content = content;
+    public void changeContent(int method, String content, int round, String writer){
         this.method = method;
+        this.content = content;
+        this.round = round;
+        this.writer = writer;
     }
 
 }

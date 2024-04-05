@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.management.monitor.CounterMonitorMBean;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,7 +61,7 @@ public class CounselingServiceImpl implements CounselingService {
     @Override
     public CounselingStudentDTO detail(Long idx) {
 
-        Optional<Counseling> result = counselingRepository.findById(1L);
+        Optional<Counseling> result = counselingRepository.findById(idx);
         Counseling counseling = result.orElseThrow();
 
         // Counseling 객체에서 studentIdx 가져오기
@@ -166,15 +165,17 @@ public class CounselingServiceImpl implements CounselingService {
 
 
     @Override
-    public void update(CounselingDTO counselingDTO) {
+    public void update(CounselingStudentDTO counselingStudentDTO) {
 
-        Optional<Counseling> result = counselingRepository.findById(counselingDTO.getIdx());
+        Optional<Counseling> result = counselingRepository.findById(counselingStudentDTO.getCounselingIdx());
 
         Counseling counseling = result.orElseThrow();
 
         //Entity에 추가함
-        counseling.changeContent(counselingDTO.getContent()
-                ,counselingDTO.getMethod());
+        counseling.changeContent(counselingStudentDTO.getRound()
+                ,counselingStudentDTO.getContent()
+                ,counselingStudentDTO.getMethod()
+                ,counselingStudentDTO.getWriter());
         
         counselingRepository.save(counseling);
 

@@ -5,7 +5,6 @@ import com.ezen.management.domain.Curriculum;
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
 import com.ezen.management.dto.CounselingStudentDTO;
-import com.ezen.management.dto.StudentDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
@@ -111,7 +109,7 @@ public class CounselingRepositoryTests {
     @Rollback(value = false)
     public void 상담학생정보확인(){
 
-        Optional<Counseling> result = counselingRepository.findById(1L);
+        Optional<Counseling> result = counselingRepository.findById(2L);
         Counseling counseling = result.orElseThrow();
 
         // Counseling 객체에서 studentIdx 가져오기

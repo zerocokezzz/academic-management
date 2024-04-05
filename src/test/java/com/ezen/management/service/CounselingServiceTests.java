@@ -4,6 +4,7 @@ package com.ezen.management.service;
 import com.ezen.management.domain.Counseling;
 import com.ezen.management.domain.Student;
 import com.ezen.management.dto.CounselingDTO;
+import com.ezen.management.dto.CounselingStudentDTO;
 import com.ezen.management.dto.PageRequestDTO;
 import com.ezen.management.dto.PageResponseDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -52,14 +53,14 @@ public class CounselingServiceTests {
     @Test
     public void testUpdate(){
 
-        CounselingDTO counselingDTO = CounselingDTO.builder()
-                .idx(2L)
+        CounselingStudentDTO counselingStudentDTO = CounselingStudentDTO.builder()
+                .counselingIdx(2L)
                 .content("잘해내고 있다는 용기의 드래곤을 줌")
                 .method(0)
                 .build();
 
-        counselingService.update(counselingDTO);
-        log.info("counselingDTO= " + counselingDTO);
+        counselingService.update(counselingStudentDTO);
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
 
     }
 
