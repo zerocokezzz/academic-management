@@ -29,16 +29,16 @@ public class Student extends BaseEntity{
     @Builder.Default
     private String fileName = "default_profile.jpg";
 
-//    상담 등록 시 +1
+    //    상담 등록 시 +1
     @Builder.Default
     private int counseling = 0;
 
-//    사전 평가 여부
+    //    사전 평가 여부
 //    사전 평가 등록 시 +1
     @Builder.Default
     private boolean pretest = false;
 
-//    사전 평가 점수
+    //    사전 평가 점수
     @Builder.Default
     private int score = 0;
 

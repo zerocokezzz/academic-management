@@ -20,7 +20,7 @@ public class SurveyAnswer {//    설문 답변
 
     private int round;
 
-    //    객관식 답변
+//    객관식 답변
     private String an1;
     private String an2;
     private String an3;
@@ -37,7 +37,7 @@ public class SurveyAnswer {//    설문 답변
     private String an14;
     private String an15;
 
-    //    주관식 답변
+//    주관식 답변
     private String com1;
     private String com2;
     private String com3;
@@ -55,3 +55,4 @@ public class SurveyAnswer {//    설문 답변
     private String com15;
 
 }
+
