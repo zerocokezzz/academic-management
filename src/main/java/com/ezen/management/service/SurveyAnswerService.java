@@ -9,7 +9,7 @@ import com.ezen.management.dto.SurveyDTO;
 
 public interface SurveyAnswerService {
 
-    public int insert(SurveyAnswerDTO surveyAnswerDTO, StudentDTO studentDTO, int round);
+    public int insert(SurveyAnswerDTO surveyAnswerDTO, StudentDTO studentDTO);
 
     default SurveyAnswer surveyAnswerDtoToEntity(SurveyAnswerDTO surveyAnswerDTO){
 

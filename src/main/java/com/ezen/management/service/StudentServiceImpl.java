@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,33 @@ public class StudentServiceImpl implements StudentService{
         return byId.get();
     }
 
+    @Override
+    public PageResponseDTO<Student> searchStudent(Long lessonIdx, PageRequestDTO pageRequestDTO) {
 
+        Pageable pageable = pageRequestDTO.getPageable();
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+
+        Page<Student> studentPage = studentRepository.searchStudent(lessonIdx, types, keyword, pageable);
+
+        List<Student> dtoList = studentPage.getContent();
+
+
+//        return new PageImpl<Student>(dtoList, pageable, studentPage.getTotalElements());
+
+        return PageResponseDTO.<Student>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)studentPage.getTotalElements())
+                .build();
+
+    }
+
+    @Override
+    public List<Student> findAll() {
+        return studentRepository.findAll();
+    }
 
 
 }

@@ -2,10 +2,12 @@ package com.ezen.management.controller;
 
 import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
+import com.ezen.management.domain.Student;
 import com.ezen.management.dto.MemberDTO;
 import com.ezen.management.dto.PageRequestDTO;
 import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.service.MemberService;
+import com.ezen.management.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ import java.util.Set;
 public class MemberController {
 
     private final MemberService memberService;
+    private final StudentService studentService;
 
 //    행정 관리 홈(행정 리스트)
     @PreAuthorize("hasRole('MASTER')")
@@ -300,6 +303,20 @@ public class MemberController {
         return null;
     }
 
+
+    @GetMapping("/student")
+    public String student(Long lessonIdx, PageRequestDTO pageRequestDTO, Model model){
+
+
+
+//        model.addAttribute("students", students);
+
+        PageResponseDTO<Student> pageResponseDTO = studentService.searchStudent(lessonIdx, pageRequestDTO);
+
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+        return "/member/student/index";
+    }
 
 
 }

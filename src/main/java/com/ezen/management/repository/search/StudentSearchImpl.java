@@ -18,13 +18,16 @@ public class StudentSearchImpl extends QuerydslRepositorySupport implements Stud
     }
 
     @Override
-    public Page<Student> searchStudent(Long lessonIdx,String[] types, String keyword, Pageable pageable) {
+    public Page<Student> searchStudent(Long lessonIdx, String[] types, String keyword, Pageable pageable) {
         QStudent student = QStudent.student;
 
         JPQLQuery<Student> query = from(student);
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(student.lesson.idx.eq(lessonIdx));
+
+        if(lessonIdx != null){
+            booleanBuilder.and(student.lesson.idx.eq(lessonIdx));
+        }
 
         if (types != null && keyword != null) {
             for (String type : types) {
