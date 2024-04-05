@@ -15,7 +15,7 @@
 
             <h3 style="display: inline-flex">수업상세</h3>
 
-            <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">설문결과</button>
+            <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end surveyResult">설문결과</button>
 
             <hr>
             <br>
@@ -299,6 +299,12 @@
             console.log(e)
         })
     }
+
+    // 설문결과로 이동하는 이벤트
+    document.querySelector('.surveyResult').addEventListener('click', function() {
+
+        window.location.href = '/member/lesson/survey?lessonIdx=' + [[${lesson.idx}]];
+    });
 
 </script>
 </html>
