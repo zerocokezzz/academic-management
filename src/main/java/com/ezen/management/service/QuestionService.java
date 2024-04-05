@@ -2,6 +2,8 @@ package com.ezen.management.service;
 
 import com.ezen.management.domain.Question;
 import com.ezen.management.domain.QuestionAnswer;
+import com.ezen.management.dto.PageRequestDTO;
+import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.dto.QuestionAnswerDTO;
 
 import com.ezen.management.dto.QuestionDTO;
@@ -23,5 +25,7 @@ public interface QuestionService {
     void delete(Long questionIdx);
 
     void multiSave(List<QuestionDTO> questionDTOList);
+
+    PageResponseDTO<Question> searchQuestion(PageRequestDTO pageRequestDTO);
 
 }

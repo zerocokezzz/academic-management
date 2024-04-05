@@ -97,6 +97,20 @@
 
 <script>
 
+  <!--  access-denied -->
+  const url = new URL(window.location.href);
+  const urlSearchParams = url.searchParams;
+  const error = urlSearchParams.get("error");
+
+  // switch (code){
+  //   case 'fail' :
+  //     alert('아이디나 비밀번호가 올바르지 않습니다.');
+  // }
+
+  if(error !== null){
+    alert('아이디나 비밀번호가 올바르지 않습니다.');
+  }
+
 
 </script>
 </body>

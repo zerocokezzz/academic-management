@@ -2,11 +2,15 @@ package com.ezen.management.service;
 
 import com.ezen.management.domain.Question;
 
+import com.ezen.management.dto.PageRequestDTO;
+import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.dto.QuestionDTO;
 import com.ezen.management.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -92,5 +96,24 @@ public class QuestionServiceImpl implements QuestionService{
 
         });
 
+    }
+
+    @Override
+    public PageResponseDTO<Question> searchQuestion(PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = pageRequestDTO.getPageable();
+
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+
+        Page<Question> questionPage = questionRepository.searchQuestion(types, keyword, pageable);
+
+        List<Question> dtoList = questionPage.getContent();
+
+        return PageResponseDTO.<Question>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)questionPage.getTotalElements())
+                .build();
     }
 }

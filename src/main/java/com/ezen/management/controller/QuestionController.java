@@ -2,6 +2,8 @@ package com.ezen.management.controller;
 
 import com.ezen.management.domain.Question;
 import com.ezen.management.domain.QuestionName;
+import com.ezen.management.dto.PageRequestDTO;
+import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.dto.QuestionBlockDTO;
 import com.ezen.management.dto.QuestionDTO;
 import com.ezen.management.service.QuestionNameService;
@@ -27,7 +29,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("")
-    public String index(Model model, String keyword){
+    public String index(Model model, PageRequestDTO pageRequestDTO){
 
         List<QuestionName> questionKeywordList = questionNameService.findAll();
 
@@ -39,14 +41,16 @@ public class QuestionController {
 
 //        모든 사전평가 문제 리스트
 //        여기는 페이징 필요함(3/29)
-        List<Question> questions = questionService.findAll();
+//        List<Question> questions = questionService.findAll();
 
-        questions.forEach(question -> {
-            log.info(question.getContent());
-        });
+        PageResponseDTO<Question> questions = questionService.searchQuestion(pageRequestDTO);
+
+//        questions.getDtoList().forEach(question -> {
+//            log.info(question.getContent());
+//        });
 
 
-        model.addAttribute("questions", questions);
+        model.addAttribute("pageResponseDTO", questions);
 
         return "member/question/index";
     }

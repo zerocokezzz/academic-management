@@ -24,16 +24,46 @@
       <hr>
       <br>
 
-      <form>
-        <div style="max-width: 300px">
-            <select class="form-select questionKeywordSelect" name="name">
-              <option selected value="전체">전체</option>
-              <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>
-            </select>
-        </div>
+      <!-- 검색 -->
+      <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+        <form action="/member/question" method="get">
+          <div class="col">
+            <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <select class="form-select type" name="type">
+                  <option value="" selected>---</option>
+                  <option th:selected="${pageRequestDTO.type == 'n'}" value="n">분류</option>
+                  <option th:selected="${pageRequestDTO.type == 'c'}" value="c">문제</option>
+                  <option th:selected="${pageRequestDTO.type == 'nc'}" value="nc">문제/분류</option>
+                </select>
+              </div>
+
+              &nbsp;&nbsp;
+              <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
+              &nbsp;&nbsp;
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
+                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
+              </div>
+
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <!-- 검색 끝-->
+
+<!--      <form>-->
+<!--        <div style="max-width: 300px">-->
+<!--            <select class="form-select questionKeywordSelect" name="name">-->
+<!--              <option selected value="전체">전체</option>-->
+<!--              <option th:each="questionKeyword : ${questionKeywordList}" th:text="${questionKeyword.name}"></option>-->
+<!--            </select>-->
+<!--        </div>-->
 
 
-      </form>
+<!--      </form>-->
 
 
 
@@ -41,8 +71,10 @@
       <!-- 문제 리스트 -->
 
       <br>
+      <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]개</div>
+      <hr>
       <div class="questionList">
-      <div  th:each="question : ${questions}">
+      <div  th:each="question : ${pageResponseDTO.getDtoList()}">
 
         <div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px"> [[${question.name}]]</p></div>
         &nbsp;
@@ -71,6 +103,30 @@
 
 
 
+
+
+      <!--      페이지 -->
+      <br>
+      <div class="">
+        <ul class="pagination flex-wrap">
+          <li class="page-item" th:if="${pageResponseDTO.prev}">
+            <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
+          </li>
+
+          <th:block th:each="i : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+            <li th:class="${pageResponseDTO.page == i} ? 'page-item active' : 'page-item'">
+              <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
+            </li>
+          </th:block>
+
+          <li class="page-item" th:if="${pageResponseDTO.next}">
+            <a class="page-link" th:data-num="${pageResponseDTO.end + 1}">다음</a>
+          </li>
+
+        </ul>
+      </div>
+
+      <br>
 
 
     </div>
@@ -256,54 +312,97 @@
 
 <script>
 
-  // 카테고리 선택했을 때 문제 리스트 불러와서 출력
-  const questionKeywordSelect = document.querySelector(".questionKeywordSelect");
-  const questionList = document.querySelector(".questionList");
+  //   페이지 클릭 이벤트 처리
+  document.querySelector(".pagination").addEventListener("click", function (e) {
+    e.stopPropagation();
+    e.preventDefault();
 
-  questionKeywordSelect.addEventListener("change", printQuestionList);
+    const target = e.target;
+
+    if (target.tagName !== 'A') {
+      return;
+    }
+    const formObj = document.querySelector("form");
+
+    const num = target.getAttribute("data-num");
+    const keyword = document.querySelector(".keyword");
+    const type = document.querySelector(".type");
+
+    // 버튼 누르면 ?page=num
+    formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
+
+    // 검색 목록이면
+    if(keyword.value !== ''){
+      formObj.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
+      formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+    }
+
+    formObj.submit();
+
+  }, false);
+  //  페이지 클릭 end
+
+
+  //  검색 조건 초기화
+  document.querySelector(".clearBtn").addEventListener("click", function (e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    self.location = '/member/question';
+
+  }, false)
+  //  검색 초기화 end
+
+
+
+  // 카테고리 선택했을 때 문제 리스트 불러와서 출력
+  // const questionKeywordSelect = document.querySelector(".questionKeywordSelect");
+  // const questionList = document.querySelector(".questionList");
+  //
+  // questionKeywordSelect.addEventListener("change", printQuestionList);
 
 
   // questionList 출력하는 함수
-  function printQuestionList(){
-
-    console.log(questionKeywordSelect.value);
-
-    const param = {
-      name : questionKeywordSelect.value
-    }
-
-    if(questionKeywordSelect.value === '전체'){
-      location.href = '/member/question';
-      return;
-    }
-
-    let htmls = '';
-
-    getQuestionList(param).then(result => {
-      console.log("[result] " +  result);
-
-      for(const question of result){
-
-        htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
-                  &nbsp;
-                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
-                  <div class="float-end" style="display: inline-flex">
-                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
-                  &nbsp;
-                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
-                  </div>
-                  <hr>`;
-      }// for
-
-      questionList.innerHTML = htmls;
-
-    }).catch( e => {
-      console.log(e);
-      console.log('error!');
-    });
-
-
-  }
+  // function printQuestionList(){
+  //
+  //   console.log(questionKeywordSelect.value);
+  //
+  //   const param = {
+  //     name : questionKeywordSelect.value
+  //   }
+  //
+  //   if(questionKeywordSelect.value === '전체'){
+  //     location.href = '/member/question';
+  //     return;
+  //   }
+  //
+  //   let htmls = '';
+  //
+  //   getQuestionList(param).then(result => {
+  //     console.log("[result] " +  result);
+  //
+  //     for(const question of result){
+  //
+  //       htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+  //                 &nbsp;
+  //                 <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+  //                 <div class="float-end" style="display: inline-flex">
+  //                 <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+  //                 &nbsp;
+  //                 <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+  //                 </div>
+  //                 <hr>`;
+  //     }// for
+  //
+  //     questionList.innerHTML = htmls;
+  //
+  //   }).catch( e => {
+  //     console.log(e);
+  //     console.log('error!');
+  //   });
+  //
+  //
+  // }
 
 
 
@@ -320,6 +419,7 @@
 
     return response.data;
   }// getQuestionList
+
 
 
 
@@ -352,7 +452,6 @@
       number.value = result.number;
       idx.value = result.idx;
       $("select[id=updateQuestionKeyword]").val(result.name).prop("selected", true);
-
       $("select[id=answer]").val(result.answer).prop("selected", true);
       $("#modifyModal").modal('show');
 
@@ -677,6 +776,7 @@
     case 'fail' :
       alert('등록에 실패하였습니다. 다시 시도해주세요.');
   }
+
 
 
 

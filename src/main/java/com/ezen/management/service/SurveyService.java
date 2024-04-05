@@ -27,6 +27,9 @@ public interface SurveyService {
     //설문 삭제
     int deleteAllByRound(int round);
 
+    //설문 참여
+
+
     default Survey surveyDtoToEntity(SurveyDTO surveyDTO){
 
         Survey survey = Survey.builder()
