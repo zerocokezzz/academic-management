@@ -1,13 +1,9 @@
 package com.ezen.management.controller;
 
+import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
-import com.ezen.management.dto.StudentDTO;
-import com.ezen.management.dto.SurveyAnswerDTO;
-import com.ezen.management.dto.SurveyDTO;
-import com.ezen.management.dto.SurveyDtoList;
-import com.ezen.management.service.StudentService;
-import com.ezen.management.service.SurveyAnswerService;
-import com.ezen.management.service.SurveyService;
+import com.ezen.management.dto.*;
+import com.ezen.management.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -27,6 +23,8 @@ public class SurveyController {
     private final StudentService studentService;
 
     private final SurveyAnswerService surveyAnswerService;
+
+    private final LessonService lessonService;
 
     /*=========================설문관리 CRUD=========================*/
 
@@ -141,22 +139,33 @@ public class SurveyController {
      * NULL일때 DB 저장되지 않도록
      */
     @PostMapping("/student/survey/insert")
-    public String insert(SurveyAnswerDTO surveyAnswerDTO, StudentDTO studentDTO, @RequestParam("round")int round){
+    public String insert(SurveyAnswerDTO surveyAnswerDTO, StudentDTO studentDTO){
 
         log.info("확인용 : 여기는 컨트롤러" + surveyAnswerDTO);
 
-        int result = surveyAnswerService.insert(surveyAnswerDTO, studentDTO, round);
+        int result = surveyAnswerService.insert(surveyAnswerDTO, studentDTO);
 
         return "redirect:/student";
     }
 
     /*=========================설문결과=========================*/
     
-//    @GetMapping("/member/lesson/survey")
-//    public String result(@RequestParam("")){
-//        //수업에서 필요한 정보 : 커리큘럼, 기수, 시작일, 종료일, 교사
-//        //그리고.. survey와 surveyAnswer 필요
-//
-//        return "/member/lesson/survey";
-//    }
+    @GetMapping("/member/lesson/survey")
+    public String result(@RequestParam("lessonIdx")Long lessonIdx){
+        //수업에서 필요한 정보 : 커리큘럼, 기수, 시작일, 종료일, 교사
+        //그리고.. survey와 surveyAnswer 필요
+
+        log.info("확인용 : result의 lessonIdx = " + lessonIdx);
+
+        //수업
+        Lesson lesson = lessonService.findById(lessonIdx);
+
+        //설문(문항)
+        List<SurveyDTO> surveyList = surveyService.surveyList();
+
+        //설문(답변)
+
+
+        return "/member/lesson/survey";
+    }
 }

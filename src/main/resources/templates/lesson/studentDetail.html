@@ -27,7 +27,7 @@
         <a th:href="@{/lesson/studentDetail(idx=${student.idx})}" style="color: black">
           <div>
             <hr>
-            <input type="hidden" class="studentIdx" >
+            <input type="hidden" class="studentIdx" th:value="${student.idx}">
             <div style="display: inline-flex" th:text="${student.lesson.curriculum.category.name}"></div>
             <div style="display: inline-flex" th:text="${student.lesson.curriculum.name}"></div>
             <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
