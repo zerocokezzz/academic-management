@@ -72,10 +72,6 @@ public class StudentController {
         model.addAttribute("lesson", student.getLesson());
         model.addAttribute("student", student);
 
-////      설문조사를 위한!!
-//        int sum = (student.isSurvey1() ? 1 : 0) + (student.isSurvey2() ? 1 : 0) + (student.isSurvey3() ? 1 : 0);
-//        model.addAttribute("surveySum", sum);
-
         return "/student/select";
     }
 
