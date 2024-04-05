@@ -102,8 +102,11 @@ public class CounselingRepositoryTests {
         });
     }
 
+
+
     @Test
     @Transactional
+    @Rollback(value = false)
     public void 상담학생정보확인(){
 
         Optional<Counseling> result = counselingRepository.findById(2L);

@@ -16,7 +16,7 @@ public interface CounselingService {
 //    List<CounselingDTO>studentList();                  //학생목록
     CounselingStudentDTO detail(Long idx);              //조회하기
     Long insert(CounselingDTO counselingDTO);           //추가하기
-    void update(CounselingDTO counselingDTO);           //수정하기
+    void update(CounselingStudentDTO counselingStudentDTO);           //수정하기
     void delete(Long idx);                              //삭제하기
 
 //  Detail에 사용할 용도이나 아직,,

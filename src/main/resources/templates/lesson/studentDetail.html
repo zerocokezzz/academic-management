@@ -31,6 +31,7 @@
       <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">상담내역</button>
       <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
 
+
       <hr>
       <br>
 
@@ -172,6 +173,14 @@
 
   })
 
+
+//학생 개별 상담내역 검색
+  const studentIdx = document.querySelector(".studentIdx")
+  document.querySelector(".counselingBtn").addEventListener("click", function (e){
+    const idx = studentIdx.value
+    window.location.href = '/counseling/detail?idx=' + idx;
+
+  })
 
 
 

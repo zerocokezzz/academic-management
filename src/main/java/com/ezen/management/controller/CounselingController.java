@@ -3,9 +3,7 @@ package com.ezen.management.controller;
 import com.ezen.management.domain.Counseling;
 import com.ezen.management.domain.Student;
 import com.ezen.management.dto.*;
-import com.ezen.management.repository.CounselingRepository;
 import com.ezen.management.service.CounselingService;
-import com.ezen.management.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.swing.*;
 
 
 @Slf4j
@@ -49,8 +45,10 @@ public class CounselingController {
 
 
     //학생 상세조회
-    @GetMapping("/detail")
+    @GetMapping({"/detail","/update"})
     public void detail(Long idx, Student student, Model model, PageRequestDTO pageRequestDTO){
+
+        log.info("------가자가자가자 상세페이지------");
 
        CounselingStudentDTO counselingStudentDTO = counselingService.detail(idx);
         log.info("counselingStudentDTO= " + counselingStudentDTO);
@@ -108,27 +106,46 @@ public class CounselingController {
 
 
     //수정하기
-    @GetMapping("/update")
-    public void update(CounselingDTO counselingDTO){
-
-        log.info("counseling Update gogo");
-
-    }
     @PostMapping("/update")
-    public Spring update(){
+    public String update(CounselingStudentDTO counselingStudentDTO
+                         , PageRequestDTO pageRequestDTO
+                         , BindingResult bindingResult
+                         , RedirectAttributes redirectAttributes){
 
         log.info("counseling UpdateAction gogo");
 
-        return null;
+        if (bindingResult.hasErrors()){
+            log.info("has errors...");
+
+            String link = pageRequestDTO.getLink();
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("idx", counselingStudentDTO.getCounselingIdx());
+
+        //오류 발생시 다시 update로 이동시켜
+            return "redirect:/counseling/update?" + link;
+        }
+
+        counselingService.update(counselingStudentDTO);
+        redirectAttributes.addFlashAttribute("result", "updated");
+        redirectAttributes.addAttribute("idx", counselingStudentDTO.getCounselingIdx());
+
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+
+        return "redirect:/counseling/detail";
     }
 
 
 
     //삭제하기
     @PostMapping("/delete")
-    public void delete(Long idx){
+    public String delete(Long idx, RedirectAttributes redirectAttributes){
 
-        log.info("counseling delete gogo");
+        log.info("counseling delete gogo" + idx);
+
+        counselingService.delete(idx);
+        redirectAttributes.addFlashAttribute("result", "delete");
+
+        return "redirect:/counseling/list";
 
     }
 
