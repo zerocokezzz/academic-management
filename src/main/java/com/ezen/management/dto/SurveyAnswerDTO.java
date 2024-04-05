@@ -41,4 +41,6 @@ public class SurveyAnswerDTO {
     private String com9;
     private String com10;
 
+    private Lesson lesson;
+
 }

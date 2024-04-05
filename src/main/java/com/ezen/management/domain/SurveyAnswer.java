@@ -54,5 +54,7 @@ public class SurveyAnswer {//    설문 답변
     private String com10;
 
 
-
+    public void setLesson(Lesson lesson) {
+        this.lesson = lesson;
+    }
 }
