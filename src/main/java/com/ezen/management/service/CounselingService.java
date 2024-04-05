@@ -1,6 +1,7 @@
 package com.ezen.management.service;
 
 import com.ezen.management.domain.Counseling;
+import com.ezen.management.domain.Student;
 import com.ezen.management.dto.CounselingDTO;
 import com.ezen.management.dto.CounselingStudentDTO;
 import com.ezen.management.dto.PageRequestDTO;
@@ -18,8 +19,6 @@ public interface CounselingService {
     void update(CounselingDTO counselingDTO);           //수정하기
     void delete(Long idx);                              //삭제하기
 
-
-    //CounselingDTO getCounselingDetailByStudentIdx(Long studentIdx);
-    //List<CounselingDTO> getCounselingListByStudentIdx(Long studentIdx);
-    //Counseling findById(Long studentIdx);
+//  Detail에 사용할 용도이나 아직,,
+//    Counseling getCounselingWithStudentId(Student student, Long studentIdx);
 }

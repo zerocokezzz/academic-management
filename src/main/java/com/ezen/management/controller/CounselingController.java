@@ -1,7 +1,9 @@
 package com.ezen.management.controller;
 
 import com.ezen.management.domain.Counseling;
+import com.ezen.management.domain.Student;
 import com.ezen.management.dto.*;
+import com.ezen.management.repository.CounselingRepository;
 import com.ezen.management.service.CounselingService;
 import com.ezen.management.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
@@ -48,14 +50,17 @@ public class CounselingController {
 
     //학생 상세조회
     @GetMapping("/detail")
-    public void detail(Long idx, Model model, Long studentIdx, PageRequestDTO pageRequestDTO){
+    public void detail(Long idx, Student student, Model model, PageRequestDTO pageRequestDTO){
 
        CounselingStudentDTO counselingStudentDTO = counselingService.detail(idx);
         log.info("counselingStudentDTO= " + counselingStudentDTO);
         model.addAttribute("dto", counselingStudentDTO);
-        //Counseling counseling = counselingService.findById(counselingDTO.getStudentIdx());
-        //log.info("counseling= " + counseling);
-        //model.addAttribute("dto", counseling);
+
+//        Counseling counselingWithStudentId = counselingService.getCounselingWithStudentId(student, student.getIdx());
+//        Counseling counseling = counselingWithStudentId;
+//
+//        model.addAttribute("counseling", counseling);
+//        log.info("counseling= " + counseling);
 
     }
 

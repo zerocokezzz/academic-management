@@ -84,6 +84,8 @@ public class CounselingRepositoryTests {
     }
 
     @Test
+    @Transactional
+    @Rollback(value = false)
     public void 상담학생조인(){
         Optional<Student> byId = studentRepository.findById(1L);
         Student student = byId.orElseThrow();
@@ -102,7 +104,7 @@ public class CounselingRepositoryTests {
 
     @Test
     @Transactional
-    public void 상담학생확인(){
+    public void 상담학생정보확인(){
 
         Optional<Counseling> result = counselingRepository.findById(1L);
         Counseling counseling = result.orElseThrow();
@@ -115,20 +117,21 @@ public class CounselingRepositoryTests {
         Student student = studentResult.orElseThrow();
 
         //웩 수동매핑
-        CounselingStudentDTO counselingStudentDTO = new CounselingStudentDTO();
-        counselingStudentDTO.setCounselingIdx(counseling.getIdx());
-        counselingStudentDTO.setStudentIdx(studentIdx);
-        counselingStudentDTO.setName(student.getName());
-        counselingStudentDTO.setFileName(student.getFileName());
-        counselingStudentDTO.setPhone(student.getPhone());
-        counselingStudentDTO.setCounselingDate(counseling.getCounselingDate());
-        counselingStudentDTO.setContent(counseling.getContent());
-        counselingStudentDTO.setMethod(counseling.getMethod());
-        counselingStudentDTO.setModDate(counseling.getModDate());
-        counselingStudentDTO.setRegDate(counseling.getRegDate());
-        counselingStudentDTO.setWriter(counseling.getWriter());
-        counselingStudentDTO.setRound(counseling.getRound());
-        counselingStudentDTO.setEmail(student.getEmail());
+        CounselingStudentDTO counselingStudentDTO = CounselingStudentDTO.builder()
+                .counselingIdx(counseling.getIdx())
+                .studentIdx(student.getIdx())
+                .name(student.getName())
+                .fileName(student.getFileName())
+                .phone(student.getPhone())
+                .email(student.getEmail())
+                .counselingDate(counseling.getCounselingDate())
+                .content(counseling.getContent())
+                .method(counseling.getMethod())
+                .modDate(counseling.getModDate())
+                .regDate(counseling.getRegDate())
+                .writer(counseling.getWriter())
+                .round(counseling.getRound())
+                .build();
 
         log.info("counselingStudentDTO= " + counselingStudentDTO);
 

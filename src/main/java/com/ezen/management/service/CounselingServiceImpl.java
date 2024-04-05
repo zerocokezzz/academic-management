@@ -73,20 +73,21 @@ public class CounselingServiceImpl implements CounselingService {
         Student student = studentResult.orElseThrow();
 
         //웩 수동매핑
-        CounselingStudentDTO counselingStudentDTO = new CounselingStudentDTO();
-        counselingStudentDTO.setCounselingIdx(counseling.getIdx());
-        counselingStudentDTO.setStudentIdx(studentIdx);
-        counselingStudentDTO.setName(student.getName());
-        counselingStudentDTO.setFileName(student.getFileName());
-        counselingStudentDTO.setPhone(student.getPhone());
-        counselingStudentDTO.setCounselingDate(counseling.getCounselingDate());
-        counselingStudentDTO.setContent(counseling.getContent());
-        counselingStudentDTO.setMethod(counseling.getMethod());
-        counselingStudentDTO.setModDate(counseling.getModDate());
-        counselingStudentDTO.setRegDate(counseling.getRegDate());
-        counselingStudentDTO.setWriter(counseling.getWriter());
-        counselingStudentDTO.setRound(counseling.getRound());
-        counselingStudentDTO.setEmail(student.getEmail());
+        CounselingStudentDTO counselingStudentDTO = CounselingStudentDTO.builder()
+                        .counselingIdx(counseling.getIdx())
+                        .studentIdx(student.getIdx())
+                        .name(student.getName())
+                        .fileName(student.getFileName())
+                        .phone(student.getPhone())
+                        .counselingDate(counseling.getCounselingDate())
+                        .content(counseling.getContent())
+                        .method(counseling.getMethod())
+                        .modDate(counseling.getModDate())
+                        .regDate(counseling.getRegDate())
+                        .writer(counseling.getWriter())
+                        .round(counseling.getRound())
+                        .email(student.getEmail())
+                        .build();
 
         log.info("counselingStudentDTO= " + counselingStudentDTO);
 
@@ -188,6 +189,13 @@ public class CounselingServiceImpl implements CounselingService {
         counselingRepository.deleteById(idx);
     }
 
+
+//    @Override
+//    public Counseling getCounselingWithStudentId(Student student, Long studentIdx) {
+//
+//
+//        return counselingRepository.getCounselingWithStudentId(student, studentIdx);
+//    }
 
 
 }

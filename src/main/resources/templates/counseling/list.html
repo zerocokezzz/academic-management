@@ -75,7 +75,7 @@
                                         <th scope="row">[[${dto.idx}]]</th>
                                         <td>[[${dto.student.idx}]]</td>
                                         <td>
-                                            <a th:href="|@{/counseling/detail(counselingIdx=${dto.idx})}&${link}|">[[${dto.student.name}]]</a>
+                                            <a th:href="|@{/counseling/detail(idx=${dto.idx})}&${link}|">[[${dto.student.name}]]</a>
                                         </td>
                                         <td>[[${dto.student.fileName}]]</td>
                                         <td>[[${#temporals.format(dto.counselingDate, 'yyyy-MM-dd')}]]</td>

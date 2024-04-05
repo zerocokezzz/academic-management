@@ -21,35 +21,20 @@ public class SurveyAnswer {//    설문 답변
     private int round;
 
     //    객관식 답변
-    @Column(nullable = false)
     private String an1;
-    @Column(nullable = false)
     private String an2;
-    @Column(nullable = false)
     private String an3;
-    @Column(nullable = false)
     private String an4;
-    @Column(nullable = false)
     private String an5;
-    @Column(nullable = false)
     private String an6;
-    @Column(nullable = false)
     private String an7;
-    @Column(nullable = false)
     private String an8;
-    @Column(nullable = false)
     private String an9;
-    @Column(nullable = false)
     private String an10;
-    @Column(nullable = false)
     private String an11;
-    @Column(nullable = false)
     private String an12;
-    @Column(nullable = false)
     private String an13;
-    @Column(nullable = false)
     private String an14;
-    @Column(nullable = false)
     private String an15;
 
     //    주관식 답변
