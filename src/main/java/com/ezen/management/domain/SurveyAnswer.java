@@ -18,28 +18,24 @@ public class SurveyAnswer {//    설문 답변
     @ManyToOne(fetch = FetchType.LAZY)
     private Lesson lesson;
 
-//    객관식 답변
-    @Column(nullable = false)
-    private int an1;
-    @Column(nullable = false)
-    private int an2;
-    @Column(nullable = false)
-    private int an3;
-    @Column(nullable = false)
-    private int an4;
-    @Column(nullable = false)
-    private int an5;
-    @Column(nullable = false)
-    private int an6;
-    @Column(nullable = false)
-    private int an7;
-    @Column(nullable = false)
-    private int an8;
-    @Column(nullable = false)
-    private int an9;
-    @Column(nullable = false)
-    private int an10;
+    private int round;
 
+//    객관식 답변
+    private String an1;
+    private String an2;
+    private String an3;
+    private String an4;
+    private String an5;
+    private String an6;
+    private String an7;
+    private String an8;
+    private String an9;
+    private String an10;
+    private String an11;
+    private String an12;
+    private String an13;
+    private String an14;
+    private String an15;
 
 //    주관식 답변
     private String com1;
@@ -52,9 +48,10 @@ public class SurveyAnswer {//    설문 답변
     private String com8;
     private String com9;
     private String com10;
+    private String com11;
+    private String com12;
+    private String com13;
+    private String com14;
+    private String com15;
 
-
-    public void setLesson(Lesson lesson) {
-        this.lesson = lesson;
-    }
 }

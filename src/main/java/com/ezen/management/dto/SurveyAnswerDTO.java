@@ -16,17 +16,24 @@ public class SurveyAnswerDTO {
     // 설문 답변
     private Long idx;
 
+    private int round;
+
     // 객관식 답변
-    private int an1;
-    private int an2;
-    private int an3;
-    private int an4;
-    private int an5;
-    private int an6;
-    private int an7;
-    private int an8;
-    private int an9;
-    private int an10;
+    private String an1;
+    private String an2;
+    private String an3;
+    private String an4;
+    private String an5;
+    private String an6;
+    private String an7;
+    private String an8;
+    private String an9;
+    private String an10;
+    private String an11;
+    private String an12;
+    private String an13;
+    private String an14;
+    private String an15;
 
 
     // 주관식 답변
@@ -40,6 +47,11 @@ public class SurveyAnswerDTO {
     private String com8;
     private String com9;
     private String com10;
+    private String com11;
+    private String com12;
+    private String com13;
+    private String com14;
+    private String com15;
 
     private Lesson lesson;
 

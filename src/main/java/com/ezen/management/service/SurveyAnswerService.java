@@ -25,6 +25,11 @@ public interface SurveyAnswerService {
                 .an8(surveyAnswerDTO.getAn8())
                 .an9(surveyAnswerDTO.getAn9())
                 .an10(surveyAnswerDTO.getAn10())
+                .an11(surveyAnswerDTO.getAn11())
+                .an12(surveyAnswerDTO.getAn12())
+                .an13(surveyAnswerDTO.getAn13())
+                .an14(surveyAnswerDTO.getAn14())
+                .an15(surveyAnswerDTO.getAn15())
                 .com1(surveyAnswerDTO.getCom1())
                 .com2(surveyAnswerDTO.getCom2())
                 .com3(surveyAnswerDTO.getCom3())
@@ -35,6 +40,13 @@ public interface SurveyAnswerService {
                 .com8(surveyAnswerDTO.getCom8())
                 .com9(surveyAnswerDTO.getCom9())
                 .com10(surveyAnswerDTO.getCom10())
+                .com11(surveyAnswerDTO.getCom11())
+                .com12(surveyAnswerDTO.getCom12())
+                .com13(surveyAnswerDTO.getCom13())
+                .com14(surveyAnswerDTO.getCom14())
+                .com15(surveyAnswerDTO.getCom15())
+                .round(surveyAnswerDTO.getRound())
+                .lesson(surveyAnswerDTO.getLesson())
                 .build();
 
         return surveyAnswer;

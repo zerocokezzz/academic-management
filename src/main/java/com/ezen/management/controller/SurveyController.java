@@ -69,10 +69,10 @@ public class SurveyController {
     @GetMapping("/member/survey/read")
     public String read(Model model, @RequestParam("round")int round) {
 
-        // 특정 회차(round)에 대한 Survey 목록을 조회합니다.
+        // 특정 회차(round)에 대한 Survey 목록을 조회합
         List<SurveyDTO> surveyList = surveyService.readAllByRound(round);
 
-        // 조회된 Survey 목록을 모델에 추가합니다.
+        // 조회된 Survey 목록을 모델에 추가
         model.addAttribute("surveys", surveyList);
 
         // 뷰 페이지로 이동합니다.
@@ -93,10 +93,10 @@ public class SurveyController {
     @GetMapping("/member/survey/modify")
     public String modifyGet(Model model, @RequestParam("round")int round){
 
-        // 특정 회차(round)에 대한 Survey 목록을 조회합니다.
+        // 특정 회차(round)에 대한 Survey 목록을 조회
         List<SurveyDTO> surveyList = surveyService.readAllByRound(round);
 
-        // 조회된 Survey 목록을 모델에 추가합니다.
+        // 조회된 Survey 목록을 모델에 추가
         model.addAttribute("surveys", surveyList);
 
         return "/member/survey/modify";
@@ -120,28 +120,19 @@ public class SurveyController {
 
         Student student = studentService.findById(studentDTO.getIdx());
 
-        int round = 0;
-
-        if (!student.isSurvey1()) {
-            round = 1;
-        } else if (!student.isSurvey2()) {
-            round = 2;
-        } else if (!student.isSurvey3()) {
-            round = 3;
-        }
+        int round = student.getSurvey() + 1;
 
         // 특정 회차(round)에 대한 Survey 목록을 조회
         List<SurveyDTO> surveyList = surveyService.readAllByRound(round);
 
-        // 조회된 Survey 목록을 모델에 추가합니다.
+        // 조회된 Survey 목록을 모델에 추가
         model.addAttribute("surveys", surveyList);
+
+        log.info("찍어보자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ" + surveyList);
 
         model.addAttribute("student", student);
 
         model.addAttribute("round", round);
-
-        log.info(round);
-        log.info("리스트가 보이나" + surveyList);
 
         return "/student/survey";
     }
@@ -152,6 +143,8 @@ public class SurveyController {
     @PostMapping("/student/survey/insert")
     public String insert(SurveyAnswerDTO surveyAnswerDTO, StudentDTO studentDTO, @RequestParam("round")int round){
 
+        log.info("확인용 : 여기는 컨트롤러" + surveyAnswerDTO);
+
         int result = surveyAnswerService.insert(surveyAnswerDTO, studentDTO, round);
 
         return "redirect:/student";
@@ -159,11 +152,11 @@ public class SurveyController {
 
     /*=========================설문결과=========================*/
     
-    @GetMapping("/member/lesson/survey")
-    public String result(){
-        //수업에서 필요한 정보 : 커리큘럼, 기수, 시작일, 종료일, 교사
-        //그리고.. survey와 surveyAnswer 필요
-
-        return "/member/lesson/survey";
-    }
+//    @GetMapping("/member/lesson/survey")
+//    public String result(@RequestParam("")){
+//        //수업에서 필요한 정보 : 커리큘럼, 기수, 시작일, 종료일, 교사
+//        //그리고.. survey와 surveyAnswer 필요
+//
+//        return "/member/lesson/survey";
+//    }
 }

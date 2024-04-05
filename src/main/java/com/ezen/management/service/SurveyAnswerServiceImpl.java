@@ -37,11 +37,10 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService{
         if (lessonOptional.isPresent()) {
             Lesson lesson = lessonOptional.get();
 
+            surveyAnswerDTO.setLesson(lesson);
+
             // SurveyAnswerDTO를 SurveyAnswer 엔티티로 변환
             SurveyAnswer surveyAnswer = surveyAnswerDtoToEntity(surveyAnswerDTO);
-
-            // SurveyAnswer 엔티티에 Lesson을 설정
-            surveyAnswer.setLesson(lesson);
 
             // SurveyAnswer를 저장
             surveyAnswerRepository.save(surveyAnswer);
@@ -52,20 +51,11 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService{
             if (studentOptional.isPresent()) {
                 Student student = studentOptional.get();
 
-                // 해당 round에 따라서 Survey 정보를 업데이트
-                switch (round){
-                    case 1:
-                        studentRepository.updateSurvey1ById(student.getIdx(), true);
-                        break;
-                    case 2:
-                        studentRepository.updateSurvey2ById(student.getIdx(), true);
-                        break;
-                    case 3:
-                        studentRepository.updateSurvey3ById(student.getIdx(), true);
-                        break;
-                    default:
-                        break;
-                }
+                student.insertSurvey();
+
+                // 해당 round에 따라서 Survey 정보를 업데이트 -> studentEntity 활용해야 함
+                studentRepository.save(student);
+
             } else {
                 // Student not found
             }

@@ -36,15 +36,17 @@
             <form action="/student/survey/insert" method="post">
                 <input type="hidden" th:value="${student.lesson.idx}" name="lessonIdx">
                 <input type="hidden" th:value="${student.idx}" name="idx">
-                <input type="hidden" name="round" th:value="${round}">
                 <div style="font-size: 12pt"> ■본 설문은 교육 진행 중 훈련생의 의견을 수렴하여 수업의 질적 향상을 도모하고 교육만족도를 향상하기 위하여 활용되며, 무기명 진행으로 성실 답변 부탁드립니다. 또한, 본 조사는 훈련기관 자체 조사이며, 조사 이외 목적으로 사용되지 않음도 알려 드립니다. </div>
                 <br>
 
                 <div th:each="survey : ${surveys}" style="margin: 10px;" class="col-md-6">
+                    <input type="hidden" name="round" th:value="${round}">
 
-                    <span th:text="${survey.number} + '.'"></span>
-                    <strong>[[${survey.content}]]. [[${survey.content}]]</strong>
-                    <br>
+                    <div th:if="${survey.type} != '선택안함'">
+                        <span th:text="${survey.number} + '.'"></span>
+                        <strong>[[${survey.content}]]. [[${survey.content}]]</strong>
+                    </div>
+                    <br th:if="${survey.type} != '선택안함'">
 
                     <!--                    예 -->
 
@@ -64,15 +66,30 @@
                     </div>
 
                     <div th:if="${survey.type} == '주관식'">
-                        <input th:name="'com' + ${survey.number}" type="text" placeholder="내 답변.."/> [[${survey.item7}]]
+                        <input th:name="'an' + ${survey.number}" type="text" placeholder="내 답변.."/>
                     </div>
 
+                    <br th:if="${survey.type} != '선택안함'">
 
-                    <br>
-                    <hr>
-                    <br>
+                    <div th:if="${survey.type} != '선택안함'">
+                        <h6>추가로 남기고 싶은 의견이 있다면..</h6>
+                        <textarea th:name="'com' + ${survey.number}" type="text" placeholder="작성해주세요.."></textarea>
+                    </div>
+
+                    <br th:if="${survey.type} != '선택안함'">
+                    <hr th:if="${survey.type} != '선택안함'">
+                    <br th:if="${survey.type} != '선택안함'">
 
                 </div>
+
+                <!--<button type="reset" class="btn btn-secondary">입력 초기화</button>-->
+
+<!--                <div>
+                    <img src="/images/survey/surveylogo.gif" />
+                </div>-->
+
+                <br>
+                <hr>
 
                 <button type="submit" class="btn btn-primary">제출</button>
 
