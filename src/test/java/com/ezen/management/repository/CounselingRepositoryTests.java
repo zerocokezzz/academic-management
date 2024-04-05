@@ -4,15 +4,23 @@ import com.ezen.management.domain.Counseling;
 import com.ezen.management.domain.Curriculum;
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import com.ezen.management.dto.CounselingStudentDTO;
+import com.ezen.management.dto.StudentDTO;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +40,12 @@ public class CounselingRepositoryTests {
     @Autowired
     private CurriculumRepository curriculumRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Test
+    @Transactional
+    @Rollback(value = false) //fetch 전 까지는 DB에 안들어감. test + Transactional 하면 rollback이 true여서 그걸 false로 바꿔줘야 함
     public void 상담추가(){
 
 //        과정 고유 이름으로 과정 찾아옴
@@ -48,7 +61,7 @@ public class CounselingRepositoryTests {
         log.info("lesson...... " + lesson);
 
 //        수업, 학생 이름으로 학생 찾아옴
-        Optional<Student> studentResult = studentRepository.getByLessonAndName(lesson, "새별");
+        Optional<Student> studentResult = studentRepository.getByLessonAndName(lesson, "지혜");
         Student student = studentResult.orElseThrow();
 
         log.info("student...... " + student);
@@ -59,10 +72,12 @@ public class CounselingRepositoryTests {
 
 //        상담 DB 저장
         Counseling counseling = Counseling.builder()
-                .content("자바에 회의감을 느낌")
-                .method(1)
-                .writer("교사2")
+                .content("인생이란 뭘꽈")
+                .method(0)
+                .writer("김도넛")
                 .student(student)
+                .counselingDate(LocalDateTime.now())
+                .round(1)
                 .build();
 
         counselingRepository.save(counseling);
@@ -70,7 +85,60 @@ public class CounselingRepositoryTests {
 
     }
 
+    @Test
+    @Transactional
+    @Rollback(value = false)
+    public void 상담학생조인(){
+        Optional<Student> byId = studentRepository.findById(1L);
+        Student student = byId.orElseThrow();
 
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Counseling> counselingWithStudentName = counselingRepository.getCounselingWithStudentName(student, pageable);
+
+//        log.info("result : {}", counselingWithStudentName);
+
+        //객체를 까본다? 확인해볼 수 있는 방법 => counseling이 studentIdx를 외래키로 가지고 있기 때문에 굳이 조인을 하지 않아도 가지고 올 수 있다. = counseling.getStudent.name
+        List<Counseling> content = counselingWithStudentName.getContent();
+        content.forEach(counseling -> {
+            log.info("counseling : {}", counseling);
+        });
+    }
+
+    @Test
+    @Transactional
+    public void 상담학생정보확인(){
+
+        Optional<Counseling> result = counselingRepository.findById(1L);
+        Counseling counseling = result.orElseThrow();
+
+        // Counseling 객체에서 studentIdx 가져오기
+        Long studentIdx = counseling.getStudent().getIdx();
+
+        // studentIdx를 사용하여 해당 학생 조회
+        Optional<Student> studentResult = studentRepository.findById(studentIdx);
+        Student student = studentResult.orElseThrow();
+
+        //웩 수동매핑
+        CounselingStudentDTO counselingStudentDTO = CounselingStudentDTO.builder()
+                .counselingIdx(counseling.getIdx())
+                .studentIdx(student.getIdx())
+                .name(student.getName())
+                .fileName(student.getFileName())
+                .phone(student.getPhone())
+                .email(student.getEmail())
+                .counselingDate(counseling.getCounselingDate())
+                .content(counseling.getContent())
+                .method(counseling.getMethod())
+                .modDate(counseling.getModDate())
+                .regDate(counseling.getRegDate())
+                .writer(counseling.getWriter())
+                .round(counseling.getRound())
+                .build();
+
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+
+
+    }
 
 
     @Test
@@ -99,31 +167,6 @@ public class CounselingRepositoryTests {
 
 
     }
-
-    @Test
-    public void 상담학생조인(){
-        Optional<Student> byId = studentRepository.findById(1L);
-        Student student = byId.orElseThrow();
-
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Counseling> counselingWithStudentName = counselingRepository.getCounselingWithStudentName(student, pageable);
-
-//        log.info("result : {}", counselingWithStudentName);
-
-        //객체를 까본다? 확인해볼 수 있는 방법 => counseling이 studentIdx를 외래키로 가지고 있기 때문에 굳이 조인을 하지 않아도 가지고 올 수 있다. = counseling.getStudent.name
-        List<Counseling> content = counselingWithStudentName.getContent();
-        content.forEach(counseling -> {
-            log.info("counseling : {}", counseling);
-        });
-    }
-
-
-
-
-
-
-
-
 
 
     @Test

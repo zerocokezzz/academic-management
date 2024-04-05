@@ -11,6 +11,11 @@
         max-height: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 높이 설정 */
     }
 
+    /*스크롤바 지우기*/
+    ::-webkit-scrollbar{
+        display: none;
+    }
+
 </style>
 <body>
 <!-- warpper start -->
@@ -134,31 +139,32 @@
                         <!-- 학생 정보 -->
                         <div class="studentInfo" style="display: inline-flex; margin-top: 40px; margin-left: 10%">
 
-                            <div style=" border: 1px solid lightgray; margin-right: 50px">
-                                <img src="" style="width: 150px; height: 200px; margin: 10px;">
+                            <div style=" border: 1px solid lightgray; margin-right: 50px; width: 150px; height: 200px" class="studentFilename">
+                                <img src="">
+<!--                                image here-->
                             </div>
-                            <table class="table table-borderless" style="width: 800px; flex-wrap: wrap">
+                            <table class="table table-borderless" style="width: 600px; flex-wrap: wrap">
 
                                 <tr>
                                     <td>이름</td>
-                                    <td colspan="2">이름임</td>
-                                    <td rowspan="5"><div style="margin: 60px 0 60px 0; font-size: 20pt; display: inline-flex">70점/</div><p style="display: inline-flex">100점</p></td>
+                                    <td colspan="2" class="studentName">이름임</td>
+                                    <td rowspan="5"><div class="studentScore" style="margin: 60px 0 60px 0; font-size: 20pt; display: inline-flex">00점/</div><p style="display: inline-flex">/100점</p></td>
                                 </tr>
                                 <tr>
                                     <td>생년월일</td>
-                                    <td colspan="2">960123</td>
+                                    <td colspan="2" class="studentBirthday">960123</td>
                                 </tr>
                                 <tr>
                                     <td>연락처</td>
-                                    <td colspan="2">010-0000-0000</td>
+                                    <td colspan="2" class="studentPhone">010-0000-0000</td>
                                 </tr>
                                 <tr>
                                     <td>이메일</td>
-                                    <td colspan="2">byeol@gmail.com</td>
+                                    <td colspan="2" class="studentEmail">byeol@gmail.com</td>
                                 </tr>
                                 <tr>
                                     <td>과정</td>
-                                    <td colspan="2"><div style="max-width: 300px; overflow: scroll">과정이름과정이름과정이름과정이름과정이름과정이름과정이름</div></td>
+                                    <td colspan="2"><div style="max-width: 300px; overflow: scroll; display: inline-flex; word-break: keep-all" class="studentLesson">과정이름과정이름과정이름과정이름과정이름과정이름과정이름</div></td>
                                 </tr>
 
                             </table>
@@ -453,24 +459,44 @@
     const studentInfo = document.querySelector(".studentInfo");
     const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
 
+    const studentName = document.querySelector(".studentName");
+    const studentBirthday = document.querySelector(".studentBirthday");
+    const studentPhone = document.querySelector(".studentPhone");
+    const studentLesson = document.querySelector(".studentLesson");
+    const studentFileName = document.querySelector('.studentFilename');
+    const studentScore = document.querySelector(".studentScore");
+
     function openPaper(questionAnswerIdx, studentIdx){
         console.log('questionAnswerIdx : ' + questionAnswerIdx);
+        console.log('studentIdx : ' + studentIdx);
 
         const studentParam = {
             studentIdx : studentIdx
         }
+
+        console.log(studentParam);
 
         const questionAnswerParam = {
             questionAnswerIdx : questionAnswerIdx
         }
 
         // 학생 정보
-        // getStudent(studentParam).then(result => {
-        //     console.log(result);
-        //
-        // }).catch( e => {
-        //
-        // })
+        getStudent(studentParam).then(result => {
+            console.log("student info!");
+            console.log(result);
+
+            studentName.innerText = result.name;
+            studentLesson.innerText = result.lessonName + ' ' +  result.lessonNumber + '회차';
+            studentPhone.innerText = result.phone;
+            studentBirthday.innerText = result.birthday;
+            studentFileName.innerHTML = `<img src="/images/${result.fileName}" style="object-fit: cover">`;
+            studentScore.innerText = result.score + '점';
+
+
+        }).catch( e => {
+            alert('student error!');
+
+        })
 
 
         // 답안지
@@ -544,12 +570,13 @@
         return response.data;
     }
 
-    // async function getStudent(paramList){
-    //     const response = await axios.get('/student/getStudent', {param : paramList});
-    //     console.log(response);
-    //
-    //     return response.data;
-    // }
+    async function getStudent(paramList){
+        const response = await axios.get('/student/getStudent', {params : paramList});
+        console.log("done!");
+        console.log(response);
+
+        return response.data;
+    }
 
 
     const 몰 = {

@@ -2,6 +2,8 @@ package com.ezen.management.repository;
 
 import com.ezen.management.domain.Counseling;
 import com.ezen.management.domain.Student;
+import com.ezen.management.dto.CounselingDTO;
+import com.ezen.management.dto.StudentDTO;
 import com.ezen.management.repository.search.CounselingSearch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 public interface CounselingRepository extends JpaRepository<Counseling, Long>, CounselingSearch {
@@ -39,6 +42,11 @@ public interface CounselingRepository extends JpaRepository<Counseling, Long>, C
     Page<Counseling> getCounselingWithStudentName(Student student, Pageable pageable);
 
 
+
+    //detail 학생정보로 조회 / 자동으로 query 생성하는 JPQL
+//    List<Counseling> findByStudentIdx(Long studentIdx);
+//    @Query("select c from Counseling c join Student s on c.student.idx = s.idx where c.student = :student")
+//    Counseling getCounselingWithStudentId(Student student, Long studentIdx);
 
 
 

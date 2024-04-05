@@ -72,26 +72,26 @@ public class CustomSecurityConfig {
 
 //        해당 메서드를 작성하면 필터를 커스텀할 수 있음
 
+//              csrf 비활성화
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-
-                                request.requestMatchers("/member/**")
+//                                권한이 있어야 접근할 수 있는 페이지
+                                    request.requestMatchers("/member/**")
                                         .hasAnyRole("MASTER", "ADMIN", "TEACHER")
                                         .anyRequest()
-                                        .permitAll()
-                )
+                                        .permitAll())
                 .exceptionHandling(exceptionHandler -> exceptionHandler.accessDeniedHandler(accessDeniedHandler()))
 //                로그인 페이지를 커스텀 로그인 페이지로 매핑
 //                defaultSuccessUrl 로그인 성공 시 이동하는 url
 //                successForwardUrl은 성공시 이동하는 url이 아니므로 주의
-                .formLogin(formLogin -> formLogin.loginPage("/member/login").loginProcessingUrl("/member/login").defaultSuccessUrl("/member").permitAll())
-//                csrf 비활성화
+                .formLogin(formLogin -> formLogin.loginPage("/member/login").defaultSuccessUrl("/redirect").permitAll())
 //                자동 로그인 처리
                 .rememberMe(rememberMe -> rememberMe
                         .key("12345678")
                         .tokenRepository(persistentTokenRepository())
                         .userDetailsService(userDetailService)
                         .tokenValiditySeconds(60 * 60 * 24 * 30));//  유효 시간 30일;
+//                .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout"));
 
 
         return http.build();
