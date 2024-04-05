@@ -47,6 +47,12 @@ public class TrainingServiceImpl implements TrainingService{
                 .build();
     }
 
+    //유형 전체
+    @Override
+    public List<Category> categoryList(){
+        return categoryRepository.findAll();
+    }
+
     // 유형 추가
     @Override
     public void categoryInsert(CategoryDTO categoryDTO) {
@@ -102,6 +108,12 @@ public class TrainingServiceImpl implements TrainingService{
                 .build();
     }
 
+    //과목 전체
+    @Override
+    public List<Subject> subjectList(){
+        return subjectRepository.findAll();
+    }
+
     //과목 등록
     @Override
     public void subjectInsert(SubjectDTO subjectDTO) {
@@ -144,6 +156,12 @@ public class TrainingServiceImpl implements TrainingService{
                 .dtoList(dtoList)
                 .total((int)curriculumPage.getTotalElements())
                 .build();
+    }
+
+    //과정 전체
+    @Override
+    public List<Curriculum> curriculumList(){
+        return curriculumRepository.findAll();
     }
 
     //과정 등록
@@ -199,6 +217,12 @@ public class TrainingServiceImpl implements TrainingService{
                 .dtoList(dtoList)
                 .total((int)lessonPage.getTotalElements())
                 .build();
+    }
+
+    //수업 전체
+    @Override
+    public List<Lesson> lessonList(){
+        return lessonRepository.findAll();
     }
     
     //수업 등록

@@ -4,12 +4,16 @@ import com.ezen.management.domain.*;
 import com.ezen.management.dto.*;
 import com.ezen.management.repository.CurriculumRepository;
 import com.ezen.management.repository.MemberRepository;
+import com.ezen.management.repository.SubjectHoldRepository;
 import com.ezen.management.service.MemberService;
 import com.ezen.management.service.QuestionNameService;
 import com.ezen.management.service.QuestionNameServiceImpl;
 import com.ezen.management.service.TrainingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -17,8 +21,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 @Slf4j
@@ -32,6 +38,7 @@ public class TrainingController {
 
     private final CurriculumRepository curriculumRepository;
     private final MemberRepository memberRepository;
+    private final SubjectHoldRepository subjectHoldRepository;
     //----------------------------------------------------유형----------------------------------------------------
 
     //유형전체
@@ -165,12 +172,16 @@ public class TrainingController {
         List<Curriculum> curriculum = responseCurriculum.getDtoList();
         model.addAttribute("curriculum", curriculum);
 
-        PageResponseDTO<Member> responseMember = memberService.findAll(pageRequestDTO);
-        List<Member> member = responseMember.getDtoList();
-        model.addAttribute("member", member);
-
         List<QuestionName> questionName = questionNameService.findAll();
         model.addAttribute("questionName", questionName);
+
+        //교사인 멤버만 부르기
+        Set<MemberRole> memberRoleSet = new HashSet<>();
+        memberRoleSet.add(MemberRole.TEACHER);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Member> memberPage = memberRepository.findBySpecificRoles(memberRoleSet, pageable);
+        List<Member> member = memberPage.getContent();
+        model.addAttribute("member", member);
 
         return "training/lesson/index";
     }
@@ -178,11 +189,30 @@ public class TrainingController {
     //수업상세
     //수업유형, 수업과정, 수업세부정보 -> 클릭으로 해당 수업의 학생들까지 ㄱㄱ
     @GetMapping(value = "/lesson/detail")
-    public String lessonDetail(Model model, Long idx){
-        Lesson detail = trainingService.getLessonByIdx(idx);
-        model.addAttribute("detail", detail);
+    public String lessonDetail(Model model, @RequestParam("idx") Long idx){
 
-        return "training/lesson/index";
+        //교사인 멤버만 부르기
+        Set<MemberRole> memberRoleSet = new HashSet<>();
+        memberRoleSet.add(MemberRole.TEACHER);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Member> memberPage = memberRepository.findBySpecificRoles(memberRoleSet, pageable);
+        List<Member> member = memberPage.getContent();
+        model.addAttribute("member", member);
+
+        //문제이름
+        model.addAttribute("questionName", questionNameService.findAll());
+
+        //과정
+        model.addAttribute("curriculum",  trainingService.curriculumList());
+
+        //보유과목
+        model.addAttribute("subjectHold", subjectHoldRepository.getSubjectHoldByLesson_idx(idx));
+
+        //인덱스에 해당하는 수업
+        model.addAttribute("lesson", trainingService.getLessonByIdx(idx));
+        log.info("컨트롤러 레슨 : " + trainingService.getLessonByIdx(idx));
+
+        return "/training/lesson/detail";
     }
 
 
@@ -241,7 +271,7 @@ public class TrainingController {
 
             log.info("Controller : " + lessonDTO);
 
-        return "redirect:/training/lesson";
+        return "redirect:/training/lesson/detail?idx="+lessonDTO.getIdx();
     }
 
     //수업삭제

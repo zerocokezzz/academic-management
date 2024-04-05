@@ -12,6 +12,9 @@ public interface TrainingService {
     //유형 페이징
     PageResponseDTO<Category> searchCategory(PageRequestDTO pageRequestDTO);
 
+    //유형 전체
+    public List<Category> categoryList();
+
     //유형 등록
     public void categoryInsert(CategoryDTO categoryDTO);
 
@@ -39,6 +42,9 @@ public interface TrainingService {
     //과목 페이징
     public PageResponseDTO<Subject> searchSubject(PageRequestDTO pageRequestDTO);
 
+    //과목 전체
+    public List<Subject> subjectList();
+
     //과목 등록
     public void subjectInsert(SubjectDTO subjectDTO);
 
@@ -61,6 +67,9 @@ public interface TrainingService {
     //----------------------------------------------------과정----------------------------------------------------
     //과정 전체 & 페이징 & 검색
     public PageResponseDTO<Curriculum> searchCurriculum(PageRequestDTO pageRequestDTO);
+
+    //과정 전체
+    public List<Curriculum> curriculumList();
 
     //과정 등록
     public void curriculumInsert(CurriculumDTO curriculumDTO);
@@ -91,6 +100,9 @@ public interface TrainingService {
 
     //수업전체 & 검색 & 페이징
     public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO);
+
+    //수업전체
+    public List<Lesson> lessonList();
 
     //수업 상세
     public Lesson getLessonByIdx(Long idx);

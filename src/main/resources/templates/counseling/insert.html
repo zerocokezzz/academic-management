@@ -22,9 +22,18 @@
                             <h5>상담 추가</h5>
                         <div class="card-body">
                             <form action="/counseling/insert" method="post">
+<!--  학생번호랑 학생이름은 땡겨오는 걸로                              -->
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">학생.No</span>
-                                    <input type="text" name="studentIdx" class="form-control" placeholder="학생정보" readonly>
+                                    <input type="text" name="studentIdx" class="form-control" placeholder="학생번호">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">학생이름</span>
+                                    <input type="text" name="name" class="form-control" placeholder="이름">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담회차</span>
+                                    <input type="text" name="round" class="form-control" placeholder="상담회차">
                                 </div>
                                 <div class="bs-body-color-rgb">
                                     <span class="input-group-text">내용</span>
@@ -40,14 +49,13 @@
                                     <input type="text" name="writer" class="form-control" placeholder="담당자를 입력하세요" >
                                 </div>
 
-
+                                <div class="my-4">
+                                    <div class="float-end">
+                                        <button type="button" class="btn btn-primary creatBtn">save</button>
+                                        <button type="button" class="btn btn-outline-dark clearBtn">back</button>
+                                    </div>
+                                </div>
                             </form>
-
-
-
-
-
-
                         </div>
 
                         </div><!-- end card-header -->
@@ -81,8 +89,21 @@
 
     console.log("안녕 여기 상담추가");
 
+    //추가하기
+    document.querySelector(".creatBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
 
+        self.location ='/counseling/list'
+    }, false)
 
+    //List 돌아가기
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        self.location ='/counseling/list'
+    }, false)
 
 
 </script>

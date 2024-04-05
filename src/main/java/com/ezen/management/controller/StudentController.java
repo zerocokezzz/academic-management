@@ -71,7 +71,6 @@ public class StudentController {
         model.addAttribute("lesson", student.getLesson());
         model.addAttribute("student", student);
 
-
         return "/student/select";
     }
 
