@@ -98,7 +98,7 @@
             <td>
               <div>
               <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${student.idx}" onclick="studentModify(this.getAttribute('data-name'))">수정</button>
-              <form action="/member/student/delete" method="post" id="deleteForm">
+              <form action="/member/student/delete" method="post" id="deleteForm" style="display: inline-flex">
                 <input type="hidden" name="studentIdx" th:value="${student.idx}"/>
                 <button style="display: inline-flex" class="btn btn-danger" onclick="studentDelete()">삭제</button>
               </form>
