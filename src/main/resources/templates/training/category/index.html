@@ -27,11 +27,9 @@
                     <div class="col">
                         <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
                         <div class="input-group">
-                            <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
-                                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
-                            </div>
+                            <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">&nbsp;
+                            <button style="border-radius: 5px" type="submit" class="btn btn-outline-primary searchBtn">검색</button>&nbsp;
+                            <button style="border-radius: 5px" type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
                         </div>
                     </div>
                 </form>
@@ -43,12 +41,9 @@
             <div style="display: inline-flex">총 [[${responseDTO.total}]]개</div>
             <div th:each="category: ${responseDTO.getDtoList()}">
                 <hr>
-                <div style="display: inline-flex" th:text="${category.name}"></div>
-
-                <div class="float-end">
-                    <button style="display: inline-flex" class="btn btn-secondary" th:name="${category.name}" th:idx="${category.idx}" th:onclick="updateBtn(this.getAttribute('name'),this.getAttribute('idx'))" >수정</button>&nbsp;
-                    <button style="display: inline-flex" class="btn btn-danger deleteBtn" th:index="${category.idx}" th:onclick="deleteBtn(this.getAttribute('index'))">삭제</button>
-                </div>
+                <a style="cursor: pointer; color: #222;" th:name="${category.name}" th:idx="${category.idx}" th:onclick="updateBtn(this.getAttribute('name'),this.getAttribute('idx'))">
+                    <div class="hovercolor" style="display: inline-flex" th:text="${category.name}"></div>
+                </a>
             </div>
 
             <!-- 페이지 -->
@@ -83,7 +78,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control categoryName">
+                                <input type="text" class="form-control categoryName" placeholder="유형명">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -105,13 +100,12 @@
                         <div class="modal-body">
                             <div class="input-group mb-3">
                                 <input type="hidden" class="updateIdx">
-                                <input type="text" class="form-control updateName">
+                                <input type="text" class="form-control updateName" placeholder="유형명" readonly>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary updateSubmit" >수정</button>&nbsp;
-                            <button type="button" class="btn btn-danger updateClose">닫기</button>&nbsp;
-                            <button type="button" class="btn btn-outline-light remove">초기화</button>
+                            <!--                        <button type="button" class="btn btn-outline-primary updateSubmit" >수정</button>&nbsp;-->
+                            <button type="button" class="btn btn-outline-danger deleteBtn" style="display: inline-flex" >삭제</button>
                         </div>
                     </div>
                 </div>
@@ -153,6 +147,12 @@
 
     // 유형 등록하기
     insertSubmit.addEventListener("click", function (e) {
+
+        if(categoryName.value.trim() == ""){
+            alert("등록할 유형명을 입력하세요.")
+            return;
+        }
+
         const insertName = {
             contentType: 'application/json',
             name: categoryName.value
@@ -177,10 +177,9 @@
     //유형 수정 모달
     const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
     const updateName = document.querySelector(".updateName")
-    const updateClose = document.querySelector(".updateClose")
-    // const deleteBtn = document.querySelector(".deleteBtn")
-    const updateSubmit = document.querySelector(".updateSubmit")
+    // const updateSubmit = document.querySelector(".updateSubmit")
     const updateIdx = document.querySelector(".updateIdx")
+    const deleteBtn = document.querySelector(".deleteBtn")
 
     //유형 상세 모달
     async function updateBtn(name, idx){
@@ -189,42 +188,48 @@
         updateModal.show()
     }
 
-    updateSubmit.addEventListener("click", function (e){
+    // updateSubmit.addEventListener("click", function (e){
+    //
+    //     const updateCategory = {
+    //         contentType: 'application/json',
+    //         idx : updateIdx.value,
+    //         name: updateName.value
+    //     }
+    //
+    //     categoryUpdate(updateCategory).then(result => {
+    //         updateName.value = ''
+    //         updateIdx.value=''
+    //         updateModal.hide()
+    //         location.reload()
+    //     }).catch(e => {
+    //         console.log(e)
+    //     })
+    // }, false)
 
-        const updateCategory = {
+    //유형 수정 모달 닫기
+    // updateClose.addEventListener("click", function (e){
+    //     updateModal.hide()
+    // })
+
+    deleteBtn.addEventListener("click", function (e){
+        if(!confirm("해당 유형 삭제 시 연관된 모든 과정이 삭제됩니다. 유형을 삭제하시겠습니까?")){
+            return
+        }
+        const idx = {
             contentType: 'application/json',
-            idx : updateIdx.value,
-            name: updateName.value
+            idx : updateIdx.value
         }
 
-        categoryUpdate(updateCategory).then(result => {
-            updateName.value = ''
+        categoryDelete(idx).then(result => {
+            updateIdx.value = ''
             updateModal.hide()
             location.reload()
         }).catch(e => {
             console.log(e)
         })
-
     }, false)
 
-    //유형 수정 모달 닫기
-    updateClose.addEventListener("click", function (e){
-        updateModal.hide()
-    })
 
-
-    //유형 삭제
-    async function deleteBtn(index){
-        if(!confirm("유형을 삭제하시겠습니까?")){
-            return
-        }
-
-        categoryDelete(index).then(result => {
-            location.reload()
-        }).catch(e =>{
-            console.log(e)
-        })
-    }
 
     //페이지 클릭
     document.querySelector(".pagination").addEventListener("click", function (e) {

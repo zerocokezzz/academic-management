@@ -91,6 +91,9 @@ public class LessonController {
     @GetMapping(value = "/studentList")
     public String studentList(Model model, @RequestParam("idx") Long idx, PageRequestDTO pageRequestDTO){
 
+        Lesson lesson = trainingService.getLessonByIdx(idx);
+        model.addAttribute("lesson", lesson);
+
         PageResponseDTO<Student> responseDTO = lessonService.searchStudent(pageRequestDTO, idx);
         model.addAttribute("responseDTO", responseDTO);
 

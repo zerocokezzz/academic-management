@@ -77,12 +77,16 @@ public class TrainingServiceImpl implements TrainingService{
 
     //유형 찾기
     @Override
-    public Category getCategoryIdx(String name){
-        log.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        Optional<Category> result = categoryRepository.getCategoryIdx(name);
+    public Category getCategoryIdx(Long idx){
+        log.info("idx : " + idx);
+        Optional<Category> result = categoryRepository.findById(idx);
+
+        log.info("Service Category : " + result);
+
         Category category = result.orElseThrow();
 
-        log.info("Service Category : " + category);
+        log.info("Category : " + category);
+
 
         return category;
     }
@@ -120,7 +124,7 @@ public class TrainingServiceImpl implements TrainingService{
         Subject subject = subjectDtoToEntity(subjectDTO);
         subjectRepository.save(subject);
     }
-    
+
     //과목 수정
     @Override
     public void subjectUpdate(SubjectDTO subjectDTO) {
@@ -175,14 +179,15 @@ public class TrainingServiceImpl implements TrainingService{
     @Override
     public void curriculumUpdate(CurriculumDTO curriculumDTO) {
         Optional<Curriculum> result = curriculumRepository.findById(curriculumDTO.getIdx());
+        log.info("Controller : " + result);
         Curriculum curriculum = result.orElseThrow();
 
-            curriculum.changeName(curriculumDTO.getName());
-            curriculum.changeCategory(curriculumDTO.getCategory());
-            curriculum.changeDay(curriculumDTO.getDay());
-            curriculum.changeTime(curriculumDTO.getTime());
+        curriculum.changeName(curriculumDTO.getName());
+        curriculum.changeCategory(curriculumDTO.getCategory());
+        curriculum.changeDay(curriculumDTO.getDay());
+        curriculum.changeTime(curriculumDTO.getTime());
 
-            curriculumRepository.save(curriculum);
+        curriculumRepository.save(curriculum);
     }
 
     //과정 삭제
@@ -199,7 +204,7 @@ public class TrainingServiceImpl implements TrainingService{
     }
 
     //----------------------------------------------------수업----------------------------------------------------
-    
+
     //수업 전체
     @Override
     public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO) {
@@ -224,10 +229,10 @@ public class TrainingServiceImpl implements TrainingService{
     public List<Lesson> lessonList(){
         return lessonRepository.findAll();
     }
-    
+
     //수업 등록
     @Override
-    public void lessonInsert(LessonDTO lessonDTO) {
+    public Long lessonInsert(LessonDTO lessonDTO) {
 
         Optional<Curriculum> result1 = curriculumRepository.findById(lessonDTO.getCurriculum_idx());
         Curriculum curriculum = result1.orElseThrow();
@@ -240,8 +245,19 @@ public class TrainingServiceImpl implements TrainingService{
         lessonDTO.setMember_name(member.getName());
 
         Lesson lesson = lessonDtoToEntity(lessonDTO, curriculum, member);
-        
-        lessonRepository.save(lesson);
+
+        Long subjectIdx = lessonRepository.save(lesson).getIdx();
+
+        return subjectIdx;
+    }
+
+    //수업 보유과목 등록
+    @Override
+    public void subjectHoldInsert(SubjectHoldDTO subjectHoldDTO){
+        log.info("서비스 보유과목 : " + subjectHoldDTO);
+        SubjectHold subjectHold = subjectHoldDtoToEntity(subjectHoldDTO);
+        subjectHoldRepository.save(subjectHold);
+        log.info("서비스 잘 들어갔나 : " + subjectHold);
     }
 
     //수업 상세

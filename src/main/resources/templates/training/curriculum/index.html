@@ -34,13 +34,10 @@
                                     <option th:selected="${pageRequestDTO.type == 't'}" value="t">기간(시간)</option>
                                     <option th:selected="${pageRequestDTO.type == 'd'}" value="d">기간(일수)</option>
                                 </select>
-                            </div>
-                            <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
-                                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
-                            </div>
+                            </div> &nbsp;
+                            <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">&nbsp;
+                            <button style="border-radius: 5px" type="submit" class="btn btn-outline-primary searchBtn">검색</button>&nbsp;
+                            <button style="border-radius: 5px" type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
 
                         </div>
                     </div>
@@ -54,33 +51,31 @@
 
             <br>
             <hr>
-            <div style="display: inline-flex">과정명</div>
             <div style="display: inline-flex">훈련유형</div>
+            <div style="display: inline-flex">과정명</div>
             <div style="display: inline-flex">훈련시간</div>
             <div style="display: inline-flex">훈련일수</div>
 
             <div th:each="curriculum: ${responseDTO.getDtoList()}">
                 <hr>
-                <div style="display: inline-flex" th:text="${curriculum.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
-                <div style="display: inline-flex" th:text="${curriculum.category.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
-                <div style="display: inline-flex" th:text="${curriculum.time}"></div> &nbsp;시간 &nbsp; | &nbsp;&nbsp;
-                <div style="display: inline-flex" th:text="${curriculum.day}"></div> &nbsp;일 &nbsp;
-
-                <div class="float-end">
-                    <button style="display: inline-flex" class="btn btn-secondary" th:idx="${curriculum.idx}"
-                            th:name="${curriculum.name}"
-                            th:category_name="${curriculum.category.name}"
-                            th:category_idx="${curriculum.category.idx}"
-                            th:time="${curriculum.time}"
-                            th:day="${curriculum.day}"
-                            th:onclick="updateBtn(this.getAttribute('idx'),
+                <a style="cursor: pointer; color: #222;"
+                   th:idx="${curriculum.idx}"
+                   th:name="${curriculum.name}"
+                   th:category_name="${curriculum.category.name}"
+                   th:category_idx="${curriculum.category.idx}"
+                   th:time="${curriculum.time}"
+                   th:day="${curriculum.day}"
+                   th:onclick="updateBtn(this.getAttribute('idx'),
                                 this.getAttribute('name'),
                                 this.getAttribute('category_name'),
                                 this.getAttribute('category_idx'),
                                 this.getAttribute('time'),
-                                this.getAttribute('day'))" >수정</button>&nbsp;
-                    <button style="display: inline-flex" class="btn btn-danger" th:index="${curriculum.idx}" th:onclick="deleteBtn(this.getAttribute('index'))">삭제</button>
-                </div>
+                                this.getAttribute('day'))">
+                    <div style="display: inline-flex" th:text="${curriculum.category.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
+                    <div style="display: inline-flex" th:text="${curriculum.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
+                    <div style="display: inline-flex" th:text="${curriculum.time}"></div> &nbsp;시간 &nbsp; | &nbsp;&nbsp;
+                    <div style="display: inline-flex" th:text="${curriculum.day}"></div> &nbsp;일 &nbsp;
+                </a>
             </div>
 
             <!-- 페이지 -->
@@ -116,14 +111,17 @@
                         <form action="/training/curriculum/insert" method="post">
                             <div class="modal-body">
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control curriculumName" name="name" placeholder="과정명">
+                                    <input type="text" class="form-control curriculumName"placeholder="과정명" required>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control curriculumCategory" name="category" placeholder="훈련유형">
+                                    <select class="form-select curriculumCategory" th:name="category" required>
+                                        <option value="">유형</option>
+                                        <option th:each="category:${category}" th:value="${category.idx}" th:text="${category.name}"></option>
+                                    </select>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control curriculumTime" name="time" placeholder="훈련기간(시간)">
-                                    <input type="text" class="form-control curriculumDay" name="day" placeholder="훈련기간(일수)">
+                                    <input type="number" oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');" class="form-control curriculumTime" name="time" placeholder="훈련기간(시간)" required>
+                                    <input type="number" oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');" class="form-control curriculumDay" name="day" placeholder="훈련기간(일)" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -145,23 +143,62 @@
                         </div>
                         <form action="/training/curriculum/update" method="post">
                             <div class="modal-body">
+                                <div class="input-group mb-2">
+                                    <div style="width: 50%; display: flex; justify-content:flex-start; align-items: center;">
+                                        <span style="font-weight: 600;">과정이름</span>
+                                    </div>
+                                </div>
                                 <div class="input-group mb-3">
                                     <input type="hidden" class="form-control updateIdx" name="idx">
                                     <input type="text" class="form-control updateName" name="name">
                                 </div>
-                                <div class="input-group mb-3">
-                                    <input type="hidden" class="form-control updateCategory_idx" name="category_idx">
-                                    <input type="text" class="form-control updateCategory_name" name="category_name">
+
+                                <br>
+
+                                <div class="input-group mb-2">
+                                    <div style="width: 50%; display: flex; justify-content:flex-start; align-items: center;">
+                                        <span style="font-weight: 600;">유형(기존)</span>
+                                    </div>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <input type="text" class="form-control updateTime" name="time">
-                                    <input type="text" class="form-control updateDay" name="day">
+                                    <input type="text" style="background-color: white;border:none; border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;" class="form-control updateCategory_name" name="category_name" readonly>
+                                </div>
+
+                                <div class="input-group mb-2">
+                                    <div style="width: 50%; display: flex; justify-content:flex-start; align-items: center;">
+                                        <span style="font-weight: 600;">유형(변경)</span>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <select class="form-select curriculumCategory" th:name="category_name">
+                                        <option value="" >유형을 변경하시려면 선택하세요.</option>
+                                        <option th:each="category:${category}" th:value="${category.name}" th:text="${category.name}"></option>
+                                    </select>
+                                    <input type="hidden" class="form-control updateCategory_idx" name="category_idx">
+                                </div>
+
+                                <br>
+
+                                <div class="input-group mb-2">
+                                    <div style="width: 50%; display: flex; justify-content:flex-start; align-items: center;">
+                                        <span style="font-weight: 600;">훈련기간(시간)</span>
+                                    </div>
+                                    <div style="width: 50%; display: flex; justify-content:flex-start; align-items: center;">
+                                        <span style="font-weight: 600;">훈련기간(일)</span>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="number" oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');" class="form-control updateTime" name="time">
+                                    <input type="number" oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');" class="form-control updateDay" name="day">
                                 </div>
                             </div>
+
+                            <br>
+                            <br>
+
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-secondary updateSubmit" >수정</button>&nbsp;
-                                <button type="button" class="btn btn-danger updateClose">닫기</button>&nbsp;
-                                <button type="button" class="btn btn-outline-light remove">초기화</button>
+                                <button type="submit" class="btn btn-outline-primary updateSubmit" >수정</button>
+                                <button type="button" class="btn btn-outline-danger deleteBtn" style="display: inline-flex" >삭제</button>
                             </div>
                         </form>
                     </div>
@@ -197,7 +234,6 @@
     const insertBtn = document.querySelector(".insertBtn")
     const insertClose = document.querySelector(".insertClose")
     const idx = document.querySelector(".idx")
-    const curriculumInsert = document.querySelector(".curriculumInsert")
 
     // 과정등록모달 뜨기  -> form action으로 Controller로 보냈음
     insertBtn.addEventListener("click", function (e) {
@@ -215,13 +251,13 @@
 
     //과정 수정 모달
     const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
-    const updateClose = document.querySelector(".updateClose")
     const updateIdx = document.querySelector(".updateIdx")
     const updateName = document.querySelector(".updateName")
     const updateCategory_name = document.querySelector(".updateCategory_name")
     const updateCategory_idx = document.querySelector(".updateCategory_idx")
     const updateTime = document.querySelector(".updateTime")
     const updateDay = document.querySelector(".updateDay")
+    const deleteBtn = document.querySelector(".deleteBtn")
 
 
     //과정 상세 모달
@@ -235,23 +271,26 @@
         updateModal.show()
     }
 
-    //과정 수정 모달 닫기
-    updateClose.addEventListener("click", function (e){
-        updateModal.hide()
-    })
-
     //과정 삭제
-    async function deleteBtn(index){
-        if(!confirm("과정을 삭제하시겠습니까?")){
+    deleteBtn.addEventListener("click", function (e){
+        if(!confirm("해당 유형 삭제 시 연관된 모든 수업이 삭제됩니다. 과정을 삭제하시겠습니까?")){
             return
         }
+        const idx = {
+            contentType: 'application/json',
+            idx : updateIdx.value
+        }
 
-        curriculumDelete(index).then(result => {
+        console.log(idx);
+
+        curriculumDelete(idx).then(result => {
+            updateIdx.value = ''
+            updateModal.hide()
             location.reload()
         }).catch(e =>{
             console.log(e)
         })
-    }
+    })
 
     //페이지 클릭
     document.querySelector(".pagination").addEventListener("click", function (e) {

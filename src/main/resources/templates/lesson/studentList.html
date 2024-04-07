@@ -13,29 +13,33 @@
 
         <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
-            <h3 style="display: inline-flex" > 학생목록 </h3>
-            <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">학생추가</button>
+                <button style="display: inline-flex" class="btn btn-primary float-end">학생추가</button>
+                <h3> 학생목록 </h3>
 
             <hr>
             <br>
 
             <!-- 본문 -->
-            <div style="display: inline-flex">총 [[${responseDTO.total}]]명</div>
+            <h7 style="color: #0d6efd" th:text="${lesson.curriculum.name}"></h7>
+            <h7 style="color: #0d6efd" th:text="${lesson.number}"></h7>
+            <h7 style="color: #0d6efd"> 기 </h7>
+            <div style="display: inline-flex; float: right">총 [[${responseDTO.total}]]명</div>
 
-                <div th:each="student : ${responseDTO.getDtoList()}">
-                    <a th:href="@{/lesson/studentDetail(idx=${student.idx})}" style="color: black">
-                        <div>
-                            <hr>
-                            <input type="hidden" class="Idx" th:value="${student.idx}">
-                            <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
-                            <div style="display: inline-flex" th:text="${student.name}"></div>
-                            <div style="display: inline-flex" th:text="${student.done}"></div>
-                            <div style="display: inline-flex" th:text="${student.pretest}"></div>
-                            <div style="display: inline-flex" th:text="${student.survey}"></div>
-                            <div style="display: inline-flex" th:text="${student.counseling}"></div>
-                        </div>
-                    </a>
-                </div>
+
+            <div th:each="student : ${responseDTO.getDtoList()}">
+                <a th:href="@{/lesson/studentDetail(idx=${student.idx})}" style="color: black">
+                    <div>
+                        <hr>
+                        <input type="hidden" class="Idx" th:value="${student.idx}">
+                        <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
+                        <div style="display: inline-flex" th:text="${student.name}"></div>
+                        <div style="display: inline-flex" th:text="${student.done}"></div>
+                        <div style="display: inline-flex" th:text="${student.pretest}"></div>
+                        <div style="display: inline-flex" th:text="${student.survey}"></div>
+                        <div style="display: inline-flex" th:text="${student.counseling}"></div>
+                    </div>
+                </a>
+            </div>
 
 
 
@@ -45,7 +49,7 @@
 
             <div class="float-end" style="display: inline-flex">
 
-                <button style="display: inline-flex" class="btn btn-outline-dark backList">목록</button>
+                <button style="display: inline-flex" class="btn btn-outline-dark backList">수업정보</button>
             </div>
 
 
@@ -66,7 +70,7 @@
 
     const Idx = document.querySelector(".Idx")
     document.querySelector(".backList").addEventListener("click", function (e){
-        const idx = studentIdx.value
+        const idx = Idx.value
         window.location.href = '/lesson/detail?idx=' + idx;
 
     })
