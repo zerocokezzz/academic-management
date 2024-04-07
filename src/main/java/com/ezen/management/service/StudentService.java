@@ -20,4 +20,10 @@ public interface StudentService {
 
     PageResponseDTO<Student> searchStudent(Long lessonIdx, PageRequestDTO pageRequestDTO);
 
+    void insertStudent(StudentDTO studentDTO);
+
+    void modifyStudent(StudentDTO studentDTO);
+
+    void deleteStudent(Long studentIdx);
+
 }
