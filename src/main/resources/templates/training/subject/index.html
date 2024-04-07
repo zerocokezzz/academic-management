@@ -50,17 +50,19 @@
 
             <br>
             <hr>
-            <div style="display: inline-flex">과목명</div>
-            <div style="display: inline-flex">평가방식</div>
+            <div style="width: 100%">
+                <div style="display: inline-flex;width: 30%; font-weight: bold; font-size: large; color: #0d6efd">과목명</div>
+                <div style="display: inline-flex;  font-weight: bold; font-size: large;  color: #0d6efd">평가방식</div>
+            </div>
 
-            <div th:each="subject: ${responseDTO.getDtoList()}">
+            <div style="width: 100%" th:each="subject: ${responseDTO.getDtoList()}">
                 <hr>
                 <a style="cursor: pointer; color: #222;"
                    th:idx="${subject.idx}"
                    th:name="${subject.name}"
                    th:method="${subject.method}"
                    th:onclick="updateBtn(this.getAttribute('idx'), this.getAttribute('name'),this.getAttribute('method'))">
-                    <div style="display: inline-flex" th:text="${subject.name}"></div>
+                    <div style="display: inline-flex; width: 30%" th:text="${subject.name}"></div>
                     <div style="display: inline-flex" th:text="${subject.method}"></div>
                 </a>
             </div>

@@ -51,12 +51,14 @@
 
             <br>
             <hr>
-            <div style="display: inline-flex">훈련유형</div>
-            <div style="display: inline-flex">과정명</div>
-            <div style="display: inline-flex">훈련시간</div>
-            <div style="display: inline-flex">훈련일수</div>
+            <div style="width: 100%">
+                <div style="display: inline-flex;width: 35%; font-weight: bold; font-size: large; color: #0d6efd">훈련유형</div>
+                <div style="display: inline-flex;width: 35%; font-weight: bold; font-size: large; color: #0d6efd">과정명</div>
+                <div style="display: inline-flex;width: 15%; font-weight: bold; font-size: large; color: #0d6efd">훈련시간</div>
+                <div style="display: inline-flex;  font-weight: bold; font-size: large;  color: #0d6efd">훈련일수</div>
+            </div>
 
-            <div th:each="curriculum: ${responseDTO.getDtoList()}">
+            <div style="width: 100%" th:each="curriculum: ${responseDTO.getDtoList()}">
                 <hr>
                 <a style="cursor: pointer; color: #222;"
                    th:idx="${curriculum.idx}"
@@ -71,10 +73,10 @@
                                 this.getAttribute('category_idx'),
                                 this.getAttribute('time'),
                                 this.getAttribute('day'))">
-                    <div style="display: inline-flex" th:text="${curriculum.category.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
-                    <div style="display: inline-flex" th:text="${curriculum.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
-                    <div style="display: inline-flex" th:text="${curriculum.time}"></div> &nbsp;시간 &nbsp; | &nbsp;&nbsp;
-                    <div style="display: inline-flex" th:text="${curriculum.day}"></div> &nbsp;일 &nbsp;
+                    <div style="overflow: auto;display: inline-flex;width: 35%" th:text="${curriculum.category.name}"></div>
+                    <div style="overflow: auto;display: inline-flex;width: 35%" th:text="${curriculum.name}"></div>
+                    <div style="display: inline-flex;width: 15%" th:text="${curriculum.time}+'시간'"></div>
+                    <div style="display: inline-flex" th:text="${curriculum.day}+'일'"></div>
                 </a>
             </div>
 

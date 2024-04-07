@@ -100,10 +100,13 @@ public class LessonController {
         return "/lesson/studentList";
     }
 
+    //학생 상세
     @GetMapping(value = "/studentDetail")
     public String studentDetail(Model model, @RequestParam("idx") Long idx){
+        //과목평가 테스트 가져오기 (학생 인덱스)
+        List<SubjectTest> subjectTest = lessonService.searchSubjectTest(idx);
+        model.addAttribute("subjectTest", subjectTest);
         model.addAttribute("student", studentService.findById(idx));
-
         return "/lesson/studentDetail";
     }
 }

@@ -26,55 +26,130 @@
                 <input type="hidden" class="lessonIdx" th:value="${student.lesson.idx}">
                 <div style="display: inline-flex">
                     <img th:src="${'/images/' + student.fileName}" alt=""
-                         style="width: 150px; height: 180px; margin-right: 20px">
-                    <div style="line-height: 130%"> <!-- 이미지랑 텍스트로 두 칸 -->
+                         style="width: 150px; height: 180px; margin-right: 40px">
+                    <div style="line-height: 90%"> <!-- 이미지랑 텍스트로 두 칸 -->
                         <br>
                         <div> <!-- 이름이랑 값으로 두칸 -->
-                            <h7 style="margin-right: 50px">이름</h7>
-                            <div style="display: inline-flex" th:text="${student.name}"></div>
+                            <h5 style="margin-right: 50px">이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${student.name}]]</h5>
                         </div>
                         <br>
                         <div>
-                            <h7 style="margin-right: 20px">생년월일</h7>
-                            <div style="display: inline-flex; margin-right: 20px" th:text="${student.birthday}"></div>
+                            <h5 style="margin-right: 20px">생년월일&nbsp;&nbsp;&nbsp;&nbsp;[[${student.birthday}]]</h5>
                         </div>
                         <br>
                         <div>
-                            <h7 style="margin-right: 20px">전화번호</h7>
-                            <div style="display: inline-flex; margin-right: 20px" th:text="${student.phone}"></div>
+                            <h5 style="margin-right: 20px">전화번호&nbsp;&nbsp;&nbsp;&nbsp;[[${student.phone}]]</h5>
                         </div>
                         <br>
                         <div>
-                            <h7 style="margin-right: 35px">이메일</h7>
-                            <div style="display: inline-flex; margin-right: 30px" th:text="${student.email}"></div>
+                            <h5 style="margin-right: 35px">이메일&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${student.email}]]</h5>
                         </div>
-
-                    </div>
-                    <br>
-                    <div>
-                        <table>
-                            <caption>유형, 과정, 기수, 담당교사, 사전평가여부, 사전평가점수, 수료여부, 설문여부, 과목평가여부</caption>
-                            <colgroup>
-                                <col style="width: %"
-                            </colgroup>
-                        </table>
-
-
-
-
-                        <h7 style="margin-right: 20px">유형</h7>
-                        <div style="display: inline-flex" th:text="${student.lesson.curriculum.category.name}"></div>
-                        <h7 style="margin-right: 20px">과정</h7>
-                        <div style="display: inline-flex; margin-right: 20px"
-                             th:text="${student.lesson.curriculum.name}"></div>
-                        <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
-                        <div style="display: inline-flex" th:text="${student.name}"></div>
-                        <div style="display: inline-flex" th:text="${student.done}"></div>
-                        <div style="display: inline-flex" th:text="${student.pretest}"></div>
-                        <div style="display: inline-flex" th:text="${student.survey}"></div>
-                        <div style="display: inline-flex" th:text="${student.counseling}"></div>
                     </div>
                 </div>
+                <br>
+                <br>
+                <hr>
+                <div>
+                    <table style="width: 100% ;font-size: large; font-weight: bold; line-height: 250%">
+                        <tr>
+                            <td style="width: 15%; text-align: left">유형</td>
+                            <td style="text-align: left" th:text="${student.lesson.curriculum.category.name}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">과정</td>
+                            <td style="text-align: left" th:text="${student.lesson.curriculum.name}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">기수</td>
+                            <td style="text-align: left" th:text="${student.lesson.number}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">담당교사</td>
+                            <td style="text-align: left" th:text="${student.lesson.member.name}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">수료여부</td>
+                            <td style="text-align: left" th:text="${student.done}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">사전평가여부</td>
+                            <td style="text-align: left" th:text="${student.pretest}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">설문여부</td>
+                            <td style="text-align: left" th:text="${student.survey}">
+                                <span th:if="${student.survey == 'O'}"> 완료</span>
+                                <span th:if="${student.survey == 'X'}"> 미완료 </span>
+                                <span th:if="${student.survey == null}">미완료 </span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">상담여부</td>
+                            <td style="text-align: left">
+                                <span th:if="${student.counseling == null}"> 완료된 상담이 없습니다.</span>
+                                <span th:if="${student.counseling == 1}"> 첫번째 상담 완료</span>
+                                <span th:if="${student.counseling == 2}"> 두번째 상담 완료</span>
+                                <span th:if="${student.counseling == 3}"> 세번째 상담 완료</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">과목평가여부</td>
+                            <td>
+                                <table>
+                                    <tr th th:each="subjectTest:${subjectTest}">
+                                        <td>[[${subjectTest.name}]]</td>
+                                        <td>
+                                            <span th:if="${subjectTest.state == 'X'}"> X </span>
+                                            <span th:if="${subjectTest.state == 'O'}"> O </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
             </div>
 
             <br>
