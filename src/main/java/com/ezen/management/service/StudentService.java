@@ -24,6 +24,6 @@ public interface StudentService {
 
     void modifyStudent(StudentDTO studentDTO);
 
-    void deleteStudent(Long studentIdx);
+    void deleteStudent(StudentDTO studentDTO);
 
 }
