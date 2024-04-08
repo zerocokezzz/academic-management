@@ -19,6 +19,16 @@ public interface CounselingService {
     void update(CounselingStudentDTO counselingStudentDTO);           //수정하기
     void delete(Long idx);                              //삭제하기
 
+    Counseling findById(Long studentIdx);               //학생에 단일 상담 정보 가져오기
+
+    List<Counseling> findByStudentIdx(Long studentIdx); //학생정보에 전체 상담 정보 가져오기
+    
+    
+    
 //  Detail에 사용할 용도이나 아직,,
 //    Counseling getCounselingWithStudentId(Student student, Long studentIdx);
+    
+    
+    
+    
 }

@@ -28,7 +28,7 @@
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
       <h3 style="display: inline-flex" > [[${student.name}]] </h3>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">상담내역</button>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end counselingBtn">상담내역</button>
       <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
 
 
@@ -166,6 +166,23 @@
 <script src="/js/training.js"></script>
 <script layout:fragment="script" th:inline="javascript">
 
+  console.log("studentIdx확인용= " + [[${student.idx}]])
+
+  //에러메세지 띄워주기
+  const errors = [[${errors}]]
+  console.log(errors)
+
+  let errorMsg = ''
+
+  if(errors){
+    for(let i=0; i<errors.length; i++){
+      errorMsg += `${errors[i].field}는 ${errors[i].code} \n`
+    }
+    alert(errorMsg)
+  }
+
+
+
   const studentIdx = document.querySelector(".studentIdx")
   document.querySelector(".backList").addEventListener("click", function (e){
     const idx = studentIdx.value
@@ -175,14 +192,25 @@
 
 
 //학생 개별 상담내역 검색
-  const studentIdx = document.querySelector(".studentIdx")
   document.querySelector(".counselingBtn").addEventListener("click", function (e){
-    const idx = studentIdx.value
-    window.location.href = '/counseling/detail?idx=' + idx;
+
+    const idx = [[${student.idx}]]
+    console.log("idx= " + idx);
+
+    //값과 타입까지 비교위한(====)
+    // if (idx === null) {
+    //   console.log("idx is null");
+    //   alert("idx가 null입니다.");
+    //   location.href = '/lesson/studentList?idx=' + studentLesson;
+    //
+    // } else {
+    //   console.log("idx= " + idx);
+    //   location.href = '/counseling/counselingDetail?idx=' + idx;
+    // }
+
+    location.href = '/counseling/counselingDetail?idx=' + [[${student.idx}]];
 
   })
-
-
 
 
   // 답안지 모달
