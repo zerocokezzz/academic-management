@@ -12,7 +12,6 @@ public class PageResponseDTO<E> {
     private int page;
 
 //    페이지당 개수 요청 따로 없으면 10개씩
-    @Builder.Default
     private int size = 10;
 
     private int total;

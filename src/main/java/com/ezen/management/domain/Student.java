@@ -1,10 +1,7 @@
 package com.ezen.management.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,44 +10,49 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 @ToString(exclude = "lesson")
 public class Student extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Lesson lesson;
 
     private String name;
     private String birthday;
     private String email;
+    private String phone;
 
     @Builder.Default
     private String fileName = "default_profile.jpg";
 
-//    상담 등록 시 +1
+    //    상담 등록 시 +1
     @Builder.Default
     private int counseling = 0;
 
-//    사전 평가 여부
+    //    사전 평가 여부
 //    사전 평가 등록 시 +1
     @Builder.Default
     private boolean pretest = false;
 
-//    사전 평가 점수
+    //    사전 평가 점수
     @Builder.Default
     private int score = 0;
 
 //    설문 조사 여부
 //    설문 조사 등록 시 true
+//    @Builder.Default
+//    private boolean survey1 = false;
+//    @Builder.Default
+//    private boolean survey2 = false;
+//    @Builder.Default
+//    private boolean survey3 = false;
+
     @Builder.Default
-    private boolean survey1 = false;
-    @Builder.Default
-    private boolean survey2 = false;
-    @Builder.Default
-    private boolean survey3 = false;
+    private int survey = 0;
 
     @Builder.Default
 //    0 진행중 / 1 수료 / 2 하차
@@ -61,12 +63,42 @@ public class Student extends BaseEntity{
 
     private String etc;
 
-
-
-
-
     public void insertCounseling(){
         this.counseling++;
     }
+
+    public void grading(int score){
+        this.pretest = true;
+        this.score = score;
+    }
+
+    public void insertSurvey(){
+        this.survey++;
+    }
+
+    public void changeFileName(String fileName){
+        this.fileName = fileName;
+    }
+
+    public void changeEtc(String etc){
+        this.etc = etc;
+    }
+
+    public void changeName(String name){
+        this.name = name;
+    }
+
+    public void changeBirthday(String birthday){
+        this.birthday = birthday;
+    }
+
+    public void changeEmail(String email){
+        this.email = email;
+    }
+
+    public void changePhone(String phone){
+        this.phone = phone;
+    }
+
 
 }

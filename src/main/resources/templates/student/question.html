@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout/student/basic :: head"></head>
+
+<style>
+
+    *{
+        max-height: max-content;
+        overflow: visible;
+    }
+</style>
+
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/student/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <br>
+
+        <br>
+        <br>
+        <div class="inner-content" style="margin: 0 4vw 0 12vh; max-width: 80%">
+
+
+            <div>
+                <h3>학생 정보</h3>
+                이름: [[${student.name}]]<br>
+                생년월일: [[${student.birthday}]]
+
+            </div>
+
+            <br>
+
+            <hr>
+            <br>
+
+            <form action="/student/question/insert" method="post">
+                <input type="hidden" th:value="${student.idx}" name="studentIdx">
+                <h3>문제</h3>
+                <div style="font-size: 12pt"> 문제를 읽고 정답을 고르세요. </div>
+                <br>
+
+                <div th:each="question : ${questions}" style="margin: 10px;" class="col-md-6">
+
+
+                    <input th:if="${question.number == 1}"
+                           type="hidden"
+                           th:value="${question.name}" name="name"/>
+                    <strong>[[${question.number}]]. [[${question.content}]]</strong>
+                    <br>
+
+                    <!--                    예 -->
+                    <div th:if="${question.example != null}"
+                         style="border: 1px solid #2a2d34; border-radius: 5px; max-width: 270px; margin: 30px">
+                        <div style="margin: 10px">
+                            [[${question.example}]]
+                        </div>
+                    </div>
+
+                    <!--                    사진 -->
+                    <div th:if="${question.fileName != null}">
+                        <img th:src="'/img/question/' + ${question.fileName}" style="max-width: 270px; margin: 30px">
+                    </div>
+
+
+                    <!--                    보기 -->
+                    <div>
+                        <input th:name="'an' + ${question.number}" type="radio" value="1"/> [[${question.item1}]]<br>
+                        <input th:name="'an' + ${question.number}" type="radio" value="2"/> [[${question.item2}]]<br>
+                        <input th:name="'an' + ${question.number}" type="radio" value="3"/> [[${question.item3}]]<br>
+                        <input th:name="'an' + ${question.number}" type="radio" value="4"/> [[${question.item4}]]
+                    </div>
+
+                    <br>
+                    <hr>
+                    <br>
+                </div>
+
+                <button type="submit" class="btn btn-primary">제출</button>
+
+            </form>
+
+
+
+
+            <!--            OMR -->
+            <div class="col-md-6">
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+
+
+    </div>
+    <!-- content end -->
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/student/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/student/basic :: scriptSet">
+</div>
+
+<script>
+
+    document.querySelector(".questionBtn").classList.add("active");
+
+</script>
+
+</body>
+</html>

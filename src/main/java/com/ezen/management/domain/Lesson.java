@@ -1,5 +1,6 @@
 package com.ezen.management.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,23 +16,27 @@ public class Lesson extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Curriculum curriculum;
 
-    @ManyToOne
-//    교사
+    //과정 설명(내용)
+    private String content;
+
+    //교사
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Member member;
 
+    //기수
     @Column(nullable = false)
-    //    기수
     private int number;
 
-    //    인원
+    //인원
     @Builder.Default
-    private int head_count = 0;
+    private int headCount = 0;
 
     @Column(nullable = false)
     private LocalDate startDay;
@@ -50,6 +55,8 @@ public class Lesson extends BaseEntity{
 
     private String classRoom;
 
+    private String questionName;
+
     public void changeTeacher(Member member){
         this.member = member;
     }
@@ -57,6 +64,31 @@ public class Lesson extends BaseEntity{
     public void changeClassroom(String classRoom) {
         this.classRoom = classRoom;
     }
+
+    public void changeQuestionName(String questionName){
+        this.questionName = questionName;
+    }
+
+    public void headCountUp(){
+        this.headCount++;
+    }
+
+
+    public void changeCurriculum(Curriculum curriculum){this.curriculum = curriculum;}
+
+
+    public void changeContent(String content){
+        this.content = content;
+    }
+
+    public void changeNumber(int number){ this.number = number;}
+
+    public void changeStartDay(LocalDate startDay){this.startDay = startDay;}
+
+    public void changEndDay(LocalDate endDay){this.endDay = endDay;}
+    public void changeSurvey1(LocalDate survey1){this.survey1 = survey1;}
+    public void changeSurvey2(LocalDate survey2){this.survey2 = survey2;}
+    public void changeSurvey3(LocalDate survey3){this.survey3 = survey3;}
 
 
 }

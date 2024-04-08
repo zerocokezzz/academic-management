@@ -12,12 +12,24 @@ import lombok.*;
 public class Curriculum {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
+
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
 
     private int time;
     private int day;
 
+    public void changeName(String putName){this.name = putName;}
+
+    public void changeCategory(Category category){this.category = category; }
+
+    public void changeTime(int time){this.time = time; }
+
+    public void changeDay(int day){this.day = day; }
+
 }
+

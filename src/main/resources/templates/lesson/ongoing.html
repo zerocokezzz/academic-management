@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%;">
+
+            <h3 style="display: inline-flex">수업목록</h3>
+            <hr>
+            <br>
+
+            <!-- 검색 -->
+            <div>
+                <a href="/lesson">
+                    <div class="form-control"style="width: 33%;; display: inline-flex; background-color:#80ceff; justify-content : center; font-weight: 400; color: white">
+                        전체
+                    </div>
+                </a>
+                <a href="/lesson/ongoing">
+                    <div class="form-control state" value="진행중" onclick="updateSelectedValue('진행중')"
+                         style="width: 33%;; display: inline-flex; background-color:rgba(23,91,238,0.98); justify-content : center; font-weight: 400; color: white">
+                        진행 중
+                    </div>
+                </a>
+                <a href="/lesson/end">
+                    <div class="form-control state" value="완료" onclick="updateSelectedValue('완료')"
+                         style="width: 33%;; display: inline-flex; background-color:#80ceff; justify-content : center; font-weight: 400; color: white">
+                        완료
+                    </div>
+                </a>
+            </div>
+
+            <br>
+            <br>
+
+
+            <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+                <form action="/lesson" method="get">
+                    <div class="col">
+                        <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select class="form-select type" name="type">
+                                    <option value="">---</option>
+                                    <option th:selected="${pageRequestDTO.type == 'c'}" value="c">훈련유형</option>
+                                    <option th:selected="${pageRequestDTO.type == 't'}" value="t">과정</option>
+                                    <option th:selected="${pageRequestDTO.type == 'n'}" value="n">기수</option>
+                                    <option th:selected="${pageRequestDTO.type == 'm'}" value="m">교사</option>
+                                    <option th:selected="${pageRequestDTO.type == 'h'}" value="h">수강인원</option>
+                                    <option th:selected="${pageRequestDTO.type == 's'}" value="s">수업시작일</option>
+                                    <option th:selected="${pageRequestDTO.type == 'e'}" value="e">수업종료일</option>
+                                    <option th:selected="${pageRequestDTO.type == 'r'}" value="r">강의실</option>
+                                </select>
+                            </div>&nbsp;
+                            <input type="text" class="form-control keyword" name="keyword"
+                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">&nbsp;
+                            <button style="border-radius: 5px" type="submit" class="btn btn-outline-primary searchBtn">검색</button>&nbsp;
+                            <button style="border-radius: 5px" type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 리스트 -->
+            <br>
+            <div style="display: inline-flex">총 [[${responseDTO.total}]]개</div>
+
+            <br>
+            <hr>
+            <div style="width: 100%">
+                <div style="display: inline-flex;width: 25%; font-weight: bold; font-size: large; color: #0d6efd">훈련유형</div>
+                <div style="display: inline-flex;width: 30%; font-weight: bold; font-size: large; color: #0d6efd">과정명</div>
+                <div style="display: inline-flex;width: 5%; font-weight: bold; font-size: large; color: #0d6efd">기수</div>
+                <div style="display: inline-flex;width: 5%; font-weight: bold; font-size: large; color: #0d6efd">인원</div>
+                <div style="display: inline-flex;width: 10%; font-weight: bold; font-size: large; color: #0d6efd">교사</div>
+                <div style="display: inline-flex;width: 10%; font-weight: bold; font-size: large; color: #0d6efd">시작일</div>
+                <div style="display: inline-flex;width: 10%;  font-weight: bold; font-size: large;  color: #0d6efd">종료일</div>
+            </div>
+
+            <div style="width: 100%; " th:each="lesson: ${responseDTO.getDtoList()}">
+                <a th:href="@{/lesson/detail(idx=${lesson.idx})}" style="color: black">
+                    <div>
+                        <hr>
+                        <div style="overflow: auto;display: inline-flex;width: 25%" th:text="${lesson.curriculum.category.name}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 30%" th:text="${lesson.curriculum.name}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 5%" th:text="${lesson.number}+'기'"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 5%" th:text="${lesson.headCount}+'명'"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 10%" th:text="${lesson.member.name}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 10%" th:text="${lesson.startDay}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 10%" th:text="${lesson.endDay}"></div>
+                    </div>
+                </a>
+                <div class="float-end" style="display: inline-flex"></div>
+
+            </div>
+
+            <!-- 페이지 -->
+            <hr>
+            <br>
+            <ul class="pagination flex-wrap">
+                <li class="page-item" th:if="${responseDTO.prev}">
+                    <a class="page-link" th:data-num="${responseDTO.start -1}">이전</a>
+                </li>
+
+                <th:block th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                    <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+                    </li>
+                </th:block>
+
+                <li class="page-item" th:if="${responseDTO.next}">
+                    <a class="page-link" th:data-num="${responseDTO.end + 1}">다음</a>
+                </li>
+
+            </ul>
+
+
+        </div>
+
+
+    </div>
+    <!-- content end -->
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div><!-- wrapper end-->
+<div th:replace="/layout/basic :: scriptSet"></div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/training.js"></script>
+<script layout:fragment="script" th:inline="javascript">
+
+    //수업 진행 & 완료 선택
+    async function updateSelectedValue(value) {
+        document.getElementById('selectedValue').value = value;
+    }
+
+    //페이지 클릭
+    document.querySelector(".pagination").addEventListener("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const target = e.target;
+
+        if (target.tagName !== 'A') {
+            return;
+        }
+
+        const formObj = document.querySelector("form");
+
+        const num = target.getAttribute("data-num");
+        const keyword = document.querySelector(".keyword");
+        const type = document.querySelector(".type");
+        const state = document.querySelector(".state");
+
+        // 버튼 누르면 ?page=num
+        formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
+
+        // 검색 목록이면
+        if (keyword.value !== '') {
+            formObj.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
+            formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
+        }
+
+
+        formObj.submit();
+
+    }, false);
+
+    //  검색 조건 초기화
+    document.querySelector(".clearBtn").addEventListener("click", function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        self.location = '/lesson/ongoing';
+
+    }, false)
+
+
+</script>
+</html>

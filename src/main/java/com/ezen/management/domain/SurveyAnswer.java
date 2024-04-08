@@ -1,51 +1,43 @@
 package com.ezen.management.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString(exclude = "lesson")
-public class SurveyAnswer {
-
-//    설문 답변
+public class SurveyAnswer {//    설문 답변
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Lesson lesson;
 
-//    문항
-    @Column(nullable = false)
+    private int round;
+
+    //    객관식 답변
     private int an1;
-    @Column(nullable = false)
     private int an2;
-    @Column(nullable = false)
     private int an3;
-    @Column(nullable = false)
     private int an4;
-    @Column(nullable = false)
     private int an5;
-    @Column(nullable = false)
     private int an6;
-    @Column(nullable = false)
     private int an7;
-    @Column(nullable = false)
     private int an8;
-    @Column(nullable = false)
     private int an9;
-    @Column(nullable = false)
     private int an10;
+    private int an11;
+    private int an12;
+    private int an13;
+    private int an14;
+    private int an15;
 
-
-//    주관식 답변
+    //    주관식 답변
     private String com1;
     private String com2;
     private String com3;
@@ -56,7 +48,10 @@ public class SurveyAnswer {
     private String com8;
     private String com9;
     private String com10;
-
-
+    private String com11;
+    private String com12;
+    private String com13;
+    private String com14;
+    private String com15;
 
 }

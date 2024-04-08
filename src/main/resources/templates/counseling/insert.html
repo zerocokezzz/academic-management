@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+
+    </div>
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>상담 추가</h5>
+                        <div class="card-body">
+                            <form action="/counseling/insert" method="post">
+<!--  학생번호랑 학생이름은 땡겨오는 걸로                              -->
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">학생.No</span>
+                                    <input type="text" name="studentIdx" class="form-control" placeholder="학생번호">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">학생이름</span>
+                                    <input type="text" name="name" class="form-control" placeholder="이름">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담회차</span>
+                                    <input type="text" name="round" class="form-control" placeholder="상담회차">
+                                </div>
+                                <div class="bs-body-color-rgb">
+                                    <span class="input-group-text">내용</span>
+                                    <textarea class="form-control col-sm-5" rows="5" name="content" placeholder="상담내용을 작성하세요"></textarea>
+                                </div>
+<!--  기입으로할지 아니면 radio로 할지                              -->
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">상담 방법</span>
+                                    <input type="text" class="form-control" name="method" placeholder="0:대면, 1:온라인, 2:전화 중 맞는 방법을 입력하세요">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">담당자</span>
+                                    <input type="text" name="writer" class="form-control" placeholder="담당자를 입력하세요" >
+                                </div>
+
+                                <div class="my-4">
+                                    <div class="float-end">
+                                        <button type="button" class="btn btn-primary creatBtn">save</button>
+                                        <button type="button" class="btn btn-outline-dark clearBtn">back</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        </div><!-- end card-header -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end inner-content -->
+
+
+
+
+
+    </div><!--end content -->
+
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script content="script" th:inline="javascript">
+
+    console.log("안녕 여기 상담추가");
+
+    //추가하기
+    document.querySelector(".creatBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        self.location ='/counseling/list'
+    }, false)
+
+    //List 돌아가기
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        self.location ='/counseling/list'
+    }, false)
+
+
+</script>
+
+
+
+</body>
+</html>

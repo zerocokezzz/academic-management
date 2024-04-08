@@ -13,7 +13,10 @@ public class QuestionAnswer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idx;
+    private Long idx;
+
+//    문제 주제 이름
+    private String name;
 
     @OneToOne
     private Student student;

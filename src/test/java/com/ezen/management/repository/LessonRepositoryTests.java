@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -31,15 +33,20 @@ public class LessonRepositoryTests {
         Optional<Member> memberResult = memberRepository.getByIdWithRoles("teacher");
         Member member = memberResult.orElseThrow();
 
-        Optional<Curriculum> curriculumResult = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정");
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
         Curriculum curriculum = curriculumResult.orElseThrow();
 
-        LocalDate start = LocalDate.of(2024, 3, 22);
+
+        log.info("curriculum {}", curriculum);
+
+
+        LocalDate start = LocalDate.of(2024, 9, 27);
 
         Lesson lesson = Lesson.builder()
                 .curriculum(curriculum)
                 .member(member)
                 .number(1)
+                .questionName("자바 풀스택")
                 .startDay(start)
                 .endDay(start.plusDays(curriculum.getDay()))
                 .survey1(start.plusMonths(1))
@@ -55,7 +62,8 @@ public class LessonRepositoryTests {
     @Test
     public void getByCurriculumNameAndNumber(){
 
-        Optional<Curriculum> curriculumResult = curriculumRepository.findById("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정 ");
+        Optional<Curriculum> curriculumResult = curriculumRepository.findById(1L);
+
         Curriculum curriculum = curriculumResult.orElseThrow();
         int number = 1;
 
@@ -82,16 +90,26 @@ public class LessonRepositoryTests {
     }
 
     @Test
+    @Transactional
     public void 현재진행중인수업(){
-        Optional<Member> result = memberRepository.findById("teacher");
-        Member teacher = result.orElseThrow();
+//        Optional<Member> result = memberRepository.findById("teacher");
+//        Member teacher = result.orElseThrow();
 
         LocalDate now = LocalDate.now();
 
-        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
-        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
+//        Optional<List<Lesson>> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
+        List<Lesson> lessonsByEndDayGreaterThan = lessonRepository.getLessonsByEndDayGreaterThan(now);
+//        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
 
-        log.info("lessons...... " + lessons);
+
+        log.info("lessons...... " + lessonsByEndDayGreaterThan);
+    }
+
+    @Test
+    public void 전체목록(){
+        List<Lesson> all = lessonRepository.findAll();
+
+        log.info("all lessons......" + all);
     }
 
 

@@ -1,11 +1,16 @@
 package com.ezen.management.controller;
 
+import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
+import com.ezen.management.domain.Student;
 import com.ezen.management.dto.MemberDTO;
 import com.ezen.management.dto.PageRequestDTO;
 import com.ezen.management.dto.PageResponseDTO;
+import com.ezen.management.dto.StudentDTO;
+import com.ezen.management.service.LessonService;
 import com.ezen.management.service.MemberService;
+import com.ezen.management.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -31,17 +33,13 @@ import java.util.Set;
 public class MemberController {
 
     private final MemberService memberService;
+    private final StudentService studentService;
+    private final LessonService lessonService;
 
 //    행정 관리 홈(행정 리스트)
     @PreAuthorize("hasRole('MASTER')")
     @GetMapping("/admin")   //  /member/admin
     public String adminIndex(Model model, PageRequestDTO pageRequestDTO){
-
-//        페이징
-//        Pageable pageable = PageRequest.of(page - 1, size);
-
-//        이거 전체 회원 가지고 오는 게 아니라 admin만 가져와야함
-//        전체 회원 목록 불러와서 행정만 보이게 하는 거라 페이지가 다르게 나올 거임
 
         Set<MemberRole> memberRoleSet = new HashSet<>();
         memberRoleSet.add(MemberRole.ADMIN);
@@ -305,6 +303,84 @@ public class MemberController {
 
         return null;
     }
+
+
+    @GetMapping("/student")
+    public String student(Long lessonIdx, PageRequestDTO pageRequestDTO, Model model){
+
+//        model.addAttribute("students", students);
+
+        PageResponseDTO<Student> pageResponseDTO = studentService.searchStudent(lessonIdx, pageRequestDTO);
+
+        model.addAttribute("pageResponseDTO", pageResponseDTO);
+
+        return "/member/student/index";
+    }
+
+    @PostMapping("/student/insert")
+    public String studentInsert(StudentDTO studentDTO){
+
+        log.info("studentDTO : {}", studentDTO);
+
+        try {
+            studentService.insertStudent(studentDTO);
+        }catch (Exception e){
+            return "redirect:/member/student?code=insert-fail";
+        }
+
+        return "redirect:/member/student?code=insert-success";
+    }
+
+
+    @PostMapping("/student/modify")
+    public String studentModify(StudentDTO studentDTO){
+
+        log.info("studentDTO : {}", studentDTO);
+
+        try {
+            studentService.modifyStudent(studentDTO);
+        }catch (Exception e){
+            return "redirect:/member/student?code=modify-fail";
+        }
+
+        return "redirect:/member/student?code=modify-success";
+    }
+
+    @GetMapping("/student/getStudent")
+    @ResponseBody
+    public StudentDTO getStudent(Long studentIdx){
+
+        Student student = studentService.findById(studentIdx);
+
+        return StudentDTO.builder()
+                .lessonIdx(student.getLesson().getIdx())
+                .idx(student.getIdx())
+                .lessonName(student.getLesson().getCurriculum().getName())
+                .lessonNumber(student.getLesson().getNumber())
+                .name(student.getName())
+                .birthday(student.getBirthday())
+                .phone(student.getPhone())
+                .email(student.getEmail())
+                .etc(student.getEtc())
+                .fileName(student.getFileName())
+                .build();
+
+
+    }
+
+    @PostMapping("/student/delete")
+    public String deleteStudent(Long studentIdx){
+
+        try{
+            studentService.deleteStudent(studentIdx);
+        }catch (Exception e){
+            return "redirect:/member/student?code=delete-fail";
+        }
+
+        return "redirect:/member/student?code=delete-success";
+
+    }
+
 
 
 

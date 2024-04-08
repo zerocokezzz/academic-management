@@ -22,12 +22,12 @@ public class CurriculumRepositoryTests {
     @Test
     public void 과정추가(){
 
-        Optional<Category> result = categoryRepository.findById("KDT");
+        Optional<Category> result = categoryRepository.findById(1L);
         Category category = result.orElseThrow();
 
         Curriculum curriculum = Curriculum.builder()
                 .category(category)
-                .name("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정 ")
+                .name("풀스택 프레임워크(자바,스프링)기반 데이터 융합SW개발자 과정")
                 .day(120)
                 .time(960)
                 .build();
