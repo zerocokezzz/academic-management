@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -94,58 +95,6 @@ public class CounselingServiceImpl implements CounselingService {
 
     }
 
-//    @Override
-//    public Counseling findById(Long studentIdx) {
-//
-//        Optional<Counseling> byStudentIdx = Optional.ofNullable(counselingRepository.findByStudentIdx(studentIdx));
-//        Counseling counseling = byStudentIdx.orElseThrow();
-//
-//        return counseling;
-//    }
-
-
-//    public CounselingDTO getCounselingDetailByStudentIdx(Long studentIdx) {
-//        Counseling counseling = counselingRepository.findByStudentIdx(studentIdx); // 해당 학생의 상담 정보 조회
-//        // Counseling 객체를 CounselingDTO로 변환
-//        CounselingDTO counselingDTO = counselingDTO(counseling);
-//
-//        return counselingDTO;
-//    }
-//
-//    private CounselingDTO counselingDTO(Counseling counseling) {
-//        return CounselingDTO.builder()
-//                .idx(counseling.getIdx())
-//                .studentIdx(counseling.getStudent().getIdx())
-//                .counselingDate(counseling.getCounselingDate())
-//                .content(counseling.getContent())
-//                .method(counseling.getMethod())
-//                .writer(counseling.getWriter())
-//                .regDate(counseling.getRegDate())
-//                .modDate(counseling.getModDate())
-//                .build();
-//    }
-
-
-
-//    public List<CounselingDTO> getCounselingListByStudentIdx(Long studentIdx) {
-//        List<Counseling> counselingList = counselingRepository.findByStudentIdx(studentIdx);
-//        return counselingList.stream()
-//                .map(this::counselingDTO)
-//                .collect(Collectors.toList());
-//    }
-//    private CounselingDTO counselingDTO(Counseling counseling) {
-//        return CounselingDTO.builder()
-//                .idx(counseling.getIdx())
-//                .studentIdx(counseling.getStudent().getIdx())
-//                .counselingDate(counseling.getCounselingDate())
-//                .content(counseling.getContent())
-//                .method(counseling.getMethod())
-//                .writer(counseling.getWriter())
-//                .regDate(counseling.getRegDate())
-//                .modDate(counseling.getModDate())
-//                .build();
-//    }
-
 
 
     @Override
@@ -154,9 +103,10 @@ public class CounselingServiceImpl implements CounselingService {
         Counseling counseling = modelMapper.map(counselingDTO, Counseling.class);
         log.info("counseling= " + counseling);
 
+        //counselingRepository.save(counseling).getIdx();
+
         Long idx = (long) counselingRepository.save(counseling).getIdx();
         log.info("idx= " + idx);
-
 
         return idx;
     }
@@ -191,12 +141,40 @@ public class CounselingServiceImpl implements CounselingService {
     }
 
 
-//    @Override
-//    public Counseling getCounselingWithStudentId(Student student, Long studentIdx) {
-//
-//
-//        return counselingRepository.getCounselingWithStudentId(student, studentIdx);
-//    }
+    @Override
+    public Counseling findById(Long studentIdx) {
+
+         Optional<Counseling> studentById = counselingRepository.findById(studentIdx);
+
+         if(studentById.isPresent()){
+            //실제 객체를 가져오기 위해 .get() 사용
+             Counseling counseling = studentById.get();
+             log.info("studentById= " , studentById);
+             return counseling;
+
+         }else {
+
+             // 예외처리가 들어갈 구간
+
+             return null;
+         }
+
+
+    }
+
+
+    //목록으로 학생정보 가져오기
+    @Override
+    public List<Counseling> findByStudentIdx(Long studentIdx) {
+
+
+        List<Counseling> counselingList = counselingRepository.findByStudentIdx(studentIdx);
+        log.info("counselingList= " + counselingList);
+
+
+        return counselingList;
+    }
+
 
 
 }
