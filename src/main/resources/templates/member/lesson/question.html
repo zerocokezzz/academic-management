@@ -81,7 +81,7 @@
             <div id="questionAnswerList">
             <div th:each="questionAnswer : ${pageResponseDTO.getDtoList()}">
             <br>
-            <a class="link-dark" href="#" th:questionAnswerIdx="${questionAnswer.idx}" th:studentIdx="${questionAnswer.getStudent().idx}" onclick="openPaper(this.getAttribute('questionAnswerIdx'), this.getAttribute('studentIdx'))">
+            <a class="link-dark" href="#" th:questionAnswerIdx="${questionAnswer.idx}" th:studentIdx="${questionAnswer.getStudent().idx}" onclick="openPaper(this.getAttribute('studentIdx'))">
                 <p th:text="${questionAnswer.getStudent().name}" style="display: inline-flex"></p>
                 &nbsp;|&nbsp;
                 <p style="display: inline-flex" th:text="${questionAnswer.getStudent().getLesson().number + '회차'}"></p>
@@ -466,41 +466,37 @@
     const studentFileName = document.querySelector('.studentFilename');
     const studentScore = document.querySelector(".studentScore");
 
-    function openPaper(questionAnswerIdx, studentIdx){
-        console.log('questionAnswerIdx : ' + questionAnswerIdx);
+    function openPaper(studentIdx){
+        // console.log('questionAnswerIdx : ' + questionAnswerIdx);
         console.log('studentIdx : ' + studentIdx);
+        let htmls = '';
 
-        const studentParam = {
+        const params = {
             studentIdx : studentIdx
         }
 
-        console.log(studentParam);
-
-        const questionAnswerParam = {
-            questionAnswerIdx : questionAnswerIdx
-        }
 
         // 학생 정보
-        getStudent(studentParam).then(result => {
-            console.log("student info!");
-            console.log(result);
+        getStudent(params).then(result => {
+          console.log("student info!");
+          console.log(result);
 
-            studentName.innerText = result.name;
-            studentLesson.innerText = result.lessonName + ' ' +  result.lessonNumber + '회차';
-            studentPhone.innerText = result.phone;
-            studentBirthday.innerText = result.birthday;
-            studentFileName.innerHTML = `<img src="/images/${result.fileName}" style="object-fit: cover">`;
-            studentScore.innerText = result.score + '점';
+          studentName.innerText = result.name;
+          studentLesson.innerText = result.lessonName + ' ' +  result.lessonNumber + '회차';
+          studentPhone.innerText = result.phone;
+          studentBirthday.innerText = result.birthday;
+          studentFileName.innerHTML = `<img src="/images/${result.fileName}" style="object-fit: cover; width: 150px; height: 200px">`;
+          studentScore.innerText = result.score + '점';
 
 
         }).catch( e => {
-            alert('student error!');
+          alert('student error!');
 
         })
 
 
         // 답안지
-        getQuestionAnswer(questionAnswerParam).then(result => {
+        getQuestionAnswer(params).then(result => {
             console.log(result);
             console.log('questionAnswer!')
             console.log(result.questionAnswer);
@@ -509,7 +505,7 @@
             console.log('1. answer : ' + result.answerList[0].answer.toString());
             console.log(result.answerList[0].answer.toString() === result.questionAnswer[0]);
 
-            let htmls = '';
+
 
             for(let i = 0; i < 20; i++){
                 // $(".questionAnswerPaper").append()
@@ -517,8 +513,8 @@
                 htmls += `<div style="display: inline-flex; width: 500px; flex-wrap: nowrap">
 
                         ${(result.questionAnswer[i]) === (result.answerList[i].answer.toString()) ?
-                        `<img src="/images/correct.png" style=" width: 120px; position: absolute;">` :
-                        `<img src="/images/wrong.png" style="width: 70px; position: absolute;">`}
+                    `<img src="/images/correct.png" style=" width: 120px; position: absolute;">` :
+                    `<img src="/images/wrong.png" style="width: 70px; position: absolute;">`}
 
                         <div style="margin : 40px;  overflow: scroll;">
 
@@ -552,18 +548,21 @@
                             </div>
                         <!-- 문제 하나  끝-->`;
 
-                questionAnswerPaper.innerHTML = htmls;
 
             }
+            questionAnswerPaper.innerHTML = htmls;
 
         }).catch( e => {
             console.log(e);
+            htmls = '<div style="text-align: center">아직 사전평가가 등록되지 않았습니다.</div><br>';
+            questionAnswerPaper.innerHTML = htmls;
         });
 
 
         $("#answerPaper").modal('show');
 
     }
+
 
     async function getQuestionAnswer(paramList){
         const response = await axios.get('/member/lesson/question/getQuestionAnswerAndAnswerList', {params: paramList});

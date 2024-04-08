@@ -53,7 +53,7 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public PageResponseDTO<Student> searchStudent(Long lessonIdx, PageRequestDTO pageRequestDTO) {
 
-        Pageable pageable = pageRequestDTO.getPageable();
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
