@@ -17,6 +17,6 @@ public class SubjectHoldDTO {
 
     private String name;
 
-    private int lesson_idx;
+    private Long lesson_idx;
 
 }

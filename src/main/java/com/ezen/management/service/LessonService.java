@@ -2,6 +2,7 @@ package com.ezen.management.service;
 
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import com.ezen.management.domain.SubjectTest;
 import com.ezen.management.dto.LessonPageRequestDTO;
 import com.ezen.management.dto.LessonPageResponseDTO;
 import com.ezen.management.dto.PageRequestDTO;
@@ -28,6 +29,8 @@ public interface LessonService {
 
 
     PageResponseDTO<Student> searchStudent(PageRequestDTO pageRequestDTO, Long lessonIdx);
+
+    List<SubjectTest> searchSubjectTest(Long studentIdx);
 
 
 

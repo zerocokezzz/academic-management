@@ -22,4 +22,6 @@ public class SubjectTest {
 
     private String subject;
 
+    private String state;
+
 }

@@ -92,16 +92,22 @@ public class LessonController {
     @GetMapping(value = "/studentList")
     public String studentList(Model model, @RequestParam("idx") Long idx, PageRequestDTO pageRequestDTO){
 
+        Lesson lesson = trainingService.getLessonByIdx(idx);
+        model.addAttribute("lesson", lesson);
+
         PageResponseDTO<Student> responseDTO = lessonService.searchStudent(pageRequestDTO, idx);
         model.addAttribute("responseDTO", responseDTO);
 
         return "/lesson/studentList";
     }
 
+    //학생 상세
     @GetMapping(value = "/studentDetail")
     public String studentDetail(Model model, @RequestParam("idx") Long idx){
+        //과목평가 테스트 가져오기 (학생 인덱스)
+        List<SubjectTest> subjectTest = lessonService.searchSubjectTest(idx);
+        model.addAttribute("subjectTest", subjectTest);
         model.addAttribute("student", studentService.findById(idx));
-
         return "/lesson/studentDetail";
     }
 

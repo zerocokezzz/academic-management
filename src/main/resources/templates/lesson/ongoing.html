@@ -20,32 +20,32 @@
             <br>
 
             <!-- 검색 -->
-                <div>
-                    <a href="/lesson">
-                        <div class="form-control"style="max-width: 500px; display: inline-flex; background-color:#66b4cb; justify-content : center; font-weight: 600; color: black">
-                            전체
-                        </div>
-                    </a>
-                    <a href="/lesson/ongoing">
+            <div>
+                <a href="/lesson">
+                    <div class="form-control"style="width: 33%;; display: inline-flex; background-color:#80ceff; justify-content : center; font-weight: 400; color: white">
+                        전체
+                    </div>
+                </a>
+                <a href="/lesson/ongoing">
                     <div class="form-control state" value="진행중" onclick="updateSelectedValue('진행중')"
-                         style="max-width: 500px; display: inline-flex; background-color:#e6dbb9; justify-content : center; font-weight: 600; color: black">
+                         style="width: 33%;; display: inline-flex; background-color:rgba(23,91,238,0.98); justify-content : center; font-weight: 400; color: white">
                         진행 중
                     </div>
-                    </a>
-                    <a href="/lesson/end">
+                </a>
+                <a href="/lesson/end">
                     <div class="form-control state" value="완료" onclick="updateSelectedValue('완료')"
-                         style="max-width: 500px; display: inline-flex; background-color:#66b4cb; justify-content : center; font-weight: 600; color: black">
+                         style="width: 33%;; display: inline-flex; background-color:#80ceff; justify-content : center; font-weight: 400; color: white">
                         완료
                     </div>
-                    </a>
-                </div>
+                </a>
+            </div>
 
-                <br>
-                <br>
+            <br>
+            <br>
 
 
-                <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
-                    <form action="/lesson/ongoing" method="get">
+            <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+                <form action="/lesson" method="get">
                     <div class="col">
                         <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
                         <div class="input-group">
@@ -61,19 +61,15 @@
                                     <option th:selected="${pageRequestDTO.type == 'e'}" value="e">수업종료일</option>
                                     <option th:selected="${pageRequestDTO.type == 'r'}" value="r">강의실</option>
                                 </select>
-                            </div>
+                            </div>&nbsp;
                             <input type="text" class="form-control keyword" name="keyword"
-                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
-                                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
-                            </div>
-
+                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">&nbsp;
+                            <button style="border-radius: 5px" type="submit" class="btn btn-outline-primary searchBtn">검색</button>&nbsp;
+                            <button style="border-radius: 5px" type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
                         </div>
                     </div>
-            </form>
-                </div>
+                </form>
+            </div>
 
             <!-- 리스트 -->
             <br>

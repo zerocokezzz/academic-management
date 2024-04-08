@@ -13,79 +13,150 @@
 
         <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
-            <h3 style="display: inline-flex">수업상세</h3>
+            <h3 style="display: inline-flex">수업정보</h3>
 
-            <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end surveyResult">설문결과</button>
+
+            <button style="display: inline-flex" class="btn btn-primary float-end">설문결과</button>
 
             <hr>
-            <br>
+            <h7 style="color: #0d6efd; font-size: large; font-weight: bold" th:text="${lesson.number}"></h7>
+            <h7 style="color: #0d6efd; font-size: large; font-weight: bold"> 기 </h7>
+
+            <hr>
 
             <!-- 본문 -->
-            <div style="display: inline-flex">
-                <table>
+
+
+                <table style="width: 100%; font-size: large; font-weight: bold; line-height: 200%">
                     <tr>
-                        <td>유형    </td>
-                        <td th:text="${lesson.curriculum.category.name}"></td>
+                        <td style="width: 20%">유형    </td>
+                        <td style="overflow: auto;width: 80%" th:text="${lesson.curriculum.category.name}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
                     </tr>
                     <tr>
                         <td>과정    </td>
-                        <td th:text="${lesson.curriculum.name}"></td>
+                        <td style="overflow: auto;" th:text="${lesson.curriculum.name}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
                     </tr>
                     <tr>
                         <td>기수    </td>
                         <td th:text="${lesson.number}"></td>
                     </tr>
                     <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
+                    </tr>
+                    <tr>
                         <td>보유과목    </td>
-                        <div th:each="i:${#numbers.sequence(0,subjectHold.size()-1)}">
-                        <td th:text="${subjectHold[i]}"></td>
-                        </div>
+                        <td >
+                            <div style="display: flex; flex-wrap: wrap;">
+                            <div style="margin-right: 10px;"
+                                 th:each="i:${#numbers.sequence(0,subjectHold.size()-1)}"
+                                 >
+                                <span th:text="${subjectHold[i]}"></span>
+                            </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
                     </tr>
                     <tr>
                         <td>교사    </td>
-                        <td th:text="${lesson.member.name}"></td>
+                        <td style="overflow: auto;" th:text="${lesson.member.name}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
                     </tr>
                     <tr>
                         <td>강의실</td>
-                        <td th:text="${lesson.classRoom}"></td>
+                        <td style="overflow: auto;" th:text="${lesson.classRoom}"></td>
                     </tr>
                     <tr>
-                        <td>비고    </td>
-                        <td th:text="${lesson.content}"></td>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
                     </tr>
                     <tr>
                         <td>수강인원    </td>
                         <td th:text="${lesson.headCount}"></td>
                     </tr>
                     <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
+                    </tr>
+                    <tr>
                         <td>시작일    </td>
                         <td th:text="${lesson.startDay}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
                     </tr>
                     <tr>
                         <td>종료일    </td>
                         <td th:text="${lesson.endDay}"></td>
                     </tr>
                     <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
+                    </tr>
+                    <tr>
                         <td>상담일 1    </td>
                         <td th:text="${lesson.survey1}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
                     </tr>
                     <tr>
                         <td>상담일 2    </td>
                         <td th:text="${lesson.survey2}"></td>
                     </tr>
                     <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
+                    </tr>
+                    <tr>
                         <td>상담일 3    </td>
                         <td th:text="${lesson.survey3}"></td>
                     </tr>
-
-
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td> <!-- 가로선 추가 -->
+                    </tr>
+                    <tr>
+                        <td>비고    </td>
+                        <td><input type="text" size="80" style=";word-break:break-all; border: none;" th:value="${lesson.content}" readonly></td>
+                    </tr>
                 </table>
-            </div>
 
             <br>
 
+            <button style="float: left;" class="btn btn-outline-danger"
+                    th:idx="${lesson.idx}"
+                    th:onclick="deleteBtn(this.getAttribute('idx'))">삭제</button>
             <div class="float-end" style="display: inline-flex">
-                <button style="display: inline-flex" class="btn btn-secondary"
+                <button style="display: inline-flex; margin-right: 10px" class="btn btn-outline-primary"
                         th:idx="${lesson.idx}"
                         th:curriculumIdx="${lesson.curriculum.idx}"
                         th:curriculumName="${lesson.curriculum.name}"
@@ -112,9 +183,6 @@
                                                   this.getAttribute('content'),
                                                   this.getAttribute('classRoom'),
                                                   this.getAttribute('questionName'))">수정</button> &nbsp;
-                <button style="display: inline-flex" class="btn btn-danger"
-                        th:idx="${lesson.idx}"
-                        th:onclick="deleteBtn(this.getAttribute('idx'))">삭제</button> &nbsp;
                 <button style="display: inline-flex" class="btn btn-outline-dark" onclick="location.href='/training/lesson'">목록</button>
             </div>
 
@@ -134,7 +202,7 @@
 
                                 <div class="input-group-prepend">
                                     <select class="form-select type" name="curriculumIdx">
-                                        <option class="updateCurriculumIdx" value="updateCurriculumIdx">---유형---
+                                        <option class="updateCurriculumIdx" value="updateCurriculumIdx">과정
                                         </option>
                                         <option class="updateCurriculumName" th:each="curriculum : ${curriculum}"
                                                 th:value="${curriculum.idx}" th:text="${curriculum.name}"></option>
@@ -143,7 +211,7 @@
 
                                 <br>
 
-                                <div class="input-group mb-3">
+                                <div class="input-group mb-2">
                                     <div style="width: 40%; display: flex; justify-content: center; align-items: center;">
                                         <span style="font-weight: 600;">교사</span></div>
                                     <div style="width: 30%; display: flex; justify-content: center; align-items: center;">
@@ -155,7 +223,7 @@
                                 <div class="input-group mb-3">
                                     <div style="width: 40%;">
                                         <select class="form-select type" name="memberId">
-                                            <option class="updateMemberId" value="updateMemberId">---교사---</option>
+                                            <option class="updateMemberId" value="updateMemberId">교사</option>
                                             <option class="updateMemberId" th:each="member: ${member}"
                                                     th:value="${member.id}" th:text="${member.name}"></option>
                                         </select>
@@ -174,7 +242,7 @@
                                     <div style="width: 50%; display: flex; justify-content: center; align-items: center;">
                                         <span style="font-weight: 600;">종료일</span></div>
                                 </div>
-                                <div class="input-group mb-2">
+                                <div class="input-group mb-3">
                                     <input type="date" class="form-control updateStartDay" name="startDay">
                                     <input type="date" class="form-control updateEndDay" name="endDay">
                                 </div>
@@ -182,11 +250,14 @@
                                 <br>
 
                                 <div class="input-group mb-2">
-                                    <div class="form-control">설문1</div>
-                                    <div class="form-control">설문2</div>
-                                    <div class="form-control">설문3</div>
+                                    <div style="width: 33%; display: flex; justify-content: center; align-items: center;">
+                                        <span style="font-weight: 600;">설문1</span></div>
+                                    <div style="width: 33%; display: flex; justify-content: center; align-items: center;">
+                                        <span style="font-weight: 600;">설문2</span></div>
+                                    <div style="width: 34%; display: flex; justify-content: center; align-items: center;">
+                                        <span style="font-weight: 600;">설문3</span></div>
                                 </div>
-                                <div class="input-group mb-2">
+                                <div class="input-group mb-3">
                                     <input type="date" class="form-control updateSurvey1" name="survey1">
                                     <input type="date" class="form-control updateSurvey2" name="survey2">
                                     <input type="date" class="form-control updateSurvey3" name="survey3">
@@ -196,24 +267,23 @@
 
                                 <div class="input-group mb-3">
                                     <select class="form-select type" name="questionName">
-                                        <option class="updateQuestionName" value="updateQuestionName">---사전평가문제---
-                                        </option>
-                                        <option th:each="questionName: ${questionName}" th:value="${questionName.name}"
+                                        <option class="updateQuestionName" value="updateQuestionName">사전평가문제</option>
+                                        <option th:each="questionName: ${questionName}"
+                                                th:value="${questionName.name}"
                                                 th:text="${questionName.name}"></option>
                                     </select>
                                 </div>
 
                                 <br>
 
-                                <div class="input-group mb-2">
+                                <div class="input-group mb-3">
                                     <textarea type="text" rows="2" class="form-control updateContent"
                                               style="resize: none; height: 85px;" name="content"></textarea>
                                 </div>
                             </div> <!-- modal body end -->
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-secondary updateSubmit">수정</button>
-                                <button type="button" class="btn btn-danger updateClose">닫기</button>
-                                <button type="button" class="btn btn-outline-light remove">초기화</button>
+                                <button type="submit" class="btn btn-outline-primary updateSubmit">수정</button>
+                                <button type="button" class="btn btn-outline-dark remove">초기화</button>
                             </div>
                         </form>
                     </div>
@@ -236,7 +306,6 @@
 
     //수업 수정 모달
     const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
-    const updateClose = document.querySelector(".updateClose")
     const updateIdx = document.querySelector(".updateIdx")
     const updateCurriculumIdx = document.querySelector(".updateCurriculumIdx ")
     const updateMemberId = document.querySelector(".updateMemberId ")
@@ -282,11 +351,6 @@
         updateModal.show()
     }
 
-    //수업 수정 모달 닫기
-    updateClose.addEventListener("click", function (e) {
-        updateModal.hide()
-    })
-
     //수업 삭제
     async function deleteBtn(idx) {
         if (!confirm("과정을 삭제하시겠습니까?")) {
@@ -299,12 +363,6 @@
             console.log(e)
         })
     }
-
-    // 설문결과로 이동하는 이벤트
-    document.querySelector('.surveyResult').addEventListener('click', function() {
-
-        window.location.href = '/member/lesson/survey?lessonIdx=' + [[${lesson.idx}]];
-    });
 
 </script>
 </html>

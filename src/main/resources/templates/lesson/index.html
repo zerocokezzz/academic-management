@@ -13,7 +13,7 @@
     <div class="content">
         <div th:replace="/layout/basic :: navbar"></div>
 
-        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%;">
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%; ">
 
             <h3 style="display: inline-flex">수업목록</h3>
             <hr>
@@ -23,21 +23,22 @@
 
             <div>
                 <a href="/lesson">
-                    <div class="form-control"style="max-width: 500px; display: inline-flex; background-color:#e6dbb9; justify-content : center; font-weight: 600; color: black">
+                    <div class="form-control"
+                         style="width: 33%; display: inline-flex; background-color:rgba(23,91,238,0.98); justify-content : center; font-weight: 400; color: white;">
                         전체
                     </div>
                 </a>
                 <a href="/lesson/ongoing">
-                <div class="form-control state" value="진행중" onclick="updateSelectedValue('진행중')"
-                     style="max-width: 500px; display: inline-flex; background-color:#66b4cb; justify-content : center; font-weight: 600; color: black">
-                    진행 중
-                </div>
+                    <div class="form-control state" value="진행중" onclick="updateSelectedValue('진행중')"
+                         style="width: 33%; display: inline-flex; background-color:#80ceff; justify-content : center; font-weight: 400; color: white">
+                        진행 중
+                    </div>
                 </a>
                 <a href="/lesson/end">
-                <div class="form-control state" value="완료" onclick="updateSelectedValue('완료')"
-                     style="max-width: 500px; display: inline-flex; background-color:#66b4cb; justify-content : center; font-weight: 600; color: black">
-                    완료
-                </div>
+                    <div class="form-control state" value="완료" onclick="updateSelectedValue('완료')"
+                         style="width: 33%; display: inline-flex; background-color:#80ceff; justify-content : center; font-weight: 400; color: white">
+                        완료
+                    </div>
                 </a>
             </div>
 
@@ -62,15 +63,11 @@
                                     <option th:selected="${pageRequestDTO.type == 'e'}" value="e">수업종료일</option>
                                     <option th:selected="${pageRequestDTO.type == 'r'}" value="r">강의실</option>
                                 </select>
-                            </div>
+                            </div>&nbsp;
                             <input type="text" class="form-control keyword" name="keyword"
-                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
-                                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
-                            </div>
-
+                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">&nbsp;
+                            <button style="border-radius: 5px" type="submit" class="btn btn-outline-primary searchBtn">검색</button>&nbsp;
+                            <button style="border-radius: 5px" type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
                         </div>
                     </div>
                 </form>
