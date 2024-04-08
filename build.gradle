@@ -58,6 +58,9 @@ dependencies {
 
 //    modelMapper
     implementation 'org.modelmapper:modelmapper:3.1.0'
+
+//    thumbnail
+    implementation 'net.coobird:thumbnailator:0.4.16'
 }
 
 tasks.named('test') {

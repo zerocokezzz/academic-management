@@ -25,7 +25,7 @@ public interface TrainingService {
     public void categoryDelete(Long idx);
 
     //유형 찾기
-    public Category getCategoryIdx(String name);
+    public Category getCategoryIdx(Long idx);
 
     default Category dtoToEntity(CategoryDTO categoryDTO){
 
@@ -108,7 +108,10 @@ public interface TrainingService {
     public Lesson getLessonByIdx(Long idx);
 
     //수업 등록
-    public void lessonInsert(LessonDTO lessonDTO);
+    public Long lessonInsert(LessonDTO lessonDTO);
+
+    //수업 보유과목 등록
+    public void subjectHoldInsert(SubjectHoldDTO subjectHoldDTO);
 
     //수업 수정
     public void lessonUpdate(LessonDTO lessonDTO);
@@ -136,5 +139,16 @@ public interface TrainingService {
                 .build();
 
         return lesson;
+    }
+
+    default SubjectHold subjectHoldDtoToEntity(SubjectHoldDTO subjectHoldDTO){
+
+        SubjectHold subjectHold = SubjectHold.builder()
+                .idx(subjectHoldDTO.getIdx())
+                .name(subjectHoldDTO.getName())
+                .lesson_idx(subjectHoldDTO.getLesson_idx())
+                .build();
+
+        return subjectHold;
     }
 }

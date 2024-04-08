@@ -32,7 +32,7 @@ public class StudentRepositoryTests {
     @Rollback(value = false)  //fetch 전 까지는 DB에 안들어감. test + Transactional 하면 rollback이 true여서 그걸 false로 바꿔줘야 함
     public void 학생추가(){
 
-        Optional<Curriculum> result = curriculumRepository.findById(1L);
+        Optional<Curriculum> result = curriculumRepository.findById(7L);
         Curriculum curriculum = result.orElseThrow();
 
 //        파라미터 (수업, 회차)
@@ -41,7 +41,7 @@ public class StudentRepositoryTests {
 
         Student student = Student.builder()
                 .lesson(lesson)
-                .name("이름")
+                .name("새별")
                 .email("forbyeol@gmail.com")
                 .birthday("000000")
 

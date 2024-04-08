@@ -55,4 +55,3 @@ public class SurveyAnswer {//    설문 답변
     private String com15;
 
 }
-

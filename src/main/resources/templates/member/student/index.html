@@ -53,47 +53,235 @@
       <!-- 검색 끝-->
 
       <br>
+
+      <!-- 학생 리스트 -->
+<!--      <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]명</div>-->
+<!--      <div th:each="student : ${pageResponseDTO.getDtoList()}">-->
+
+<!--          <hr>-->
+<!--          <img class="rounded-circle" th:src="${'/images/' + student.fileName}" alt="" style="width: 40px; height: 40px;">-->
+<!--        &nbsp;&nbsp;-->
+<!--          <div style="display: inline-flex" th:text="${student.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;-->
+<!--          <div style="display: inline-flex" th:text="${#temporals.format(student.regDate, 'yy-MM-dd')}"></div>-->
+<!--          <div class="float-end">-->
+<!--            <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${student.idx}" onclick="studentModify(this.getAttribute('data-name'))">수정</button>-->
+<!--            <button style="display: inline-flex" class="btn btn-danger studentDeleteBtn">삭제</button>-->
+<!--          </div>-->
+<!--      </div>-->
+      <!-- 학생 리스트 끝 -->
+
+
+
+
+      <!-- 학생 테이블 -->
       <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]명</div>
-      <div th:each="student : ${pageResponseDTO.getDtoList()}">
-
-          <hr>
-          <img class="rounded-circle" th:src="${'/images/' + student.fileName}" alt="" style="width: 40px; height: 40px;">
-        &nbsp;&nbsp;
-          <div style="display: inline-flex" th:text="${student.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
-          <div style="display: inline-flex" th:text="${#temporals.format(student.regDate, 'yy-MM-dd')}"></div>
-          <div class="float-end">
-            <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${student.idx}" th:onclick="studentUpdate(this.getAttribute('data-name'))">수정</button>
-            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${student.idx}" th:onclick="studentdelete(this.getAttribute('data-name'))">삭제</button>
-          </div>
-      </div>
-
-
-<!--      페이지-->
       <hr>
-      <br>
-      <div class="">
-        <ul class="pagination flex-wrap">
-          <li class="page-item" th:if="${pageResponseDTO.prev}">
-            <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
+
+        <table class="table table-hover">
+          <tr>
+            <th class="align-middle">수업</th>
+            <th class="align-middle">이름</th>
+            <th class="align-middle">생년월일</th>
+            <th class="align-middle">이메일</th>
+            <th class="align-middle">연락처</th>
+<!--            <th class="align-middle">비고</th>-->
+            <th class="align-middle"><div>수정/삭제</div></th>
+
+          </tr>
+          <tr th:each="student : ${pageResponseDTO.dtoList}">
+            <td th:text="${student.lesson.curriculum.name + ' ' + student.lesson.number + '회차'}" class="align-middle"></td>
+            <td th:text="${student.name}" class="align-middle"></td>
+            <td th:text="${student.birthday}" class="align-middle"></td>
+            <td th:text="${student.email}" class="align-middle"></td>
+            <td th:text="${student.phone}" class="align-middle"></td>
+<!--            <td th:text="${student.etc}" class="align-middle"></td>-->
+            <td>
+              <div>
+              <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${student.idx}" onclick="studentModify(this.getAttribute('data-name'))">수정</button>
+              <form action="/member/student/delete" method="post" id="deleteForm" style="display: inline-flex">
+                <input type="hidden" name="lessonIdx" th:value="${student.lesson.idx}"/>
+                <input type="hidden" name="idx" th:value="${student.idx}"/>
+                <button style="display: inline-flex" class="btn btn-danger" onclick="studentDelete()">삭제</button>
+              </form>
+              </div>
+            </td>
+
+          </tr>
+
+
+        </table>
+    <!-- 학생 테이블 끝 -->
+
+
+
+
+
+    <!--      페이지 -->
+    <br>
+    <div class="">
+      <ul class="pagination flex-wrap">
+        <li class="page-item" th:if="${pageResponseDTO.prev}">
+          <a class="page-link" th:data-num="${pageResponseDTO.start -1}">이전</a>
+        </li>
+
+        <th:block th:each="i : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
+          <li th:class="${pageResponseDTO.page == i} ? 'page-item active' : 'page-item'">
+            <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
           </li>
+        </th:block>
 
-          <th:block th:each="i : ${#numbers.sequence(pageResponseDTO.start, pageResponseDTO.end)}">
-            <li th:class="${pageResponseDTO.page == i} ? 'page-item active' : 'page-item'">
-              <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
-            </li>
-          </th:block>
+        <li class="page-item" th:if="${pageResponseDTO.next}">
+          <a class="page-link" th:data-num="${pageResponseDTO.end + 1}">다음</a>
+        </li>
 
-          <li class="page-item" th:if="${pageResponseDTO.next}">
-            <a class="page-link" th:data-num="${pageResponseDTO.end + 1}">다음</a>
-          </li>
+      </ul>
+    </div>
 
-        </ul>
-      </div>
-      <br>
+    <br>
 
     </div>
 <!--    inner content end-->
 
+
+
+
+
+    <!-- 등록 모달 -->
+
+    <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="insertModalLabel">학생 등록</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/member/student/insert" method="post" id="insertForm">
+
+              <div>
+                <select class="form-select lessonSelect" id="lessonSelect" name="lessonIdx" required>
+                  <option value="" selected>수업 선택</option>
+                </select>
+              </div>
+
+              <br>
+
+              <div class="mb-3">
+                <label for="insertName" class="col-form-label">이름</label>
+                <textarea type="text" rows="1" class="form-control" id="insertName" name="name" required></textarea>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="insertPhone" class="col-form-label">전화번호</label>
+                <textarea type="text" rows="1" class="form-control" id="insertPhone" name="phone"></textarea>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="insertBirthday" class="col-form-label">생년월일</label>
+                <textarea class="form-control" rows="1"  id="insertBirthday" name="birthday" required placeholder="ex) 991231"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="insertEmail" class="col-form-label">이메일</label>
+                <textarea class="form-control" rows="1"  id="insertEmail" name="email" required placeholder="ex) example@gmail.com"></textarea>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="insertEtc" class="col-form-label">비고</label>
+                <textarea class="form-control" rows="1"  id="insertEtc" name="etc" required></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="insertFileName" class="col-form-label">사진</label>
+                <input class="form-control" type="file" id="insertFileName"/>
+              </div>
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="registerBtn">등록</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 등록 모달 끝 -->
+
+
+
+
+    <!-- 수정 모달 -->
+
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modifyModalLabel">학생 수정</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/member/student/modify" method="post" id="modifyForm">
+
+              <br>
+
+              <input type="hidden" id="modifyIdx" name="idx"/>
+
+              <div class="mb-3">
+                <label for="modifyName" class="col-form-label">이름</label>
+                <textarea type="text" rows="1" class="form-control" id="modifyName" name="name" required></textarea>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="modifyPhone" class="col-form-label">전화번호</label>
+                <textarea type="text" rows="1" class="form-control" id="modifyPhone" name="phone"></textarea>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="modifyBirthday" class="col-form-label">생년월일</label>
+                <textarea class="form-control" rows="1"  id="modifyBirthday" name="birthday" required placeholder="ex) 991231"></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="modifyEmail" class="col-form-label">이메일</label>
+                <textarea class="form-control" rows="1"  id="modifyEmail" name="email" required placeholder="ex) example@gmail.com"></textarea>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="modifyEtc" class="col-form-label">비고</label>
+                <textarea class="form-control" rows="1"  id="modifyEtc" name="etc" required></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="modifyFilename" class="col-form-label">사진</label>
+                <input class="form-control" type="file" id="modifyFilename"/>
+              </div>
+
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="modifyBtn">수정</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 수정 모달 끝 -->
 
   </div>
   <!-- content end -->
@@ -114,19 +302,8 @@
 
 <script>
 
-  //  삭제 버튼
-  function teacherDelete(memberId) {
-    if(confirm('삭제하시겠습니까?')){
-      location.href='/member/teacher/delete?id=' + memberId;
-    }
-  }
 
-
-  //  수정 버튼
-  function teacherUpdate(memberId) {
-    location.href='/member/teacher/update?id=' + memberId;
-  }
-
+  // 페이지 ------------------------------------------------------------
   //   페이지 클릭 이벤트 처리
   //   clear 버튼 누르면 검색 조건 사라진 목록(/member/teacher) 출력
   document.querySelector(".pagination").addEventListener("click", function (e) {
@@ -169,6 +346,279 @@
 
   }, false)
   //  검색 초기화 end
+  // 페이지 끝 ------------------------------------------------------------
+
+
+
+  // 등록------------------------------------------------------------
+  const lessonSelect = document.querySelector(".lessonSelect");
+
+
+  const registerBtn = document.querySelector("#registerBtn");
+  const insertForm = document.querySelector("#insertForm");
+
+  const insertName = document.querySelector("#insertName");
+  const insertPhone = document.querySelector("#insertPhone");
+  const insertBirthday = document.querySelector("#insertBirthday");
+  const insertEmail = document.querySelector("#insertEmail");
+
+
+  // 등록 모달 띄우기
+  // const insertModal = document.querySelector(".insertModal");
+  document.querySelector(".studentInsertBtn").addEventListener("click", function (){
+
+    getOngoingLesson().then( result => {
+      console.log(result);
+        // console.log('result curriculum' + result[0].curriculum.name);
+
+      let htmls = '';
+
+      htmls += `<option value="" selected>수업 선택</option>`;
+
+      for(const lesson of result){
+        htmls += `<option value="${lesson.idx}">${lesson.curriculum.name} ${lesson.number}회차</option>`;
+      }
+
+      lessonSelect.innerHTML = htmls;
+    }).catch( e => {
+
+    });
+
+    $("#insertModal").modal('show');
+  })
+
+
+
+  registerBtn.addEventListener("click", function (e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    insertValid();
+  });
+
+
+
+  async function getOngoingLesson(){
+    const response = await axios.get('/lesson/getOngoing', null);
+    console.log(response);
+
+    return response.data;
+
+  }
+  // 등록 끝------------------------------------------------------------
+
+
+
+
+
+
+
+  // 수정------------------------------------------------------------
+  const modifyIdx = document.querySelector("#modifyIdx");
+  const modifyName = document.querySelector("#modifyName");
+  const modifyPhone = document.querySelector("#modifyPhone");
+  const modifyBirthday = document.querySelector("#modifyBirthday");
+  const modifyEmail = document.querySelector("#modifyEmail");
+  const modifyEtc = document.querySelector("#modifyEtc");
+
+
+  // 수정 모달 띄우기
+  function studentModify(studentIdx){
+
+    const params = {
+      studentIdx : studentIdx
+    }
+
+    getStudent(params).then(result => {
+
+      console.log(result);
+
+      // modifyLessonIdx.value = result.lessonIdx;
+      modifyIdx.value = result.idx;
+      modifyName.value = result.name;
+      modifyPhone.value = result.phone;
+      modifyEmail.value = result.email;
+      modifyBirthday.value = result.birthday;
+      modifyEtc.value = result.etc;
+
+    //   사진 가져와야됨
+
+    }).catch(e => {
+
+    })
+
+    $("#modifyModal").modal('show');
+
+  }
+
+
+  function modifyValid(){
+
+    console.log('modifyValid!');
+    console.log(modifyIdx.value);
+
+    modifyName.value = modifyName.value.trim();
+    modifyPhone.value = modifyPhone.value.trim();
+    modifyBirthday.value = modifyBirthday.value.trim();
+    modifyEmail.value = modifyEmail.value.trim();
+
+
+    if(modifyName.value === ""){
+      alert("이름이 입력되지 않았습니다.");
+      return;
+    }
+
+    if(modifyPhone.value === ""){
+      alert("연락처가 입력되지 않았습니다.");
+      return;
+    }
+
+    if(modifyBirthday.value === ""){
+      alert("생년월일이 입력되지 않았습니다.");
+      return;
+    }
+
+    modifyForm.submit();
+
+  }
+
+
+  const modifyForm = document.querySelector("#modifyForm");
+  const modifyBtn = document.querySelector("#modifyBtn");
+  modifyBtn.addEventListener("click", function (e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    modifyValid();
+
+
+
+
+  })
+
+
+
+  async function getStudent(paramList){
+    const response = await axios.get('/member/student/getStudent', {params : paramList});
+    console.log(response);
+
+    return response.data;
+  }
+
+
+  // 수정 끝------------------------------------------------------------
+
+
+
+
+
+  // async function modifyStudent(paramList){
+  //   await axios.post('/member/student/modify', null, {params : paramList});
+  // }
+
+  // async function deleteStudent(paramList){
+  //   await axios.post('/member/student/delete', null, {params : paramList});
+  // }
+
+
+
+
+  const deleteStudentIdx = document.querySelector("#deleteStudentIdx");
+  const deleteForm = document.querySelector("#deleteForm");
+  function studentDelete(studentIdx){
+
+    if(!confirm('삭제하시겠습니까?')){
+      return;
+    }
+
+    if(!confirm('관련 데이터가 모두 삭제됩니다.\n정말로 삭제하시겠습니까?')){
+      return;
+    }
+
+    deleteForm.submit();
+
+
+    // const param = {
+    //   studentIdx : studentIdx
+    // }
+    // deleteStudent(param);
+
+
+
+
+  }
+
+
+  function insertValid(){
+
+    insertName.value = insertName.value.trim();
+    insertPhone.value = insertPhone.value.trim();
+    insertBirthday.value = insertBirthday.value.trim();
+    insertEmail.value = insertEmail.value.trim();
+
+    if(lessonSelect.value === ""){
+      alert("수업이 선택되지 않았습니다.");
+      return;
+    }
+
+    if(insertName.value === ""){
+      alert("이름이 입력되지 않았습니다.");
+      return;
+    }
+
+    if(insertPhone.value === ""){
+      alert("연락처가 입력되지 않았습니다.");
+      return;
+    }
+
+    if(insertBirthday.value === ""){
+      alert("생년월일이 입력되지 않았습니다.");
+      return;
+    }
+
+    insertForm.submit();
+
+  }
+
+
+
+
+  const url = new URL(window.location.href);
+  console.log(window.location.href);
+  const urlSearchParams = url.searchParams;
+
+  console.log(urlSearchParams.get("code"));
+  const code = urlSearchParams.get("code");
+
+  switch (code){
+    case 'insert-success' :
+      alert('등록되었습니다. ◝(ᵔᵕᵔ)◜');
+      history.replaceState({}, null, location.pathname);
+      break;
+    case 'insert-fail' :
+      alert('이미 존재하는 학생입니다.');
+      history.replaceState({}, null, location.pathname);
+      break;
+    case 'modify-success' :
+      alert('수정되었습니다.');
+      history.replaceState({}, null, location.pathname);
+      break;
+    case 'modify-fail' :
+      alert('수정에 실패했습니다.');
+      history.replaceState({}, null, location.pathname);
+      break;
+    case 'delete-fail' :
+      alert('삭제에 실패했습니다.');
+      history.replaceState({}, null, location.pathname);
+      break;
+    case 'delete-success' :
+      alert('삭제되었습니다.');
+      history.replaceState({}, null, location.pathname);
+      break;
+
+  }
+
+
 
 
   // nav 활성화
