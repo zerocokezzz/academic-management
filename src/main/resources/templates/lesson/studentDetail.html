@@ -28,7 +28,7 @@
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
       <h3 style="display: inline-flex" > [[${student.name}]] </h3>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end">상담내역</button>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end counselingBtn">상담내역</button>
       <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
 
 
@@ -174,8 +174,8 @@
   })
 
 
-//학생 개별 상담내역 검색
-  const studentIdx = document.querySelector(".studentIdx")
+// 학생 개별 상담내역 검색
+//   const studentIdx = document.querySelector(".studentIdx")
   document.querySelector(".counselingBtn").addEventListener("click", function (e){
     const idx = studentIdx.value
     window.location.href = '/counseling/detail?idx=' + idx;
@@ -183,6 +183,8 @@
   })
 
 
+
+  const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
 
 
   // 답안지 모달
@@ -199,7 +201,7 @@
     return response.data;
   }
 
-  const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
+
 
   const studentName = document.querySelector(".studentName");
   const studentBirthday = document.querySelector(".studentBirthday");
@@ -207,6 +209,8 @@
   const studentLesson = document.querySelector(".studentLesson");
   const studentFileName = document.querySelector('.studentFilename');
   const studentScore = document.querySelector(".studentScore");
+
+
 
   function openPaper(studentIdx){
     // console.log('questionAnswerIdx : ' + questionAnswerIdx);
@@ -301,6 +305,7 @@
     $("#answerPaper").modal('show');
 
   }
+
 
 
 

@@ -64,6 +64,11 @@ public class LessonServiceImpl implements LessonService{
                 .build();
     }
 
+    @Override
+    public List<Lesson> getOngoingLesson() {
+        return lessonRepository.getLessonsByEndDayGreaterThan(LocalDate.now());
+    }
+
     //완료된 수업 & 검색 & 페이징
     @Override
     public PageResponseDTO<Lesson> endLesson(PageRequestDTO pageRequestDTO) {
