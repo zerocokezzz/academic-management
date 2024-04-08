@@ -53,7 +53,7 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public PageResponseDTO<Student> searchStudent(Long lessonIdx, PageRequestDTO pageRequestDTO) {
 
-        Pageable pageable = pageRequestDTO.getPageable();
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
 
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
@@ -79,6 +79,7 @@ public class StudentServiceImpl implements StudentService{
         Optional<Lesson> byId = lessonRepository.findById(studentDTO.getLessonIdx());
         Lesson lesson = byId.get();
 
+
         Optional<Student> byLessonAndName = studentRepository.getByLessonAndName(lesson, studentDTO.getName());
 
         if(byLessonAndName.isPresent()){
@@ -103,6 +104,8 @@ public class StudentServiceImpl implements StudentService{
 
 
         studentRepository.save(student);
+        lesson.headCountUp();
+        lessonRepository.save(lesson);
 
     }
 
@@ -125,12 +128,17 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public void deleteStudent(Long studentIdx) {
-        Optional<Student> byId = studentRepository.findById(studentIdx);
+    public void deleteStudent(StudentDTO studentDTO) {
+        Optional<Student> studentById = studentRepository.findById(studentDTO.getIdx());
         Student student = null;
 
-        if(byId.isPresent()){
-            student = byId.get();
+        Optional<Lesson> lessonById = lessonRepository.findById(studentDTO.getLessonIdx());
+        Lesson lesson = lessonById.orElseThrow();
+
+
+
+        if(studentById.isPresent()){
+            student = studentById.get();
         }
 
         if(student == null){
@@ -138,6 +146,8 @@ public class StudentServiceImpl implements StudentService{
         }
 
         studentRepository.delete(student);
+        lesson.headCountDown();
+        lessonRepository.save(lesson);
 
     }
 
