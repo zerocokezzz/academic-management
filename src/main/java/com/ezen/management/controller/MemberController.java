@@ -324,6 +324,7 @@ public class MemberController {
 
         try {
             studentService.insertStudent(studentDTO);
+
         }catch (Exception e){
             return "redirect:/member/student?code=insert-fail";
         }
@@ -369,10 +370,10 @@ public class MemberController {
     }
 
     @PostMapping("/student/delete")
-    public String deleteStudent(Long studentIdx){
+    public String deleteStudent(StudentDTO studentDTO){
 
         try{
-            studentService.deleteStudent(studentIdx);
+            studentService.deleteStudent(studentDTO);
         }catch (Exception e){
             return "redirect:/member/student?code=delete-fail";
         }

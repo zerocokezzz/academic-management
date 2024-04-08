@@ -73,6 +73,13 @@ public class Lesson extends BaseEntity{
         this.headCount++;
     }
 
+    public void headCountDown(){
+        if(headCount < 1){
+            return;
+        }
+
+        this.headCount--;
+    }
 
     public void changeCurriculum(Curriculum curriculum){this.curriculum = curriculum;}
 
