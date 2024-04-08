@@ -5,6 +5,7 @@ import com.ezen.management.domain.Student;
 import com.ezen.management.domain.SurveyAnswer;
 import com.ezen.management.dto.StudentDTO;
 import com.ezen.management.dto.SurveyAnswerDTO;
+import com.ezen.management.dto.SurveyResultDTO;
 import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.StudentRepository;
 import com.ezen.management.repository.SurveyAnswerRepository;
@@ -12,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -67,4 +70,48 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService{
             return 0;
         }
     }
+
+    @Override
+    public List<SurveyAnswerDTO> findByLessonIdx(Long lessonIdx) {
+
+        List<SurveyAnswer> surveyAnswerList = surveyAnswerRepository.findByLessonIdx(lessonIdx);
+        List<SurveyAnswerDTO> surveyAnswerDTOList = new ArrayList<>();
+
+        for (SurveyAnswer surveyAnswer : surveyAnswerList) {
+            SurveyAnswerDTO surveyAnswerDTO = surveyAnswerEntityToDTO(surveyAnswer);
+            surveyAnswerDTOList.add(surveyAnswerDTO);
+        }
+
+        return surveyAnswerDTOList;
+    }
+
+    @Override
+    public List<SurveyResultDTO> calculateSumOfAnswers(int round, Long lessonIndex) {
+        List<Object[]> objects = surveyAnswerRepository.calculateSumOfAnswers(round, lessonIndex);
+
+        log.info("여기는 서비스 임플" + objects);
+
+        List<SurveyResultDTO> surveyResultDTOList = new ArrayList<>();
+
+        // SurveyResultDTO로 변환하여 결과를 저장합니다.
+        for (Object[] obj : objects) {
+            // SurveyResultDTO 생성자나 빌더 메서드를 이용하여 객체를 생성합니다.
+            SurveyResultDTO surveyResultDTO = new SurveyResultDTO();
+            surveyResultDTO.setAn(String.valueOf(obj[0])); // 첫 번째 컬럼은 an 값입니다.
+            surveyResultDTO.setSumOf1(Integer.parseInt(String.valueOf(obj[1]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+            surveyResultDTO.setSumOf2(Integer.parseInt(String.valueOf(obj[2]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+            surveyResultDTO.setSumOf3(Integer.parseInt(String.valueOf(obj[3]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+            surveyResultDTO.setSumOf4(Integer.parseInt(String.valueOf(obj[4]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+            surveyResultDTO.setSumOf5(Integer.parseInt(String.valueOf(obj[5]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+            surveyResultDTO.setSumOf6(Integer.parseInt(String.valueOf(obj[6]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+            surveyResultDTO.setSumOf6(Integer.parseInt(String.valueOf(obj[7]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+
+            surveyResultDTOList.add(surveyResultDTO);
+        }
+
+        log.info("리스트 찍어 보자" + surveyResultDTOList);
+
+        return surveyResultDTOList;
+    }
+
 }

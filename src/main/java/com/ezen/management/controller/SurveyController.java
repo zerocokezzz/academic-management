@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -54,7 +55,9 @@ public class SurveyController {
      * OK
      */
     @PostMapping("/member/survey/register")
-    public String registerPost(@ModelAttribute("surveyDtoList") SurveyDtoList surveyDtoList, @RequestParam("round")int round){
+    public String registerPost(@ModelAttribute("surveyDtoList") SurveyDtoList surveyDtoList, @RequestParam("round")int round, @RequestParam("lessonIdx")String lessonIdx){
+
+        log.info("확인 : " + lessonIdx);
 
         round = surveyService.register(surveyDtoList);
 
@@ -149,23 +152,36 @@ public class SurveyController {
     }
 
     /*=========================설문결과=========================*/
-    
-    @GetMapping("/member/lesson/survey")
-    public String result(@RequestParam("lessonIdx")Long lessonIdx){
+
+
+    //1회차
+    @GetMapping("/member/lesson/survey/result")
+    public String result(Model model, @RequestParam("lessonIdx")Long lessonIdx){
         //수업에서 필요한 정보 : 커리큘럼, 기수, 시작일, 종료일, 교사
         //그리고.. survey와 surveyAnswer 필요
 
-        log.info("확인용 : result의 lessonIdx = " + lessonIdx);
+        int round = 1;
 
         //수업
         Lesson lesson = lessonService.findById(lessonIdx);
 
-        //설문(문항)
-        List<SurveyDTO> surveyList = surveyService.surveyList();
+        //설문(질문과보기)
+        List<SurveyDTO> surveyDTOList = surveyService.readAllByRound(round);
 
-        //설문(답변)
+        log.info("확인용 : " + surveyDTOList);
 
+        //설문(결과)
+        List<SurveyResultDTO> surveyResultDTOList = surveyAnswerService.calculateSumOfAnswers(round, lessonIdx);
+        log.info("컨트롤러" + surveyResultDTOList);
 
-        return "/member/lesson/survey";
+        //MAP으로 한다면?? List<MAP>
+
+        model.addAttribute("round", round);
+        model.addAttribute("lesson", lesson);
+        model.addAttribute("surveyDTOList", surveyDTOList);
+        model.addAttribute("surveyResultDTOList", surveyResultDTOList);
+
+        return "/member/lesson/survey/result";
     }
+
 }

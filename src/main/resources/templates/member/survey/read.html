@@ -101,7 +101,7 @@
 
 </div>
 <!-- wrapper end-->
-
+<div th:replace="/layout/basic :: scriptSet"></div>
 <script >
     document.addEventListener("DOMContentLoaded", function() {
         const removeButtons = document.querySelectorAll(".removeBtn");
@@ -117,13 +117,14 @@
 
         // 수정 버튼에 대한 이벤트 리스너 추가
         const modifyBtn = document.querySelector(".modifyBtn");
-        modifyBtn.addEventListener("click", function() {
-            const round = document.querySelector('h2 span').textContent.trim();
-            window.location.href = 'modify?round=' + round;
-        });
-    });
+        if (modifyBtn) {
+            // 수정 버튼에 대한 이벤트 리스너 추가
+            modifyBtn.addEventListener("click", function() {
+                const round = document.querySelector('h2 span').textContent.trim();
+                window.location.href = 'modify?round=' + round;
+            });
+        }
 
-    document.addEventListener("DOMContentLoaded", function() {
         // 등록 버튼이 있는지 확인
         const registerBtn = document.querySelector(".registerBtn");
         if (registerBtn) {
@@ -143,9 +144,6 @@
     });
 
 </script>
-
-
-</div>
 
 </body>
 </html>
