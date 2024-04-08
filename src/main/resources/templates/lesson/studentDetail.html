@@ -7,15 +7,15 @@
 <div class="wrapper">
     <div th:replace="/layout/basic :: sidebar"></div>
 
-    <!-- content start -->
-    <div class="content">
-        <div th:replace="/layout/basic :: navbar"></div>
+  <!-- content start -->
+  <div class="content">
+    <div th:replace="/layout/basic :: navbar"></div>
 
-        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+    <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
-            <h3 style="display: inline-flex"> [[${student.name}]] </h3>
-            <button style="display: inline-flex" class="btn btn-primary float-end">상담내역</button>
-            <button style="display: inline-flex; margin-right: 10px" class="btn btn-primary float-end">사전평가결과지</button>
+      <h3 style="display: inline-flex" > [[${student.name}]] </h3>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end counselingBtn">상담내역</button>
+      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
 
             <hr>
             <br>
@@ -186,11 +186,155 @@
 <script src="/js/training.js"></script>
 <script layout:fragment="script" th:inline="javascript">
 
+
     const lessonIdx = document.querySelector(".lessonIdx")
     document.querySelector(".backList").addEventListener("click", function (e) {
         const idx = lessonIdx.value
         window.location.href = '/lesson/studentList?idx=' + idx;
     })
+
+
+  const studentIdx = document.querySelector(".studentIdx")
+  document.querySelector(".backList").addEventListener("click", function (e){
+    const idx = studentIdx.value
+    window.location.href = '/lesson/studentList?idx=' + idx;
+
+  })
+
+
+// 학생 개별 상담내역 검색
+//   const studentIdx = document.querySelector(".studentIdx")
+  document.querySelector(".counselingBtn").addEventListener("click", function (e){
+    const idx = studentIdx.value
+    window.location.href = '/counseling/detail?idx=' + idx;
+
+  })
+
+
+
+  const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
+
+
+  // 답안지 모달
+  async function getQuestionAnswer(paramList){
+    const response = await axios.get('/member/lesson/question/getQuestionAnswerAndAnswerList', {params: paramList});
+    return response.data;
+  }
+
+  async function getStudent(paramList){
+    const response = await axios.get('/student/getStudent', {params : paramList});
+    console.log("done!");
+    console.log(response);
+
+    return response.data;
+  }
+
+
+
+  const studentName = document.querySelector(".studentName");
+  const studentBirthday = document.querySelector(".studentBirthday");
+  const studentPhone = document.querySelector(".studentPhone");
+  const studentLesson = document.querySelector(".studentLesson");
+  const studentFileName = document.querySelector('.studentFilename');
+  const studentScore = document.querySelector(".studentScore");
+
+
+
+  function openPaper(studentIdx){
+    // console.log('questionAnswerIdx : ' + questionAnswerIdx);
+    console.log('studentIdx : ' + studentIdx);
+
+    const params = {
+      studentIdx : studentIdx
+    }
+
+
+    // 학생 정보
+    getStudent(params).then(result => {
+      console.log("student info!");
+      console.log(result);
+
+      studentName.innerText = result.name;
+      studentLesson.innerText = result.lessonName + ' ' +  result.lessonNumber + '회차';
+      studentPhone.innerText = result.phone;
+      studentBirthday.innerText = result.birthday;
+      studentFileName.innerHTML = `<img src="/images/${result.fileName}" style="object-fit: fill">`;
+      studentScore.innerText = result.score + '점';
+
+
+    }).catch( e => {
+      alert('student error!');
+
+    })
+
+
+    // 답안지
+    getQuestionAnswer(params).then(result => {
+      console.log(result);
+      console.log('questionAnswer!')
+      console.log(result.questionAnswer);
+      console.log(result.answerList);
+      console.log(result.questionAnswer[0]);
+      console.log('1. answer : ' + result.answerList[0].answer.toString());
+      console.log(result.answerList[0].answer.toString() === result.questionAnswer[0]);
+
+      let htmls = '';
+
+      for(let i = 0; i < 20; i++){
+        // $(".questionAnswerPaper").append()
+
+        htmls += `<div style="display: inline-flex; width: 500px; flex-wrap: nowrap">
+
+                        ${(result.questionAnswer[i]) === (result.answerList[i].answer.toString()) ?
+                `<img src="/images/correct.png" style=" width: 120px; position: absolute;">` :
+                `<img src="/images/wrong.png" style="width: 70px; position: absolute;">`}
+
+                        <div style="margin : 40px;  overflow: scroll;">
+
+                            <div>
+                                <div><strong>${result.answerList[i].number}. ${result.answerList[i].content}</strong></div>
+                                <br><br>
+
+                        ${result.answerList[i].example !== null ? `<div style="border: 1px solid #2a2d34; border-radius: 5px; margin: 0 0 30px 30px">
+                                      <div style="margin: 10px;">${result.answerList[i].example}</div>
+                                      </div>` : ``}
+
+                        ${result.answerList[i].fileName !== null ? `<div>
+                                        <img src="/images/question/${result.answerList[i].fileName}" style="max-width: 270px; margin: 0 0 30px 30px">
+                                    </div>` : ``}
+
+                                    <!--                    문항 -->
+                                    <div>
+                                    ${result.answerList[i].answer === 1 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '1' ? '❶' : '①'}  ${result.answerList[i].item1}</div><br>
+                                    ${result.answerList[i].answer === 2 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '2' ? '❷' : '②'} ${result.answerList[i].item2}</div><br>
+                                    ${result.answerList[i].answer === 3 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '3' ? '❸' : '③'} ${result.answerList[i].item3}</div><br>
+                                    ${result.answerList[i].answer === 4 && (result.questionAnswer[i]) !== (result.answerList[i].answer.toString()) ? `<img src="/images/check.png" style="width: 20px; position: absolute;">` : ``}
+                                        <div>${result.questionAnswer[i] === '4' ? '❹' : '④'} ${result.answerList[i].item4}</div><br>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            </div>
+                        <!-- 문제 하나  끝-->`;
+
+        questionAnswerPaper.innerHTML = htmls;
+
+      }
+
+    }).catch( e => {
+      console.log(e);
+    });
+
+
+    $("#answerPaper").modal('show');
+
+  }
+
+
 
 </script>
 </html>

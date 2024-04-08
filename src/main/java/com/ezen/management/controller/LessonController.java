@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashSet;
 import java.util.List;
@@ -108,5 +109,17 @@ public class LessonController {
         model.addAttribute("subjectTest", subjectTest);
         model.addAttribute("student", studentService.findById(idx));
         return "/lesson/studentDetail";
+    }
+
+
+    //진행중인 수업 목록(axios)
+    @GetMapping("/getOngoing")
+    @ResponseBody
+    public List<Lesson> getOngoing() {
+
+        List<Lesson> ongoingLesson = lessonService.getOngoingLesson();
+        log.info("ongoing lesson : {}", ongoingLesson);
+
+        return lessonService.getOngoingLesson();
     }
 }
