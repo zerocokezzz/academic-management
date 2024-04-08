@@ -14,8 +14,8 @@
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
       <h3 style="display: inline-flex" > [[${student.name}]] </h3>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end counselingBtn">상담내역</button>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
+      <button style="display: inline-flex ; background-color: #0d6efd; color: white; " class="btn float-end counselingBtn">상담내역</button>
+      <button style="display: inline-flex ; background-color: #0d6efd; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
 
             <hr>
             <br>
@@ -89,7 +89,10 @@
                         </tr>
                         <tr>
                             <td style="width: 15%; text-align: left">수료여부</td>
-                            <td style="text-align: left" th:text="${student.done}"></td>
+                            <td style="text-align: left">
+                                <span th:if="${student.pretest}">완료</span>
+                                <span th:if="${!student.pretest}">미완료 </span>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2">
@@ -98,7 +101,10 @@
                         </tr>
                         <tr>
                             <td style="width: 15%; text-align: left">사전평가여부</td>
-                            <td style="text-align: left" th:text="${student.pretest}"></td>
+                            <td style="text-align: left">
+                                <span th:if="${student.pretest}">완료</span>
+                                <span th:if="${!student.pretest}">미완료 </span>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2">
@@ -107,10 +113,11 @@
                         </tr>
                         <tr>
                             <td style="width: 15%; text-align: left">설문여부</td>
-                            <td style="text-align: left" th:text="${student.survey}">
-                                <span th:if="${student.survey == 'O'}"> 완료</span>
-                                <span th:if="${student.survey == 'X'}"> 미완료 </span>
-                                <span th:if="${student.survey == null}">미완료 </span>
+                            <td style="text-align: left">
+                                <span th:if="${student.survey == 0}"> 미완료</span>
+                                <span th:if="${student.survey == 1}"> 첫번째 설문 완료 </span>
+                                <span th:if="${student.survey == 2}">두번째 설문 완료 </span>
+                                <span th:if="${student.survey == 3}">세번째 설문 완료 </span>
 
                             </td>
                         </tr>
@@ -122,10 +129,13 @@
                         <tr>
                             <td style="width: 15%; text-align: left">상담여부</td>
                             <td style="text-align: left">
-                                <span th:if="${student.counseling == null}"> 완료된 상담이 없습니다.</span>
+                                <span th:if="${student.counseling == 0}"> 완료된 상담이 없습니다.</span>
                                 <span th:if="${student.counseling == 1}"> 첫번째 상담 완료</span>
                                 <span th:if="${student.counseling == 2}"> 두번째 상담 완료</span>
                                 <span th:if="${student.counseling == 3}"> 세번째 상담 완료</span>
+                                <span th:if="${student.counseling == 4}"> 네번째 상담 완료</span>
+                                <span th:if="${student.counseling == 5}"> 다섯번째 상담 완료</span>
+                                <span th:if="${student.counseling == 6}"> 여섯번째 상담 완료</span>
                             </td>
                         </tr>
                         <tr>
@@ -137,12 +147,12 @@
                             <td style="width: 15%; text-align: left">과목평가여부</td>
                             <td>
                                 <table>
-                                    <tr th th:each="subjectTest:${subjectTest}">
-                                        <td>[[${subjectTest.name}]]</td>
-                                        <td>
-                                            <span th:if="${subjectTest.state == 'X'}"> X </span>
-                                            <span th:if="${subjectTest.state == 'O'}"> O </span>
-                                        </td>
+                                    <tr th:each="test:${subjectTest}">
+                                        <td style="width: 15%" th:text="${test.subject}"></td>
+                                        <td style="width: 15%">
+                                            <span th:if="${test.state eq 'X'}"> 완료 </span>
+                                            <span th:if="${test.state eq 'O'}"> 미완료 </span>
+                                        </td>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   9
                                     </tr>
                                 </table>
                             </td>
@@ -155,9 +165,6 @@
             <br>
 
             <div class="float-end" style="display: inline-flex">
-                <button style="display: inline-flex; margin-right: 10px" class="btn btn-outline-primary"
-                        th:idx="${student.idx}" th:onclick="updateBtn(this.getAttribute('idx'))">수정
-                </button>
                 <button style="display: inline-flex" class="btn btn-outline-dark backList">학생전체목록</button>
             </div>
 

@@ -20,23 +20,52 @@
             <br>
 
             <!-- 본문 -->
-            <h7 style="color: #0d6efd" th:text="${lesson.curriculum.name}"></h7>
-            <h7 style="color: #0d6efd" th:text="${lesson.number}"></h7>
-            <h7 style="color: #0d6efd"> 기 </h7>
-            <div style="display: inline-flex; float: right">총 [[${responseDTO.total}]]명</div>
+            <h5 style="color: #0d6efd" >[[${lesson.curriculum.name}]] [[${lesson.number}]] 기</h5>
+            <hr>
+            <br>
+
+            <div style="width: 100%">
+                <div style="display: inline-flex;width: 20%; font-weight: bold; font-size: large; color: #0d6efd">이름</div>
+                <div style="display: inline-flex;width: 10%; font-weight: bold; font-size: large; color: #0d6efd">수료여부</div>
+                <div style="display: inline-flex;width: 20%; font-weight: bold; font-size: large; color: #0d6efd">사전평가여부</div>
+                <div style="display: inline-flex;width: 20%; font-weight: bold; font-size: large; color: #0d6efd">설문여부</div>
+                <div style="display: inline-flex;width: 20%; font-weight: bold; font-size: large; color: #0d6efd">상담여부</div>
+            </div>
 
 
-            <div th:each="student : ${responseDTO.getDtoList()}">
+
+
+            <div style="width: 100%; " th:each="student : ${responseDTO}">
                 <a th:href="@{/lesson/studentDetail(idx=${student.idx})}" style="color: black">
                     <div>
                         <hr>
                         <input type="hidden" class="Idx" th:value="${student.idx}">
-                        <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
-                        <div style="display: inline-flex" th:text="${student.name}"></div>
-                        <div style="display: inline-flex" th:text="${student.done}"></div>
-                        <div style="display: inline-flex" th:text="${student.pretest}"></div>
-                        <div style="display: inline-flex" th:text="${student.survey}"></div>
-                        <div style="display: inline-flex" th:text="${student.counseling}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 20%" th:text="${student.name}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 10%">
+                            <span th:if="${student.done == 0}">수료</span>
+                            <span th:if="${student.done == 1}">미수료 </span>
+                            <span th:if="${student.done == 2}">중도탈락 </span>
+                        </div>
+                        <div style="overflow: auto;display: inline-flex;width: 20%" >
+                            <span th:if="${student.pretest}">완료</span>
+                            <span th:if="${!student.pretest}">미완료 </span>
+
+                        </div>
+                        <div style="overflow: auto;display: inline-flex;width: 20%">
+                            <span th:if="${student.survey == 0}"> 미완료</span>
+                            <span th:if="${student.survey == 1}"> 첫번째 설문 완료 </span>
+                            <span th:if="${student.survey == 2}">두번째 설문 완료 </span>
+                            <span th:if="${student.survey == 3}">세번째 설문 완료 </span>
+                        </div>
+                        <div style="overflow: auto;display: inline-flex;width: 20%">
+                            <span th:if="${student.counseling == 0}"> 완료된 상담이 없습니다.</span>
+                            <span th:if="${student.counseling == 1}"> 첫번째 상담 완료</span>
+                            <span th:if="${student.counseling == 2}"> 두번째 상담 완료</span>
+                            <span th:if="${student.counseling == 3}"> 세번째 상담 완료</span>
+                            <span th:if="${student.counseling == 4}"> 네번째 상담 완료</span>
+                            <span th:if="${student.counseling == 5}"> 다섯번째 상담 완료</span>
+                            <span th:if="${student.counseling == 6}"> 여섯번째 상담 완료</span>
+                        </div>
                     </div>
                 </a>
             </div>
