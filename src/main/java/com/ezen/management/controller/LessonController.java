@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashSet;
 import java.util.List;
@@ -89,18 +90,35 @@ public class LessonController {
 
     //학생 목록
     @GetMapping(value = "/studentList")
-    public String studentList(Model model, @RequestParam("idx") Long idx, PageRequestDTO pageRequestDTO){
+    public String studentList(Model model, @RequestParam("idx") Long idx){
 
-        PageResponseDTO<Student> responseDTO = lessonService.searchStudent(pageRequestDTO, idx);
-        model.addAttribute("responseDTO", responseDTO);
+        Lesson lesson = trainingService.getLessonByIdx(idx);
+        model.addAttribute("lesson", lesson);
+        model.addAttribute("responseDTO", lessonService.studentList(idx));
 
         return "/lesson/studentList";
     }
 
+    //학생 상세
     @GetMapping(value = "/studentDetail")
     public String studentDetail(Model model, @RequestParam("idx") Long idx){
-        model.addAttribute("student", studentService.findById(idx));
+        //과목평가 테스트 가져오기 (학생 인덱스)
+        List<SubjectTest> subjectTest = lessonService.searchSubjectTest(idx);
+        model.addAttribute("subjectTest", subjectTest);
 
+        model.addAttribute("student", studentService.findById(idx));
         return "/lesson/studentDetail";
+    }
+
+
+    //진행중인 수업 목록(axios)
+    @GetMapping("/getOngoing")
+    @ResponseBody
+    public List<Lesson> getOngoing() {
+
+        List<Lesson> ongoingLesson = lessonService.getOngoingLesson();
+        log.info("ongoing lesson : {}", ongoingLesson);
+
+        return lessonService.getOngoingLesson();
     }
 }

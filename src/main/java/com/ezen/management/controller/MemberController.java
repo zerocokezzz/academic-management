@@ -1,11 +1,14 @@
 package com.ezen.management.controller;
 
+import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
 import com.ezen.management.domain.Student;
 import com.ezen.management.dto.MemberDTO;
 import com.ezen.management.dto.PageRequestDTO;
 import com.ezen.management.dto.PageResponseDTO;
+import com.ezen.management.dto.StudentDTO;
+import com.ezen.management.service.LessonService;
 import com.ezen.management.service.MemberService;
 import com.ezen.management.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -34,6 +34,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final StudentService studentService;
+    private final LessonService lessonService;
 
 //    행정 관리 홈(행정 리스트)
     @PreAuthorize("hasRole('MASTER')")
@@ -307,8 +308,6 @@ public class MemberController {
     @GetMapping("/student")
     public String student(Long lessonIdx, PageRequestDTO pageRequestDTO, Model model){
 
-
-
 //        model.addAttribute("students", students);
 
         PageResponseDTO<Student> pageResponseDTO = studentService.searchStudent(lessonIdx, pageRequestDTO);
@@ -317,6 +316,73 @@ public class MemberController {
 
         return "/member/student/index";
     }
+
+    @PostMapping("/student/insert")
+    public String studentInsert(StudentDTO studentDTO){
+
+        log.info("studentDTO : {}", studentDTO);
+
+        try {
+            studentService.insertStudent(studentDTO);
+
+        }catch (Exception e){
+            return "redirect:/member/student?code=insert-fail";
+        }
+
+        return "redirect:/member/student?code=insert-success";
+    }
+
+
+    @PostMapping("/student/modify")
+    public String studentModify(StudentDTO studentDTO){
+
+        log.info("studentDTO : {}", studentDTO);
+
+        try {
+            studentService.modifyStudent(studentDTO);
+        }catch (Exception e){
+            return "redirect:/member/student?code=modify-fail";
+        }
+
+        return "redirect:/member/student?code=modify-success";
+    }
+
+    @GetMapping("/student/getStudent")
+    @ResponseBody
+    public StudentDTO getStudent(Long studentIdx){
+
+        Student student = studentService.findById(studentIdx);
+
+        return StudentDTO.builder()
+                .lessonIdx(student.getLesson().getIdx())
+                .idx(student.getIdx())
+                .lessonName(student.getLesson().getCurriculum().getName())
+                .lessonNumber(student.getLesson().getNumber())
+                .name(student.getName())
+                .birthday(student.getBirthday())
+                .phone(student.getPhone())
+                .email(student.getEmail())
+                .etc(student.getEtc())
+                .fileName(student.getFileName())
+                .build();
+
+
+    }
+
+    @PostMapping("/student/delete")
+    public String deleteStudent(StudentDTO studentDTO){
+
+        try{
+            studentService.deleteStudent(studentDTO);
+        }catch (Exception e){
+            return "redirect:/member/student?code=delete-fail";
+        }
+
+        return "redirect:/member/student?code=delete-success";
+
+    }
+
+
 
 
 }

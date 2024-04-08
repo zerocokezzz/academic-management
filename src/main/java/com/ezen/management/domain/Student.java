@@ -76,5 +76,29 @@ public class Student extends BaseEntity{
         this.survey++;
     }
 
+    public void changeFileName(String fileName){
+        this.fileName = fileName;
+    }
+
+    public void changeEtc(String etc){
+        this.etc = etc;
+    }
+
+    public void changeName(String name){
+        this.name = name;
+    }
+
+    public void changeBirthday(String birthday){
+        this.birthday = birthday;
+    }
+
+    public void changeEmail(String email){
+        this.email = email;
+    }
+
+    public void changePhone(String phone){
+        this.phone = phone;
+    }
+
 
 }

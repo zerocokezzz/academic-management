@@ -39,14 +39,11 @@
                                     <option th:selected="${pageRequestDTO.type == 'e'}" value="e">수업종료일</option>
                                     <option th:selected="${pageRequestDTO.type == 'r'}" value="r">강의실</option>
                                 </select>
-                            </div>
+                            </div> &nbsp;
                             <input type="text" class="form-control keyword" name="keyword"
-                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
-                                <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
-                            </div>
+                                   th:value="${pageRequestDTO.keyword}" style="border-radius: 5px"> &nbsp;
+                            <button style="border-radius: 5px" type="submit" class="btn btn-outline-primary searchBtn">검색</button> &nbsp;
+                            <button style="border-radius: 5px" type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
 
                         </div>
                     </div>
@@ -59,28 +56,31 @@
 
             <br>
             <hr>
-            <div style="display: inline-flex">훈련유형</div>
-            <div style="display: inline-flex">과정명</div>
-            <div style="display: inline-flex">기수</div>
-            <div style="display: inline-flex">교사</div>
-            <div style="display: inline-flex">수강인원</div>
-            <div style="display: inline-flex">시작일</div>
-            <div style="display: inline-flex">종료일</div>
 
-            <div th:each="lesson: ${responseDTO.getDtoList()}">
+            <div style="width: 100%">
+                <div style="display: inline-flex;width: 25%; font-weight: bold; font-size: large; color: #0d6efd">훈련유형</div>
+                <div style="display: inline-flex;width: 30%; font-weight: bold; font-size: large; color: #0d6efd">과정명</div>
+                <div style="display: inline-flex;width: 5%; font-weight: bold; font-size: large; color: #0d6efd">기수</div>
+                <div style="display: inline-flex;width: 5%; font-weight: bold; font-size: large; color: #0d6efd">인원</div>
+                <div style="display: inline-flex;width: 10%; font-weight: bold; font-size: large; color: #0d6efd">교사</div>
+                <div style="display: inline-flex;width: 10%; font-weight: bold; font-size: large; color: #0d6efd">시작일</div>
+                <div style="display: inline-flex;width: 10%;  font-weight: bold; font-size: large;  color: #0d6efd">종료일</div>
+            </div>
+
+            <div style="width: 100%; " th:each="lesson: ${responseDTO.getDtoList()}">
                 <a th:href="@{/training/lesson/detail(idx=${lesson.idx})}" style="color: black">
                     <div>
                         <hr>
-                        <div style="display: inline-flex" th:text="${lesson.curriculum.category.name}"></div> &nbsp; | &nbsp;
-                        <div style="display: inline-flex" th:text="${lesson.curriculum.name}"></div> &nbsp; | &nbsp;
-                        <div style="display: inline-flex" th:text="${lesson.number}"></div> &nbsp;기 &nbsp; | &nbsp;
-                        <div style="display: inline-flex" th:text="${lesson.member.name}"></div> &nbsp; | &nbsp;
-                        <div style="display: inline-flex" th:text="${lesson.headCount}"></div> &nbsp; 명 &nbsp; | &nbsp;
-                        <div style="display: inline-flex" th:text="${lesson.startDay}"></div> &nbsp; | &nbsp;
-                        <div style="display: inline-flex" th:text="${lesson.endDay}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 25%" th:text="${lesson.curriculum.category.name}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 30%" th:text="${lesson.curriculum.name}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 5%" th:text="${lesson.number}+'기'"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 5%" th:text="${lesson.headCount}+'명'"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 10%" th:text="${lesson.member.name}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 10%" th:text="${lesson.startDay}"></div>
+                        <div style="overflow: auto;display: inline-flex;width: 10%" th:text="${lesson.endDay}"></div>
                     </div>
                 </a>
-                        <div class="float-end" style="display: inline-flex"></div>
+                <div class="float-end" style="display: inline-flex"></div>
 
             </div>
 
@@ -121,7 +121,7 @@
 
                                 <div class="input-group-prepend">
                                     <select class="form-select type" th:name="curriculum_idx">
-                                        <option value="">---과정---</option>
+                                        <option value="">과정</option>
                                         <option th:each="curriculum : ${curriculum}" th:value="${curriculum.idx}"
                                                 th:text="${curriculum.name}"></option>
                                     </select>
@@ -131,11 +131,11 @@
 
                                 <div class="input-group mb-3">
                                     <select class="form-select type" th:name="member_id">
-                                        <option value="">---교사---</option>
+                                        <option value="">교사</option>
                                         <option th:each="member: ${member}" th:value="${member.id}"
                                                 th:text="${member.name}"></option>
                                     </select>
-                                    <input type="text" class="form-control lessonNumber" name="number" placeholder="기수">
+                                    <input type="number" class="form-control lessonNumber" name="number" placeholder="기수" oninput="this.value=this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');">
                                     <input type="text" class="form-control lessonClassRoom" name="classRoom"
                                            placeholder="강의실">
                                 </div>
@@ -148,7 +148,7 @@
                                     <div style="width: 50%; display: flex; justify-content: center; align-items: center;">
                                         <span style="font-weight: 600;">종료일</span></div>
                                 </div>
-                                <div class="input-group mb-2">
+                                <div class="input-group mb-3">
                                     <input type="date" class="form-control lessonStartDay" name="startDay"
                                            placeholder="시작일">
                                     <input type="date" class="form-control lessonEndDay" name="endDay"
@@ -158,11 +158,14 @@
                                 <br>
 
                                 <div class="input-group mb-2">
-                                    <div class="form-control">설문1</div>
-                                    <div class="form-control">설문2</div>
-                                    <div class="form-control">설문3</div>
+                                    <div style="width: 33%; display: flex; justify-content: center; align-items: center;">
+                                        <span style="font-weight: 600;">설문1</span></div>
+                                    <div style="width: 33%; display: flex; justify-content: center; align-items: center;">
+                                        <span style="font-weight: 600;">설문2</span></div>
+                                    <div style="width: 34%; display: flex; justify-content: center; align-items: center;">
+                                        <span style="font-weight: 600;">설문3</span></div>
                                 </div>
-                                <div class="input-group mb-2">
+                                <div class="input-group mb-3">
                                     <input type="date" class="form-control lessonSurvey1" name="survey1"
                                            placeholder="설문1">
                                     <input type="date" class="form-control lessonSurvey2" name="survey2"
@@ -173,9 +176,19 @@
 
                                 <br>
 
+                                <!-- 보유 과목 체크박스 -->
+                                <div class="input-group mb-3">
+                                    <div class="form-check form-check-inline" th:each="subject: ${subject}" >
+                                        <input type="checkbox" name="selectedSubjects" th:value="${subject.name}" th:id="'subject_' + ${subject.idx}" class="form-check-input">
+                                        <label th:for="'subject_' + ${subject.idx}" th:text="${subject.name}" class="form-check-label"></label>
+                                    </div>
+                                </div>ㅊ
+
+                                <br>
+
                                 <div class="input-group mb-3">
                                     <select class="form-select type" th:name="questionName">
-                                        <option value="">---사전평가문제---</option>
+                                        <option value="">사전평가문제</option>
                                         <option th:each="questionName: ${questionName}" th:value="${questionName.name}"
                                                 th:text="${questionName.name}"></option>
                                     </select>
@@ -183,16 +196,15 @@
 
                                 <br>
 
-                                <div class="input-group mb-2">
+                                <div class="input-group mb-3">
                                     <textarea type="text" rows="2" class="form-control lessonContent"
                                               style="resize: none; height: 85px;" id="content" name="content"
                                               placeholder="비고"></textarea>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary lessonInsert">등록</button>
-                                <button type="button" class="btn btn-danger insertClose">닫기</button>
-                            </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-outline-primary lessonInsert">등록</button>
+                                    <button type="button" class="btn btn-outline-danger insertClose">닫기</button>
+                                </div>
                         </form>
                     </div>
                 </div>

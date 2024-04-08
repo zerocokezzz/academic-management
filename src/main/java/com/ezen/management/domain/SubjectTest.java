@@ -1,16 +1,14 @@
 package com.ezen.management.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
+@Getter
 public class SubjectTest {
 
     @Id
@@ -21,5 +19,7 @@ public class SubjectTest {
     private Student student;
 
     private String subject;
+
+    private String state;
 
 }
