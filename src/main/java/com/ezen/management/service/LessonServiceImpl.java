@@ -110,7 +110,13 @@ public class LessonServiceImpl implements LessonService{
                 .build();
     }
 
+    @Override
+    public List<Student> studentList(Long idx){
+        return studentRepository.getByLessonIdx(idx);
+    }
+
     //학생 인덱스로 과목평가 가져오기
+    @Override
     public List<SubjectTest> searchSubjectTest(Long studentIdx){
         return subjectTestRepository.searchSubjectTest(studentIdx);
     }

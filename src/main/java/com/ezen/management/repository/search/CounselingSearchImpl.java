@@ -57,6 +57,9 @@ public class CounselingSearchImpl extends QuerydslRepositorySupport implements C
             query.where(booleanBuilder);
         }//end if
 
+        //정렬
+//        query.orderBy(counseling.);
+
         query.where(counseling.idx.gt(0L));
 
         //paging

@@ -29,7 +29,11 @@ public class CategorySearchImpl extends QuerydslRepositorySupport implements Cat
             booleanBuilder.or(category.name.contains(keyward));
             query.where(booleanBuilder);
         }
-        
+
+
+        //정렬
+        query.orderBy(category.name.asc());
+
         //페이징
         this.getQuerydsl().applyPagination(pageable, query);
 
