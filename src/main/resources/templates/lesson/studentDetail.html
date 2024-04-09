@@ -295,6 +295,23 @@
 <script layout:fragment="script" th:inline="javascript">
 
 
+  console.log("studentIdx확인용= " + [[${student.idx}]])
+
+  //에러메세지 띄워주기
+  const errors = [[${errors}]]
+  console.log(errors)
+
+  let errorMsg = ''
+
+  if(errors){
+    for(let i=0; i<errors.length; i++){
+      errorMsg += `${errors[i].field}는 ${errors[i].code} \n`
+    }
+    alert(errorMsg)
+  }
+
+
+
     const lessonIdx = document.querySelector(".lessonIdx")
     document.querySelector(".backList").addEventListener("click", function (e) {
         const idx = lessonIdx.value
@@ -312,15 +329,29 @@
   })
 
 
+
 // 학생 개별 상담내역 검색
 //   const studentIdx = document.querySelector(".studentIdx")
+
   document.querySelector(".counselingBtn").addEventListener("click", function (e){
-    const idx = studentIdx.value
-    window.location.href = '/counseling/detail?idx=' + idx;
+
+    const idx = [[${student.idx}]]
+    console.log("idx= " + idx);
+
+    //값과 타입까지 비교위한(====)
+    // if (idx === null) {
+    //   console.log("idx is null");
+    //   alert("idx가 null입니다.");
+    //   location.href = '/lesson/studentList?idx=' + studentLesson;
+    //
+    // } else {
+    //   console.log("idx= " + idx);
+    //   location.href = '/counseling/counselingDetail?idx=' + idx;
+    // }
+
+    location.href = '/counseling/counselingDetail?idx=' + [[${student.idx}]];
 
   })
-
-
 
   const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
 

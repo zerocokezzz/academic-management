@@ -43,8 +43,10 @@ public interface CounselingRepository extends JpaRepository<Counseling, Long>, C
 
 
 
-    //detail 학생정보로 조회 / 자동으로 query 생성하는 JPQL
-//    List<Counseling> findByStudentIdx(Long studentIdx);
+    //detail 학생정보로 조회 / 학생정보를 list로 받아와서 처리해야함 / 자동으로 query 생성하는 JPQL
+    List<Counseling> findByStudentIdx(Long studentIdx);
+
+
 //    @Query("select c from Counseling c join Student s on c.student.idx = s.idx where c.student = :student")
 //    Counseling getCounselingWithStudentId(Student student, Long studentIdx);
 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+    </div>
+
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>상담 상세 보기</h5>
+                <!-- 버튼을 어느쪽에 놓을까~~~~ 아따 중간에 왜 띄워져 있는겨-->
+                            <div class="row justify-content-end">
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-outline-dark clearBtn">목록</button>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-primary creatBtn" style="margin: 1px;">추가</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                <!-- 왼쪽에 학생 정보 표시 -->
+                                    <div class="col-md-6">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">학생No</span>
+                                            <input type="text" class="form-control" name="studentIdx" th:value="${student.idx}" readonly>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">이름</span>
+                                            <input type="text" class="form-control" name="name" th:value="${student.name}" readonly>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">전화번호</span>
+                                            <input type="text" class="form-control" name="phone" th:value="${student.phone}" readonly>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text">이메일</span>
+                                            <input type="text" class="form-control" name="phone" th:value="${student.email}" readonly>
+                                        </div>
+                                    </div>
+
+                <!-- 오른쪽에 사진 표시 -->
+                                    <div class="col-md-6">
+                                        <div class="border border-dark rounded p-2" style="margin: 1px;">
+                                            <!-- 여기에 사진 표시인디 사진은 변화없이 고정해놓고 싶은데 더럽게 안되네 -->
+                                            <img src="/images/default_profile.jpg" alt="학생 사진" class="img-fluid" style="width: 150px; height: 200px; padding: 1px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                <!-- 여기부터는 상담List로 나오기 -->
+                                <div th:each="counseling: ${counselingList}">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담No</span>
+                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.idx}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담회차</span>
+                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.round}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담일자</span>
+                                        <input type="text" class="form-control" name="counselingIdx" th:value="${#temporals.format(counseling.counselingDate, 'yyyy-MM-dd')}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담내용</span>
+                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.content}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담방식</span>
+                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.method}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">담당자</span>
+                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.writer}" readonly>
+                                    </div>
+                <!-- button -->
+                                    <div class="my-4">
+                                        <button type="button" class="btn btn-secondary modBtn">수정하기</button>
+                                        <button type="button" class="btn btn-danger delBtn">삭제하기</button>
+                                    </div>
+                                </div>
+
+
+                            </div><!-- end card body -->
+
+                        </div><!-- end card-header -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end inner-content -->
+
+
+
+
+
+    </div><!--end content -->
+
+
+
+
+
+
+
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script content="script" th:inline="javascript">
+
+    console.log("안녕 여기 상담 상세");
+
+    console.log("studentIdx확인용= " + [[${student.idx}]])
+
+    //에러메세지 띄워주기
+    const errors = [[${errors}]]
+    console.log(errors)
+
+    let errorMsg = ''
+
+    if(errors){
+        for(let i=0; i<errors.length; i++){
+            errorMsg += `${errors[i].field}는 ${errors[i].code} \n`
+        }
+        alert(errorMsg)
+    }
+
+
+
+    //상담 추가하기
+    document.querySelector(".creatBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const studentIdx = [[${student.idx}]]
+        console.log("studentIdx= " + studentIdx);
+
+        location.href = '/counseling/insert?idx=' + studentIdx;
+
+    }, false)
+
+
+    //학생목록으로 돌아가~
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const lessonIdx = [[${student.lesson.idx}]]
+        console.log("lessonIdx= " + lessonIdx);
+
+        location.href = '/lesson/studentList?idx=' + lessonIdx;
+
+    }, false)
+
+
+
+
+</script>
+
+</body>
+</html>
