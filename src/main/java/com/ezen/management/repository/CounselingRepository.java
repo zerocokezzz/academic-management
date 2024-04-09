@@ -16,12 +16,6 @@ import java.util.List;
 
 public interface CounselingRepository extends JpaRepository<Counseling, Long>, CounselingSearch {
 
-
-    //특정 데이터베이스에서 동작하는 SQL을 사용하는 기능이랍니다 447p
-    @Query(value = "select now()", nativeQuery = true)
-    String getTime();
-
-
     //검색 기능
     //날짜 타입
     @Query("select c from Counseling c where c.counselingDate >= :startDate and c.counselingDate <= :endDate")
@@ -35,16 +29,18 @@ public interface CounselingRepository extends JpaRepository<Counseling, Long>, C
 
 
 
-    //list
-    //  @Query("select c from Counseling c")
-    //  PageResponseDTO<CounselingDTO> findAllByCounseling(PageRequestDTO pageRequestDTO);
+    //학생정보를 List로 받아와서 처리해야함 / 자동으로 query 생성하는 JPQL
+    List<Counseling> findByStudentIdx(Long studentIdx);
+
+    //한개의 정보조회
+    Counseling findByIdx(Long idx);
+
+
+    //list Join으로 가져와 보기
     @Query("select c from Counseling c join Student s on c.student.idx = s.idx where c.student = :student")
     Page<Counseling> getCounselingWithStudentName(Student student, Pageable pageable);
 
 
-
-    //detail 학생정보로 조회 / 학생정보를 list로 받아와서 처리해야함 / 자동으로 query 생성하는 JPQL
-    List<Counseling> findByStudentIdx(Long studentIdx);
 
 
 //    @Query("select c from Counseling c join Student s on c.student.idx = s.idx where c.student = :student")

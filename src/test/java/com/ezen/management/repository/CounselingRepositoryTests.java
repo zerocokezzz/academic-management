@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 
 
+import java.io.Console;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -142,6 +143,16 @@ public class CounselingRepositoryTests {
     }
 
 
+
+
+
+
+
+
+
+
+    //search + paging 확인구간
+
     @Test
     public void testSearchAll2(){
         String[] types = {"t", "c", "w","n"};
@@ -202,5 +213,7 @@ public class CounselingRepositoryTests {
         todoList.forEach(counseling -> log.info("counseling= " + counseling));
 
     }
+
+
 
 }

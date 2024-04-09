@@ -20,6 +20,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5>상담 상세 보기</h5>
+                            <h8>※상담방식: ( 0: 대면 / 1: 온라인 / 2: 전화 )</h8><br>
                 <!-- 버튼을 어느쪽에 놓을까~~~~ 아따 중간에 왜 띄워져 있는겨-->
                             <div class="row justify-content-end">
                                 <div class="col-auto">
@@ -52,46 +53,51 @@
                                     </div>
 
                 <!-- 오른쪽에 사진 표시 -->
-                                    <div class="col-md-2">
-                                        <div class="border border-dark rounded p-2" style="margin: 1px; width: 150px; height: 200px">
-                                            <!-- 여기에 사진 표시인디 사진은 변화없이 고정해놓고 싶은데 더럽게 안되네 -->
-                                            <img src="/images/default_profile.jpg" alt="학생 사진" class="img-fluid" style="width: 100%; height: 100%; padding: 1px; object-fit: cover;">
+
+                                    <div class="col-md-6">
+                                        <div class="border border-dark rounded p-2" style="margin: 1px; width: 160px;">
+                                            <!-- 여기에 사진 표시인디 사진은 변화없이 고정해놓고 싶은데 -->
+                                            <img src="/images/default_profile.jpg" alt="학생 사진" class="img-fluid" style="width: 150px; height: 200px; padding: 1px; object-fit: cover;">
+
                                         </div>
                                     </div>
                                 </div>
-
+                                <hr>
                 <!-- 여기부터는 상담List로 나오기 -->
-                                <div th:each="counseling: ${counselingList}">
+                                <form th:each="counseling: ${counselingList}" id="l1">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text">상담No</span>
-                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.idx}" readonly>
+                                        <input type="hidden" class="form-control" name="idx" th:value="${counseling.idx}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담회차</span>
-                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.round}" readonly>
+                                        <input type="text" class="form-control" name="round" th:value="${counseling.round}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담일자</span>
-                                        <input type="text" class="form-control" name="counselingIdx" th:value="${#temporals.format(counseling.counselingDate, 'yyyy-MM-dd')}" readonly>
+                                        <input type="text" class="form-control" name="counselingDate" th:value="${#temporals.format(counseling.counselingDate, 'yyyy-MM-dd')}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담내용</span>
-                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.content}" readonly>
+                                        <input type="text" class="form-control" name="content" th:value="${counseling.content}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담방식</span>
-                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.method}" readonly>
+                                        <input type="text" class="form-control counselingMethod" name="method" th:value="${counseling.method}" readonly>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">담당자</span>
-                                        <input type="text" class="form-control" name="counselingIdx" th:value="${counseling.writer}" readonly>
+                                        <input type="text" class="form-control" name="writer" th:value="${counseling.writer}" readonly>
                                     </div>
                 <!-- button -->
                                     <div class="my-4">
-                                        <button type="button" class="btn btn-secondary modBtn">수정하기</button>
-                                        <button type="button" class="btn btn-danger delBtn">삭제하기</button>
+                                        <a th:href="|@{/counseling/update}?idx=${counseling.idx}|">
+                                            <button type="button" class="btn btn-secondary modBtn">수정하기</button>
+                                        </a>
+                                        <a th:href="|@{/counseling/delete}?idx=${counseling.idx}|">
+                                            <button type="button" class="btn btn-danger delBtn">삭제하기</button>
+                                        </a>
                                     </div>
-                                </div>
+                                </form><!-- end th:each -->
 
 
                             </div><!-- end card body -->
@@ -133,7 +139,6 @@
 
     console.log("안녕 여기 상담 상세");
 
-    console.log("studentIdx확인용= " + [[${student.idx}]])
 
     //에러메세지 띄워주기
     const errors = [[${errors}]]
@@ -150,17 +155,24 @@
 
 
 
+    //학생정보확인
+    const studentIdx = [[${student.idx}]]
+    console.log("studentIdx= " + studentIdx);
+
+
+
+
     //상담 추가하기
     document.querySelector(".creatBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
 
-        const studentIdx = [[${student.idx}]]
-        console.log("studentIdx= " + studentIdx);
 
         location.href = '/counseling/insert?idx=' + studentIdx;
 
     }, false)
+
+
 
 
     //학생목록으로 돌아가~
@@ -177,6 +189,46 @@
 
 
 
+    const formObj = document.querySelector("#l1");
+
+    // 삭제하기
+    document.querySelectorAll(".delBtn").forEach(function(btn) {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 확인 창 표시
+            const confirmed = confirm("삭제하시겠습니까?");
+
+            if (confirmed) {
+                // 삭제할 form 요소 선택
+                const form = this.closest("form");
+                form.action = `/counseling/delete`;
+                form.method = 'post';
+                form.submit();
+            }
+        });
+    });
+
+
+
+
+
+//상담방법에 따라 형식 변환
+//     const method = document.querySelector(".counselingMethod").value;
+//
+//     function getCounselingMethod(method) {
+//         switch (method) {
+//             case 0:
+//                 return "대면";
+//             case 1:
+//                 return "전화";
+//             case 2:
+//                 return "온라인";
+//             default:
+//                 return "몰?루?";
+//         }
+//     }
 
 </script>
 

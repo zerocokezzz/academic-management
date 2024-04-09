@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -37,32 +38,7 @@ public class CounselingController {
 
 
 
-    //전체목록
-    @GetMapping("/list")
-    public void counselingList(PageRequestDTO pageRequestDTO
-            , Model model){
-
-        //상담목록
-        PageResponseDTO<Counseling> responseDTO = counselingService.counselingList(pageRequestDTO);
-        model.addAttribute("responseDTO", responseDTO);
-
-        log.info("responseDTO= " + responseDTO);
-
-    }
-
-
-    //학생 상세조회
-    @GetMapping({"/detail","/update"})
-    public void detail(Long idx, Student student, Model model, PageRequestDTO pageRequestDTO){
-
-        log.info("------가자가자가자 상세페이지------");
-
-       CounselingStudentDTO counselingStudentDTO = counselingService.detail(idx);
-        log.info("counselingStudentDTO= " + counselingStudentDTO);
-        model.addAttribute("dto", counselingStudentDTO);
-    }
-
-
+    //상담 상세리스트
     @GetMapping("/counselingDetail")
     public void findByStudentIdx(Model model, @RequestParam("idx")Long studentIdx) {
         //왜 스트링을 보낼때는 안가고 void로 하니까 갈까?
@@ -95,29 +71,86 @@ public class CounselingController {
     }
     @PostMapping("/insert")
     public String insert(CounselingDTO counselingDTO
-
                             ,BindingResult bindingResult
-                            , RedirectAttributes redirectAttributes){
+                            ,RedirectAttributes redirectAttributes){
 
         log.info("안녕 여기 추가화면 나오는 중");
 
-        log.info("counselingDTO= " + counselingDTO);
+        //시간 잘 나오나 확인용
+        log.info("before counselingDTO= " + counselingDTO);
 
-        if(bindingResult.hasErrors()){
-            log.info("-----has errors-----");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.hasErrors());
-
-            redirectAttributes.addAttribute("idx", counselingDTO.getStudentIdx());
-
-//            return "redirect:/counseling/insert?idx=" + counselingDTO.getStudentIdx();
-            return "redirect:/counseling/insert";
+        //만약 시간이 null 인경우 현재 시간으로 변경하기
+        if(counselingDTO.getCounselingDate() == null){
+            counselingDTO.setCounselingDate(LocalDateTime.now());
         }
+
+        //시간 변경후 확인용
+        log.info("after counselngDTO= " + counselingDTO);
 
 
         Long idx = counselingService.insert(counselingDTO);
-        redirectAttributes.addFlashAttribute("result", idx);
+        log.info("idx= " + idx);
 
+        redirectAttributes.addFlashAttribute("result", idx);
         redirectAttributes.addAttribute("idx", counselingDTO.getStudentIdx());
+
+        return "redirect:/counseling/counselingDetail";
+    }
+
+
+    //수정하기
+    @GetMapping("/update")
+    public void update(Model model
+                        ,Student Student
+                        ,@RequestParam("idx") Long idx){
+
+        log.info("안녕 여기 수정화면 가는 중");
+
+        //상담 정보 보내기
+        Counseling counseling = counselingService.findByidx(idx);
+        model.addAttribute("counseling", counseling);
+        log.info("counseling= " + counseling);
+
+        //학생 단일 정보 보내기
+        Student student = studentService.findById(counseling.getStudent().getIdx());
+        model.addAttribute("student", student);
+        log.info("student= " + student);
+
+    }
+    @PostMapping("/update")
+    public String update(CounselingDTO counselingDTO
+                         ,RedirectAttributes redirectAttributes){
+
+        log.info("상담 수정화면 나오는 중");
+
+
+        counselingService.update(counselingDTO);
+        redirectAttributes.addFlashAttribute("result", "updated");
+        redirectAttributes.addAttribute("idx", counselingDTO.getStudentIdx());
+
+        log.info("counselingDTO= " + counselingDTO);
+
+        return "redirect:/counseling/counselingDetail";
+    }
+
+
+
+    //삭제하기
+    @PostMapping("/delete")
+    public String delete(@RequestParam("idx") Long idx
+                        ,RedirectAttributes redirectAttributes){
+
+        log.info("상담삭제할겨" + idx);
+
+
+        //상담idx 찾기
+        Counseling counseling = counselingService.findByidx(idx);
+
+        //삭제 호출
+        counselingService.delete(idx);
+
+        redirectAttributes.addFlashAttribute("result", "delete");
+        redirectAttributes.addAttribute("idx", counseling.getStudent().getIdx());
 
         return "redirect:/counseling/counselingDetail";
 
@@ -125,48 +158,33 @@ public class CounselingController {
 
 
 
-    //수정하기
-    @PostMapping("/update")
-    public String update(CounselingStudentDTO counselingStudentDTO
-                         , PageRequestDTO pageRequestDTO
-                         , BindingResult bindingResult
-                         , RedirectAttributes redirectAttributes){
 
-        log.info("counseling UpdateAction gogo");
 
-        if (bindingResult.hasErrors()){
-            log.info("has errors...");
 
-            String link = pageRequestDTO.getLink();
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("idx", counselingStudentDTO.getCounselingIdx());
 
-        //오류 발생시 다시 update로 이동시켜
-            return "redirect:/counseling/update?" + link;
-        }
+    //전체목록
+    @GetMapping("/list")
+    public void counselingList(PageRequestDTO pageRequestDTO
+            , Model model){
 
-        counselingService.update(counselingStudentDTO);
-        redirectAttributes.addFlashAttribute("result", "updated");
-        redirectAttributes.addAttribute("idx", counselingStudentDTO.getCounselingIdx());
+        //상담목록
+        PageResponseDTO<Counseling> responseDTO = counselingService.counselingList(pageRequestDTO);
+        model.addAttribute("responseDTO", responseDTO);
 
-        log.info("counselingStudentDTO= " + counselingStudentDTO);
+        log.info("responseDTO= " + responseDTO);
 
-        return "redirect:/counseling/detail";
     }
 
 
+    //학생 상세조회
+    @GetMapping("/detail")
+    public void detail(Long idx, Student student, Model model, PageRequestDTO pageRequestDTO){
 
-    //삭제하기
-    @PostMapping("/delete")
-    public String delete(Long idx, RedirectAttributes redirectAttributes){
+        log.info("------가자가자가자 상세페이지------");
 
-        log.info("counseling delete gogo" + idx);
-
-        counselingService.delete(idx);
-        redirectAttributes.addFlashAttribute("result", "delete");
-
-        return "redirect:/counseling/list";
-
+        CounselingStudentDTO counselingStudentDTO = counselingService.detail(idx);
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+        model.addAttribute("dto", counselingStudentDTO);
     }
 
 

@@ -67,8 +67,14 @@ public class Student extends BaseEntity{
 
     private String etc;
 
+    //상담 추가시
     public void insertCounseling(){
         this.counseling++;
+    }
+
+    //상담 삭제시
+    public void deleteCounseling(){
+        this.counseling--;
     }
 
     public void grading(int score){
