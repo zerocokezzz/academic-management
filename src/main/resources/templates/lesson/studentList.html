@@ -2,6 +2,17 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="/layout/basic :: head"></head>
+<style>
+    img {
+        max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 너비 설정 */
+        max-height: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 높이 설정 */
+    }
+
+    /*스크롤바 지우기*/
+    ::-webkit-scrollbar{
+        display: none;
+    }
+</style>
 <body>
 <!-- warpper start -->
 <div class="wrapper">

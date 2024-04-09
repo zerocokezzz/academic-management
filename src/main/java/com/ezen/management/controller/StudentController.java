@@ -117,27 +117,6 @@ public class StudentController {
 //        학생 테이블 pretest = true, score = 점수
         int result = questionAnswerService.grading(questionAnswerDTO);
 
-//        response.setCharacterEncoding("utf-8");
-//        response.setContentType("text/html; charset=utf-8");
-//        PrintWriter w = null;
-//
-//        try {
-//            w = response.getWriter();
-//        } catch (IOException e) {
-////            throw new RuntimeException(e);
-//            return "redirect:/student";
-//        }
-//
-//        if(result == 1){
-//            w.println("<script> alert('제출되었습니다.');");
-//        }else{
-//            w.println("<script> alert('Error!');");
-//        }
-//
-//        w.println("location.href='/student' </script>");
-//        w.close();
-//        return null;
-
 
 //        이렇게 보내면 뷰에서 파라미터 받은 후 자바스크립트로 처리
         if (result == 1) {
@@ -145,21 +124,6 @@ public class StudentController {
         }
 
         return "redirect:/student?code=fail";
-//        const url = new URL(window.location.href);
-//        console.log(window.location.href);
-//        const urlSearchParams = url.searchParams;
-//
-//        console.log(urlSearchParams.get("code"));
-//        const code = urlSearchParams.get("code");
-//
-//            switch (code){
-//                case 'success' :
-//                    alert('제출되었습니다.');
-//                    break;
-//                case 'fail' :
-//                    alert('오류 발생! 다시 제출해주세요.');
-//            }
-
 
     }
 
@@ -186,6 +150,7 @@ public class StudentController {
                 .idx(student.getIdx())
                 .birthday(student.getBirthday())
                 .phone(student.getPhone())
+                .uuid(student.getUuid())
                 .fileName(student.getFileName())
                 .counseling(student.getCounseling())
                 .pretest(student.isPretest())

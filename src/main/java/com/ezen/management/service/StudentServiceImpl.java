@@ -10,10 +10,15 @@ import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -22,6 +27,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService{
+
+    @Value("${com.ezen.management.upload.path}")
+    private String uploadPath;
 
     private final StudentRepository studentRepository;
     private final LessonRepository lessonRepository;
@@ -95,7 +103,7 @@ public class StudentServiceImpl implements StudentService{
                 .build();
 
         if(studentDTO.getFileName() != null && !studentDTO.getFileName().isEmpty()){
-            student.changeFileName(studentDTO.getFileName());
+            student.changeFileName(studentDTO.getUuid(), studentDTO.getFileName());
         }
 
         if(studentDTO.getEtc() != null && !studentDTO.getEtc().isEmpty()){
@@ -110,10 +118,20 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public void modifyStudent(StudentDTO studentDTO) {
+    public void modifyStudent(StudentDTO studentDTO) throws IOException {
 
         Optional<Student> byId = studentRepository.findById(studentDTO.getIdx());
-        Student student = byId.get();
+        Student student = byId.orElseThrow();
+
+        if(student.getUuid() != null){
+            Resource resource = new FileSystemResource(uploadPath + File.separator + student.getUuid() + '_' + student.getFileName());
+
+            try{
+                resource.getFile().delete();
+            }catch (Exception e){
+                throw new IOException();
+            }
+        }
 
         log.info("student : {} ", student);
 
@@ -121,14 +139,17 @@ public class StudentServiceImpl implements StudentService{
         student.changeBirthday(studentDTO.getBirthday());
         student.changeEmail(studentDTO.getEmail());
         student.changePhone(studentDTO.getPhone());
-        student.changeFileName(studentDTO.getFileName());
+
+        if(studentDTO.getUuid() != null){
+            student.changeFileName(studentDTO.getUuid(), studentDTO.getFileName());
+        }
 
         studentRepository.save(student);
 
     }
 
     @Override
-    public void deleteStudent(StudentDTO studentDTO) {
+    public void deleteStudent(StudentDTO studentDTO) throws IOException {
         Optional<Student> studentById = studentRepository.findById(studentDTO.getIdx());
         Student student = null;
 
@@ -136,13 +157,24 @@ public class StudentServiceImpl implements StudentService{
         Lesson lesson = lessonById.orElseThrow();
 
 
-
         if(studentById.isPresent()){
             student = studentById.get();
+
         }
 
         if(student == null){
             throw new NoSuchElementException();
+        }
+
+//        파일 삭제
+        if(student.getUuid() != null){
+            Resource resource = new FileSystemResource(uploadPath + File.separator + student.getUuid() + '_' + student.getFileName());
+
+            try{
+                resource.getFile().delete();
+            }catch (Exception e){
+                throw new IOException();
+            }
         }
 
         studentRepository.delete(student);

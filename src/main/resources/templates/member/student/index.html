@@ -3,6 +3,15 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="/layout/basic :: head"></head>
+<style>
+  .list-title{
+    font-weight: bold;
+    font-size: large;
+    color: #0d6efd;
+    margin-bottom: 15px;
+  }
+
+</style>
 <body>
 <!-- warpper start -->
 <div class="wrapper">
@@ -77,15 +86,15 @@
       <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]명</div>
       <hr>
 
-        <table class="table table-hover">
+        <table class="table table-hover" style="margin-top: 0">
           <tr>
-            <th class="align-middle">수업</th>
-            <th class="align-middle">이름</th>
-            <th class="align-middle">생년월일</th>
-            <th class="align-middle">이메일</th>
-            <th class="align-middle">연락처</th>
+            <th class="align-middle"><div class="list-title">수업</div></th>
+            <th class="align-middle"><div class="list-title">이름</div></th>
+            <th class="align-middle"><div class="list-title">생년월일</div></th>
+            <th class="align-middle"><div class="list-title">이메일</div></th>
+            <th class="align-middle"><div class="list-title">연락처</div></th>
 <!--            <th class="align-middle">비고</th>-->
-            <th class="align-middle"><div>수정/삭제</div></th>
+            <th class="align-middle"><div class="list-title">수정/삭제</div></th>
 
           </tr>
           <tr th:each="student : ${pageResponseDTO.dtoList}">
@@ -156,7 +165,28 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/member/student/insert" method="post" id="insertForm">
+
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="inputImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+
+
+            <br>
+            <br>
+
+            <form action="/member/student/insert" method="post" id="insertForm" encType="multipart/form-data">
+
+              <!-- imageupload-->
+              <div class="mb-3" id="insertFileName">
+                <input name="file" type="file" id="uploadImage"/>
+              </div>
+              <!-- imageupload-->
+
+
 
               <div>
                 <select class="form-select lessonSelect" id="lessonSelect" name="lessonIdx" required>
@@ -189,14 +219,11 @@
               </div>
 
 
+
+
               <div class="mb-3">
                 <label for="insertEtc" class="col-form-label">비고</label>
                 <textarea class="form-control" rows="1"  id="insertEtc" name="etc" required></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="insertFileName" class="col-form-label">사진</label>
-                <input class="form-control" type="file" id="insertFileName"/>
               </div>
 
 
@@ -206,6 +233,12 @@
               </div>
 
             </form>
+
+
+
+
+
+
           </div>
 
         </div>
@@ -228,9 +261,24 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/member/student/modify" method="post" id="modifyForm">
 
-              <br>
+            <br>
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="modifyImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+            <form action="/member/student/modify" method="post" id="modifyForm" encType="multipart/form-data">
+
+
+
+              <!-- imageupload-->
+              <div class="mb-3" id="modifyFileName">
+                <input name="file" type="file" id="modifyFile"/>
+              </div>
+              <!-- imageupload-->
 
               <input type="hidden" id="modifyIdx" name="idx"/>
 
@@ -262,10 +310,6 @@
                 <textarea class="form-control" rows="1"  id="modifyEtc" name="etc" required></textarea>
               </div>
 
-              <div class="mb-3">
-                <label for="modifyFilename" class="col-form-label">사진</label>
-                <input class="form-control" type="file" id="modifyFilename"/>
-              </div>
 
 
               <div class="modal-footer">
@@ -441,7 +485,11 @@
       modifyBirthday.value = result.birthday;
       modifyEtc.value = result.etc;
 
-    //   사진 가져와야됨
+      if(result.uuid != null){
+        modifyImage.innerHTML = '<img src="/view/' + result.uuid + '_' + result.fileName +'" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      }else{
+        modifyImage.innerHTML = `<img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">`;
+      }
 
     }).catch(e => {
 
@@ -461,7 +509,6 @@
     modifyPhone.value = modifyPhone.value.trim();
     modifyBirthday.value = modifyBirthday.value.trim();
     modifyEmail.value = modifyEmail.value.trim();
-
 
     if(modifyName.value === ""){
       alert("이름이 입력되지 않았습니다.");
@@ -619,7 +666,50 @@
   }
 
 
+  const inputImage = document.querySelector(".inputImage");
+  const uploadImage = document.querySelector("#uploadImage");
+  const insertFileName = document.querySelector("#insertFileName");
+  const insertFile = document.querySelector("#insertFile");
+  inputImage.addEventListener("click", function (){
+    uploadImage.click();
+  })
 
+  uploadImage.addEventListener("change", function (){
+    if (uploadImage.files && uploadImage.files[0]) {
+      var reader = new FileReader();
+
+      // 파일을 읽어서 이미지를 미리보기에 표시합니다.
+      reader.onload = function(e) {
+        inputImage.innerHTML = '<img src="' + e.target.result + '" alt="이미지 미리보기" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      };
+
+      // 파일을 읽습니다.
+      reader.readAsDataURL(uploadImage.files[0]);
+    }
+  })
+
+
+
+
+  const modifyImage = document.querySelector(".modifyImage");
+  const modifyFile = document.querySelector("#modifyFile");
+  modifyImage.addEventListener("click", function (){
+    modifyFile.click();
+  })
+
+  modifyFile.addEventListener("change", function (){
+    if (modifyFile.files && modifyFile.files[0]) {
+      var reader = new FileReader();
+
+      // 이미지를 미리보기에 표시
+      reader.onload = function(e) {
+        modifyImage.innerHTML = '<img src="' + e.target.result + '" alt="이미지 미리보기" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      };
+
+      //  파일을 읽어옴
+      reader.readAsDataURL(modifyFile.files[0]);
+    }
+  })
 
   // nav 활성화
   // document.querySelector(".teacherManagement").classList.add("active");

@@ -24,6 +24,7 @@ public class StudentDTO {
     private String birthday;
     private String email;
     private String phone;
+    private String uuid;
     private String fileName;
     private int counseling;
     private boolean pretest;
