@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +35,7 @@ public class CounselingServiceImpl implements CounselingService {
     private final ModelMapper modelMapper;
     @Autowired
     private  final StudentRepository studentRepository;
+
 
     @Override
     public PageResponseDTO<Counseling> counselingList(PageRequestDTO pageRequestDTO) {
@@ -96,15 +96,22 @@ public class CounselingServiceImpl implements CounselingService {
     }
 
 
-
     @Override
     public Long insert(CounselingDTO counselingDTO) {
-
+        // CounselingDTO로부터 Counseling 엔티티로 매핑
         Counseling counseling = modelMapper.map(counselingDTO, Counseling.class);
+
         log.info("counseling= " + counseling);
 
-        //counselingRepository.save(counseling).getIdx();
+        //student에도 저장해야 해요
+        Optional<Student> studentResult = studentRepository.findById(counselingDTO.getStudentIdx());
+        Student student = studentResult.orElseThrow();
 
+        // Student 엔티티에 counseling 추가
+        student.insertCounseling();
+        studentRepository.save(student);
+
+        // 저장하고 저장된 엔티티의 idx 반환
         Long idx = (long) counselingRepository.save(counseling).getIdx();
         log.info("idx= " + idx);
 
@@ -115,17 +122,17 @@ public class CounselingServiceImpl implements CounselingService {
 
 
     @Override
-    public void update(CounselingStudentDTO counselingStudentDTO) {
+    public void update(CounselingDTO counselingDTO) {
 
-        Optional<Counseling> result = counselingRepository.findById(counselingStudentDTO.getCounselingIdx());
+        Optional<Counseling> result = counselingRepository.findById(counselingDTO.getIdx());
 
         Counseling counseling = result.orElseThrow();
 
         //Entity에 추가함
-        counseling.changeContent(counselingStudentDTO.getRound()
-                ,counselingStudentDTO.getContent()
-                ,counselingStudentDTO.getMethod()
-                ,counselingStudentDTO.getWriter());
+        counseling.changeContent(counselingDTO.getRound()
+                ,counselingDTO.getContent()
+                ,counselingDTO.getMethod()
+                ,counselingDTO.getWriter());
         
         counselingRepository.save(counseling);
 
@@ -155,12 +162,22 @@ public class CounselingServiceImpl implements CounselingService {
          }else {
 
              // 예외처리가 들어갈 구간
-
              return null;
          }
-
-
     }
+
+
+    @Override
+    public Counseling findByidx(Long idx) {
+
+        Counseling counseling = counselingRepository.findByIdx(idx);
+
+        log.info("counseling= " + counseling);
+
+        return counseling;
+    }
+
+
 
 
     //목록으로 학생정보 가져오기

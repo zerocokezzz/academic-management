@@ -20,6 +20,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h5>상담 상세 보기</h5>
+                            <h8>※상담방식: ( 0: 대면 / 1: 온라인 / 2: 전화 )</h8><br>
                 <!-- 버튼을 어느쪽에 놓을까~~~~ 아따 중간에 왜 띄워져 있는겨-->
                             <div class="row justify-content-end">
                                 <div class="col-auto">
@@ -54,12 +55,12 @@
                 <!-- 오른쪽에 사진 표시 -->
                                     <div class="col-md-6">
                                         <div class="border border-dark rounded p-2" style="margin: 1px;">
-                                            <!-- 여기에 사진 표시인디 사진은 변화없이 고정해놓고 싶은데 더럽게 안되네 -->
+                                            <!-- 여기에 사진 표시인디 사진은 변화없이 고정해놓고 싶은데 -->
                                             <img src="/images/default_profile.jpg" alt="학생 사진" class="img-fluid" style="width: 150px; height: 200px; padding: 1px;">
                                         </div>
                                     </div>
                                 </div>
-
+                                <hr>
                 <!-- 여기부터는 상담List로 나오기 -->
                                 <div th:each="counseling: ${counselingList}">
                                     <div class="input-group mb-3">
@@ -88,10 +89,12 @@
                                     </div>
                 <!-- button -->
                                     <div class="my-4">
-                                        <button type="button" class="btn btn-secondary modBtn">수정하기</button>
+                                        <a th:href="|@{/counseling/update}?idx=${counseling.idx}|">
+                                            <button type="button" class="btn btn-secondary modBtn">수정하기</button>
+                                        </a>
                                         <button type="button" class="btn btn-danger delBtn">삭제하기</button>
                                     </div>
-                                </div>
+                                </div><!-- end th:each -->
 
 
                             </div><!-- end card body -->
@@ -174,7 +177,6 @@
         location.href = '/lesson/studentList?idx=' + lessonIdx;
 
     }, false)
-
 
 
 

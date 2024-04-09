@@ -20,8 +20,9 @@ public class CounselingDTO {
     private String content;                 //내용
     private int method;                     //방식
     private String writer;                  //담당자
-    private LocalDateTime regDate;          //추가날짜
-    private LocalDateTime modDate;          //수정날짜
+    private int round;                      //회차
+//    private LocalDateTime regDate;          //추가날짜
+//    private LocalDateTime modDate;          //수정날짜
 
 
 

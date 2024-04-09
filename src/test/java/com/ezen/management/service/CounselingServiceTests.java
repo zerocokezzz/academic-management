@@ -53,14 +53,14 @@ public class CounselingServiceTests {
     @Test
     public void testUpdate(){
 
-        CounselingStudentDTO counselingStudentDTO = CounselingStudentDTO.builder()
-                .counselingIdx(2L)
+        CounselingDTO counselingDTO = CounselingDTO.builder()
+                .idx(2L)
                 .content("잘해내고 있다는 용기의 드래곤을 줌")
                 .method(0)
                 .build();
 
-        counselingService.update(counselingStudentDTO);
-        log.info("counselingStudentDTO= " + counselingStudentDTO);
+        counselingService.update(counselingDTO);
+        log.info("counselingDTO= " + counselingDTO);
 
     }
 

@@ -45,4 +45,6 @@ public class Counseling extends BaseEntity{
         this.writer = writer;
     }
 
+
+
 }

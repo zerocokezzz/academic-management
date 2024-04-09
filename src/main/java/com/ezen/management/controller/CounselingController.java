@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -52,7 +53,7 @@ public class CounselingController {
 
 
     //학생 상세조회
-    @GetMapping({"/detail","/update"})
+    @GetMapping("/detail")
     public void detail(Long idx, Student student, Model model, PageRequestDTO pageRequestDTO){
 
         log.info("------가자가자가자 상세페이지------");
@@ -95,61 +96,67 @@ public class CounselingController {
     }
     @PostMapping("/insert")
     public String insert(CounselingDTO counselingDTO
-
                             ,BindingResult bindingResult
-                            , RedirectAttributes redirectAttributes){
+                            ,RedirectAttributes redirectAttributes){
 
         log.info("안녕 여기 추가화면 나오는 중");
 
-        log.info("counselingDTO= " + counselingDTO);
+        //시간 잘 나오나 확인용
+        log.info("before counselingDTO= " + counselingDTO);
 
-        if(bindingResult.hasErrors()){
-            log.info("-----has errors-----");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.hasErrors());
-
-            redirectAttributes.addAttribute("idx", counselingDTO.getStudentIdx());
-
-//            return "redirect:/counseling/insert?idx=" + counselingDTO.getStudentIdx();
-            return "redirect:/counseling/insert";
+        //만약 시간이 null 인경우 현재 시간으로 변경하기
+        if(counselingDTO.getCounselingDate() == null){
+            counselingDTO.setCounselingDate(LocalDateTime.now());
         }
+
+        //시간 변경후 확인용
+        log.info("after counselngDTO= " + counselingDTO);
 
 
         Long idx = counselingService.insert(counselingDTO);
-        redirectAttributes.addFlashAttribute("result", idx);
+        log.info("idx= " + idx);
 
+        redirectAttributes.addFlashAttribute("result", idx);
         redirectAttributes.addAttribute("idx", counselingDTO.getStudentIdx());
 
         return "redirect:/counseling/counselingDetail";
-
     }
 
 
+    @GetMapping("/update")
+    public void update(Model model
+                        ,Student Student
+                        ,@RequestParam("idx") Long idx){
+
+        log.info("안녕 여기 수정화면 가는 중");
+
+        //학생 단일 정보 보내기
+        Student student = studentService.findById(Student.getIdx());
+        model.addAttribute("student", student);
+        log.info("student= " + student);
+
+        //상담 정보 보내기
+        Counseling counseling = counselingService.findByidx(idx);
+        model.addAttribute("counseling", counseling);
+        log.info("counseling= " + counseling);
+
+    }
 
     //수정하기
     @PostMapping("/update")
-    public String update(CounselingStudentDTO counselingStudentDTO
-                         , PageRequestDTO pageRequestDTO
-                         , BindingResult bindingResult
-                         , RedirectAttributes redirectAttributes){
+    public String update(CounselingDTO counselingDTO
+                         ,RedirectAttributes redirectAttributes){
 
-        log.info("counseling UpdateAction gogo");
+        log.info("상담 수정화면 가는 중");
+        //시간 확인용
+        log.info("counselingDTO= " + counselingDTO);
 
-        if (bindingResult.hasErrors()){
-            log.info("has errors...");
 
-            String link = pageRequestDTO.getLink();
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("idx", counselingStudentDTO.getCounselingIdx());
-
-        //오류 발생시 다시 update로 이동시켜
-            return "redirect:/counseling/update?" + link;
-        }
-
-        counselingService.update(counselingStudentDTO);
+        counselingService.update(counselingDTO);
         redirectAttributes.addFlashAttribute("result", "updated");
-        redirectAttributes.addAttribute("idx", counselingStudentDTO.getCounselingIdx());
+        redirectAttributes.addAttribute("idx", counselingDTO.getIdx());
 
-        log.info("counselingStudentDTO= " + counselingStudentDTO);
+        log.info("counselingDTO= " + counselingDTO);
 
         return "redirect:/counseling/detail";
     }
