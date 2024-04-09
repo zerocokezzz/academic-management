@@ -57,7 +57,8 @@
       <div th:each="member : ${pageResponseDTO.getDtoList()}" th:with="teacher=${teacher}">
 
           <hr>
-          <img class="rounded-circle" th:src="${'/images/' + member.fileName}" alt="" style="width: 40px; height: 40px;">
+          <img th:if="${member.uuid != null}" class="rounded-circle" th:src="${'/view/' + member.uuid + '_' + member.fileName}" alt="" style="width: 40px; height: 40px; object-fit: cover">
+          <img th:if="${member.uuid == null}" class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 40px; height: 40px; object-fit: cover">
         &nbsp;&nbsp;
           <div style="display: inline-flex" th:text="${member.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
           <div style="display: inline-flex" th:text="${#temporals.format(member.regDate, 'yy-MM-dd')}"></div>
@@ -105,7 +106,29 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/member/teacher/insert" method="post" id="insertForm">
+
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="inputImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+
+            <br>
+            <br>
+
+
+            <form action="/member/teacher/insert" method="post" id="insertForm" encType="multipart/form-data">
+
+
+              <!-- imageupload-->
+              <div class="mb-3" id="insertFileName">
+                <input name="file" type="file" id="uploadImage" style="display: none"/>
+              </div>
+              <!-- imageupload-->
+
+
               <div class="input-group mb-3">
                 <input type="text" class="form-control" name="id" placeholder="아이디" id="insertId">
               </div>
@@ -114,9 +137,6 @@
               </div>
               <div class="input-group mb-3">
                 <input type="text" class="form-control" name="name" placeholder="이름" id="insertName">
-              </div>
-              <div class="input-group mb-3">
-                <input type="file" class="form-control" name="fileName" id="insertFile">
               </div>
             </form>
           </div>
@@ -140,18 +160,32 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/member/teacher/update" method="post" id="modifyForm">
+
+            <br>
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="modifyImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+            <br>
+            <br>
+
+
+            <form action="/member/teacher/update" method="post" id="modifyForm" encType="multipart/form-data">
+
+              <!-- imageupload-->
+              <div class="mb-3" id="modifyFileName">
+                <input name="file" type="file" id="modifyFile" style="display: none"/>
+              </div>
+              <!-- imageupload-->
+
               <div class="input-group mb-3">
                 <input type="text" class="form-control" name="id" placeholder="아이디" id="modifyId" readonly>
               </div>
-              <!--              <div class="input-group mb-3">-->
-              <!--                <input type="password" class="form-control" name="pwd" placeholder="비밀번호" id="modifyPassword">-->
-              <!--              </div>-->
               <div class="input-group mb-3">
                 <input type="text" class="form-control" name="name" placeholder="이름" id="modifyName">
-              </div>
-              <div class="input-group mb-3">
-                <input type="file" class="form-control" name="fileName" id="modifyFile">
               </div>
             </form>
           </div>
@@ -350,6 +384,12 @@
       modifyId.value = result.id;
       // modifyPassword.value =
       modifyName.value = result.name;
+      if(result.uuid != null){
+        modifyImage.innerHTML = '<img src="/view/' + result.uuid + '_' + result.fileName +'" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      }else{
+        modifyImage.innerHTML = `<img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">`;
+      }
+
 
     }).catch(e => {
 
@@ -489,6 +529,53 @@
       history.replaceState({}, null, location.pathname);
       break;
   }
+
+
+
+  //   이미지 처리
+  const inputImage = document.querySelector(".inputImage");
+  const uploadImage = document.querySelector("#uploadImage");
+  const insertFileName = document.querySelector("#insertFileName");
+  const insertFile = document.querySelector("#insertFile");
+  inputImage.addEventListener("click", function (){
+    uploadImage.click();
+  })
+
+  uploadImage.addEventListener("change", function (){
+    if (uploadImage.files && uploadImage.files[0]) {
+      var reader = new FileReader();
+
+      // 이미지를 미리보기에 표시
+      reader.onload = function(e) {
+        inputImage.innerHTML = '<img src="' + e.target.result + '" alt="이미지 미리보기" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      };
+
+      // 파일을 읽어옴
+      reader.readAsDataURL(uploadImage.files[0]);
+    }
+  })
+
+
+
+  const modifyImage = document.querySelector(".modifyImage");
+  const modifyFile = document.querySelector("#modifyFile");
+  modifyImage.addEventListener("click", function (){
+    modifyFile.click();
+  })
+
+  modifyFile.addEventListener("change", function (){
+    if (modifyFile.files && modifyFile.files[0]) {
+      var reader = new FileReader();
+
+      // 파일을 읽어서 이미지를 미리보기에 표시합니다.
+      reader.onload = function(e) {
+        modifyImage.innerHTML = '<img src="' + e.target.result + '" alt="이미지 미리보기" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      };
+
+      // 파일을 읽습니다.
+      reader.readAsDataURL(modifyFile.files[0]);
+    }
+  })
 
 
 </script>
