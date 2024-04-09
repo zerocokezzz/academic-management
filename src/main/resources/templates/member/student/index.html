@@ -3,6 +3,15 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="/layout/basic :: head"></head>
+<style>
+  .list-title{
+    font-weight: bold;
+    font-size: large;
+    color: #0d6efd;
+    margin-bottom: 15px;
+  }
+
+</style>
 <body>
 <!-- warpper start -->
 <div class="wrapper">
@@ -77,15 +86,15 @@
       <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]명</div>
       <hr>
 
-        <table class="table table-hover">
+        <table class="table table-hover" style="margin-top: 0">
           <tr>
-            <th class="align-middle">수업</th>
-            <th class="align-middle">이름</th>
-            <th class="align-middle">생년월일</th>
-            <th class="align-middle">이메일</th>
-            <th class="align-middle">연락처</th>
+            <th class="align-middle"><div class="list-title">수업</div></th>
+            <th class="align-middle"><div class="list-title">이름</div></th>
+            <th class="align-middle"><div class="list-title">생년월일</div></th>
+            <th class="align-middle"><div class="list-title">이메일</div></th>
+            <th class="align-middle"><div class="list-title">연락처</div></th>
 <!--            <th class="align-middle">비고</th>-->
-            <th class="align-middle"><div>수정/삭제</div></th>
+            <th class="align-middle"><div class="list-title">수정/삭제</div></th>
 
           </tr>
           <tr th:each="student : ${pageResponseDTO.dtoList}">

@@ -136,7 +136,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public int update(MemberDTO memberDTO) {
+    public void update(MemberDTO memberDTO) {
 
         Optional<Member> result = memberRepository.findById(memberDTO.getId());
 
@@ -154,9 +154,8 @@ public class MemberServiceImpl implements MemberService {
             log.info("member......" + member);
             memberRepository.save(member);
 
-            return 1;
         }
-        return 0;
+
     }
 
     @Override

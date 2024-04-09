@@ -46,23 +46,12 @@ public class MemberController {
 
         PageResponseDTO<Member> pageResponseDTO = memberService.findBySpecificRoles(memberRoleSet, pageRequestDTO);
 
-        log.info("pageResponseDTO" + pageResponseDTO);
-
-        log.info("pageResponseDTO.getDtoList() " + pageResponseDTO.getDtoList());
-
         model.addAttribute("admin", MemberRole.ADMIN);
         model.addAttribute("pageResponseDTO", pageResponseDTO);
 
         return "/member/admin/index";
     }
 
-//    행정 추가 폼
-    @PreAuthorize("hasRole('MASTER')")
-    @GetMapping("/admin/insert")    //  /member/admin/insert GET
-    public String adminInsertGET(){
-        log.info("----------------- ADMIN insert GET -----------------");
-        return "/member/admin/insert";
-    }
 
 //    행정 추가
     @PreAuthorize("hasRole('MASTER')")
@@ -70,27 +59,22 @@ public class MemberController {
     public String adminInsertPOST(MemberDTO memberDTO){
         log.info("----------------- ADMIN insert POST -----------------");
 
-        memberService.adminInsert(memberDTO);
-        log.info("memberDTO......" + memberDTO);
-
-        return "redirect:/member/admin";
+        try{
+            memberService.adminInsert(memberDTO);
+            return "redirect:/member/admin?code=insert-success";
+        }catch (Exception e){
+            return "redirect:/member/admin?code=insert-fail";
+        }
     }
 
 
-//    행정 수정 폼
-    @PreAuthorize("hasRole('MASTER')")
-    @GetMapping("/admin/update")
-    public String adminUpdateGET(String id, Model model){
+//    행정 정보
+    @GetMapping("/admin/getAdmin")
+    @ResponseBody
+    public Member getAdmin(String adminId){
 
-        Optional<Member> result = memberService.findById(id);
-
-        if(result.isPresent()){
-            Member admin = result.get();
-            model.addAttribute("admin", admin);
-            return "/member/admin/update";
-        }
-
-        return "redirect:/member/admin";
+        Optional<Member> byId = memberService.findById(adminId);
+        return byId.get();
 
     }
 
@@ -100,73 +84,23 @@ public class MemberController {
     @PostMapping("/admin/update")
     public String adminUpdatePost(MemberDTO memberDTO, HttpServletResponse response){
 
-//        수정 로직은 리턴 뷰 빼고 행정/강사가 똑같음 리팩토링할 방법 찾아볼 것
-        log.info("admin post update memberDTO....." + memberDTO);
-
-        int result = memberService.update(memberDTO);
-
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("text/html; charset=utf-8");
-        PrintWriter w = null;
-
-        try {
-            w = response.getWriter();
-        } catch (IOException e) {
-//            throw new RuntimeException(e);
-            return "redirect:/member/admin";
+        try{
+            memberService.update(memberDTO);
+            return "redirect:/member/admin?code=modify-success";
+        }catch (Exception e){
+            return "redirect:/member/admin?code=modify-fail";
         }
 
-//        수정 성공
-        if(result == 1){
-            w.println("<script> alert('수정되었습니다.');");
-        }else{
-            w.println("<script> alert('error!');");
-        }
-
-        w.println("location.href='/member/admin' </script>");
-        w.close();
-
-        return null;
 
     }
 
 
     //    행정 삭제
     @PreAuthorize("hasRole('MASTER')")
-    @GetMapping("/admin/delete")
-    public String adminDelete(String id, HttpServletResponse response){
-
-//        삭제 로직 행정/강사 똑같음 리턴 뷰만 빼면
-//        일단 따로 구현은 했는데 메서드 하나로 가능할 것 같음
-
-        log.info("id......" + id);
-
-        int result = memberService.delete(id);
-
-        log.info("deleteById result......" + result);
-
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("text/html; charset=utf-8");
-        PrintWriter w = null;
-
-        try {
-            w = response.getWriter();
-        } catch (IOException e) {
-//            throw new RuntimeException(e);
-            return "redirect:/member/teacher";
-        }
-
-//        삭제 성공
-        if(result == 1){
-            w.println("<script> alert('삭제되었습니다.');");
-        }else{
-            w.println("<script> alert('error!');");
-        }
-
-        w.println("location.href='/member/teacher' </script>");
-        w.close();
-
-        return null;
+    @PostMapping("/admin/delete")
+    @ResponseBody
+    public void adminDelete(String id, HttpServletResponse response){
+        memberService.delete(id);
     }
 
 
@@ -189,44 +123,29 @@ public class MemberController {
     }
 
 
-//    교사 추가 폼
-    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    @GetMapping("/teacher/insert")
-    public String teacherInsertGET(){
-        log.info("----------------- TEACHER insert GET -----------------");
-        return "/member/teacher/insert";
-    }
-
 
 //    교사 추가
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     @PostMapping("/teacher/insert")   //  /member/admin/insert POST
     public String teacherInsertPOST(MemberDTO memberDTO){
-        log.info("----------------- TEACHER insert POST -----------------");
 
-        memberService.teacherInsert(memberDTO);
-        log.info("memberDTO......" + memberDTO);
+        try{
+            memberService.teacherInsert(memberDTO);
+            return "redirect:/member/teacher?code=insert-success";
+        }catch (Exception e){
+            return "redirect:/member/teacher?code=insert-fail";
+        }
 
-        return "redirect:/member/teacher";
     }
 
 
-//    교사 수정 폼
-//    /teacher 뷰에서 모달로 teacherUpdatePOST 날리면 이건 필요 없음
-    @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    @GetMapping("/teacher/update")
-    public String teacherUpdateGET(@RequestParam String id, Model model){
 
-        Optional<Member> result = memberService.findById(id);
+//    교사 찾기
+    @GetMapping("/teacher/getTeacher")
+    @ResponseBody
+    public Member getTeacher(String id){
 
-        if(result.isPresent()){
-            Member teacher = result.get();
-            model.addAttribute("teacher", teacher);
-            return "/member/teacher/update";
-        }
-
-        return "redirect:/member/teacher";
-
+        return memberService.findById(id).get();
     }
 
 
@@ -235,33 +154,13 @@ public class MemberController {
     @PostMapping("/teacher/update")
     public String teacherUpdatePOST(MemberDTO memberDTO, HttpServletResponse response){
 
-//        수정 로직은 리턴 뷰 빼고 행정/강사가 똑같음 리팩토링할 방법 찾아볼 것
-        log.info("post update memberDTO....." + memberDTO);
-
-        int result = memberService.update(memberDTO);
-
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("text/html; charset=utf-8");
-        PrintWriter w = null;
-
-        try {
-            w = response.getWriter();
-        } catch (IOException e) {
-//            throw new RuntimeException(e);
-            return "redirect:/member/teacher";
+        try{
+            memberService.update(memberDTO);
+            return "redirect:/member/teacher?code=modify-success";
+        }catch (Exception e){
+            return "redirect:/member/teacher?code=modify-fail";
         }
 
-//        수정 성공
-        if(result == 1){
-            w.println("<script> alert('수정되었습니다.');");
-        }else{
-            w.println("<script> alert('error!');");
-        }
-
-        w.println("location.href='/member/teacher' </script>");
-        w.close();
-
-        return null;
     }
 
 
@@ -269,90 +168,69 @@ public class MemberController {
 
 //    교사 삭제
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
-    @GetMapping("/teacher/delete")
-    public String teacherDelete(@RequestParam String id, HttpServletResponse response){
+    @PostMapping("/teacher/delete")
+    public String teacherDelete(@RequestParam String id){
 
-//        삭제 로직 행정/강사 똑같음 리턴 뷰만 빼면
-//        일단 따로 구현은 했는데 메서드 하나로 가능할 것 같음
-        log.info("id......" + id);
+        try{
+            memberService.delete(id);
+            return "redirect:/member/teacher?code=delete-success";
+        }catch (Exception e){
+            return "redirect:/member/teacher?code=delete-fail";
 
-        int result = memberService.delete(id);
-
-        log.info("deleteById result......" + result);
-
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("text/html; charset=utf-8");
-        PrintWriter w = null;
-
-        try {
-            w = response.getWriter();
-        } catch (IOException e) {
-//            throw new RuntimeException(e);
-            return "redirect:/member/teacher";
         }
 
-//        삭제 성공
-        if(result == 1){
-            w.println("<script> alert('삭제되었습니다.');");
-        }else{
-            w.println("<script> alert('error!');");
-        }
-
-        w.println("location.href='/member/teacher' </script>");
-        w.close();
-
-        return null;
     }
 
 
+//    학생 목록
     @GetMapping("/student")
     public String student(Long lessonIdx, PageRequestDTO pageRequestDTO, Model model){
 
 //        model.addAttribute("students", students);
 
         PageResponseDTO<Student> pageResponseDTO = studentService.searchStudent(lessonIdx, pageRequestDTO);
-
         model.addAttribute("pageResponseDTO", pageResponseDTO);
 
         return "/member/student/index";
     }
 
+
+//    학생 추가
     @PostMapping("/student/insert")
     public String studentInsert(StudentDTO studentDTO){
 
-        log.info("studentDTO : {}", studentDTO);
-
         try {
             studentService.insertStudent(studentDTO);
-
+            return "redirect:/member/student?code=insert-success";
         }catch (Exception e){
             return "redirect:/member/student?code=insert-fail";
         }
 
-        return "redirect:/member/student?code=insert-success";
     }
 
 
+//    학생 수정
     @PostMapping("/student/modify")
     public String studentModify(StudentDTO studentDTO){
 
-        log.info("studentDTO : {}", studentDTO);
-
         try {
             studentService.modifyStudent(studentDTO);
+            return "redirect:/member/student?code=modify-success";
         }catch (Exception e){
             return "redirect:/member/student?code=modify-fail";
         }
 
-        return "redirect:/member/student?code=modify-success";
     }
 
+
+//    학생 정보
     @GetMapping("/student/getStudent")
     @ResponseBody
     public StudentDTO getStudent(Long studentIdx){
 
         Student student = studentService.findById(studentIdx);
 
+//        뷰에 노출되면 안 되는 값이 있다면 DTO로 전달할 것
         return StudentDTO.builder()
                 .lessonIdx(student.getLesson().getIdx())
                 .idx(student.getIdx())
@@ -366,19 +244,18 @@ public class MemberController {
                 .fileName(student.getFileName())
                 .build();
 
-
     }
+
 
     @PostMapping("/student/delete")
     public String deleteStudent(StudentDTO studentDTO){
 
         try{
             studentService.deleteStudent(studentDTO);
+            return "redirect:/member/student?code=delete-success";
         }catch (Exception e){
             return "redirect:/member/student?code=delete-fail";
         }
-
-        return "redirect:/member/student?code=delete-success";
 
     }
 

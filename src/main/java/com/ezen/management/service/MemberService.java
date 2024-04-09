@@ -26,7 +26,7 @@ public interface MemberService {
 
     int delete(String id);
 
-    int update(MemberDTO memberDTO);
+    void update(MemberDTO memberDTO);
 
     Optional<Member> findById(String id);
 
