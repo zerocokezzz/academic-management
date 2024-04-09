@@ -36,7 +36,9 @@
                 <input type="hidden" class="studentIdx" th:value="${student.idx}">
                 <input type="hidden" class="lessonIdx" th:value="${student.lesson.idx}">
                 <div style="display: inline-flex">
-                    <img th:src="${'/images/' + student.fileName}" alt=""
+                    <img th:if="${student.uuid != null}" th:src="${'/view/' + student.uuid + '_' + student.fileName}" alt=""
+                         style="width: 150px; height: 180px; margin-right: 40px; object-fit: cover">
+                    <img th:if="${student.uuid == null}" src="/images/default_profile.jpg" alt=""
                          style="width: 150px; height: 180px; margin-right: 40px; object-fit: cover">
                     <div style="line-height: 90%"> <!-- 이미지랑 텍스트로 두 칸 -->
                         <br>

@@ -4,16 +4,14 @@ import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
 import com.ezen.management.domain.Student;
-import com.ezen.management.dto.MemberDTO;
-import com.ezen.management.dto.PageRequestDTO;
-import com.ezen.management.dto.PageResponseDTO;
-import com.ezen.management.dto.StudentDTO;
+import com.ezen.management.dto.*;
 import com.ezen.management.service.LessonService;
 import com.ezen.management.service.MemberService;
 import com.ezen.management.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,9 +19,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Controller
@@ -35,6 +36,9 @@ public class MemberController {
     private final MemberService memberService;
     private final StudentService studentService;
     private final LessonService lessonService;
+
+    @Value("${com.ezen.management.upload.path}")
+    private String uploadPath;
 
 //    행정 관리 홈(행정 리스트)
     @PreAuthorize("hasRole('MASTER')")
@@ -84,12 +88,18 @@ public class MemberController {
     @PostMapping("/admin/update")
     public String adminUpdatePost(MemberDTO memberDTO, HttpServletResponse response){
 
+
+
+
+
         try{
             memberService.update(memberDTO);
             return "redirect:/member/admin?code=modify-success";
         }catch (Exception e){
             return "redirect:/member/admin?code=modify-fail";
         }
+
+
 
 
     }
@@ -197,7 +207,26 @@ public class MemberController {
 
 //    학생 추가
     @PostMapping("/student/insert")
-    public String studentInsert(StudentDTO studentDTO){
+    public String studentInsert(StudentDTO studentDTO, MultipartFile file){
+
+        log.info("upload File is null? : {}", file == null);
+        log.info("upload FIle name : {} ", file.getName());
+
+        String uuid = UUID.randomUUID().toString();
+        String originalName = file.getOriginalFilename();
+
+        studentDTO.setUuid(uuid);
+        studentDTO.setFileName(originalName);
+
+        Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
+
+        try {
+//           이미지 저장
+            file.transferTo(savePath);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
 
         try {
             studentService.insertStudent(studentDTO);
@@ -211,7 +240,22 @@ public class MemberController {
 
 //    학생 수정
     @PostMapping("/student/modify")
-    public String studentModify(StudentDTO studentDTO){
+    public String studentModify(StudentDTO studentDTO, MultipartFile file){
+
+        String uuid = UUID.randomUUID().toString();
+        String originalName = file.getOriginalFilename();
+
+        studentDTO.setUuid(uuid);
+        studentDTO.setFileName(originalName);
+
+        Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
+
+        try {
+//           이미지 저장
+            file.transferTo(savePath);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
 
         try {
             studentService.modifyStudent(studentDTO);
@@ -241,6 +285,7 @@ public class MemberController {
                 .phone(student.getPhone())
                 .email(student.getEmail())
                 .etc(student.getEtc())
+                .uuid(student.getUuid())
                 .fileName(student.getFileName())
                 .build();
 

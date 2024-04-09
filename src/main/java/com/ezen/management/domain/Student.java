@@ -26,6 +26,8 @@ public class Student extends BaseEntity{
     private String email;
     private String phone;
 
+    private String uuid;
+
     @Builder.Default
     private String fileName = "default_profile.jpg";
 
@@ -61,6 +63,8 @@ public class Student extends BaseEntity{
 
 
 
+
+
     private String etc;
 
     public void insertCounseling(){
@@ -76,7 +80,8 @@ public class Student extends BaseEntity{
         this.survey++;
     }
 
-    public void changeFileName(String fileName){
+    public void changeFileName(String uuid, String fileName){
+        this.uuid = uuid;
         this.fileName = fileName;
     }
 

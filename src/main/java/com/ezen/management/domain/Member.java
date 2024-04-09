@@ -25,6 +25,7 @@ public class Member extends BaseEntity{
 //    private int access;
 
 
+    private String uuid;
 
 
     @Builder.Default
