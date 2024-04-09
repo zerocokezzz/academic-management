@@ -60,8 +60,11 @@ public class MemberController {
 //    행정 추가
     @PreAuthorize("hasRole('MASTER')")
     @PostMapping("/admin/insert")   //  /member/admin/insert POST
-    public String adminInsertPOST(MemberDTO memberDTO){
-        log.info("----------------- ADMIN insert POST -----------------");
+    public String adminInsert(MemberDTO memberDTO, MultipartFile file){
+
+        if(file != null){
+            memberFileSave(memberDTO, file);
+        }
 
         try{
             memberService.adminInsert(memberDTO);
@@ -86,11 +89,11 @@ public class MemberController {
 //    행정 수정
     @PreAuthorize("hasRole('MASTER')")
     @PostMapping("/admin/update")
-    public String adminUpdatePost(MemberDTO memberDTO, HttpServletResponse response){
+    public String adminUpdate(MemberDTO memberDTO, MultipartFile file){
 
-
-
-
+        if(file != null){
+            memberFileSave(memberDTO, file);
+        }
 
         try{
             memberService.update(memberDTO);
@@ -98,10 +101,6 @@ public class MemberController {
         }catch (Exception e){
             return "redirect:/member/admin?code=modify-fail";
         }
-
-
-
-
     }
 
 
@@ -109,7 +108,7 @@ public class MemberController {
     @PreAuthorize("hasRole('MASTER')")
     @PostMapping("/admin/delete")
     @ResponseBody
-    public void adminDelete(String id, HttpServletResponse response){
+    public void adminDelete(String id) throws IOException {
         memberService.delete(id);
     }
 
@@ -137,7 +136,11 @@ public class MemberController {
 //    교사 추가
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     @PostMapping("/teacher/insert")   //  /member/admin/insert POST
-    public String teacherInsertPOST(MemberDTO memberDTO){
+    public String teacherInsertPOST(MemberDTO memberDTO, MultipartFile file){
+
+        if(file != null){
+            memberFileSave(memberDTO, file);
+        }
 
         try{
             memberService.teacherInsert(memberDTO);
@@ -162,7 +165,11 @@ public class MemberController {
 //    교사 수정
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     @PostMapping("/teacher/update")
-    public String teacherUpdatePOST(MemberDTO memberDTO, HttpServletResponse response){
+    public String teacherUpdate(MemberDTO memberDTO, MultipartFile file){
+
+        if(file != null){
+            memberFileSave(memberDTO, file);
+        }
 
         try{
             memberService.update(memberDTO);
@@ -209,24 +216,9 @@ public class MemberController {
     @PostMapping("/student/insert")
     public String studentInsert(StudentDTO studentDTO, MultipartFile file){
 
-        log.info("upload File is null? : {}", file == null);
-        log.info("upload FIle name : {} ", file.getName());
-
-        String uuid = UUID.randomUUID().toString();
-        String originalName = file.getOriginalFilename();
-
-        studentDTO.setUuid(uuid);
-        studentDTO.setFileName(originalName);
-
-        Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
-
-        try {
-//           이미지 저장
-            file.transferTo(savePath);
-        } catch (IOException e) {
-            log.error(e.getMessage());
+        if(file != null){
+            studentFileSave(studentDTO, file);
         }
-
 
         try {
             studentService.insertStudent(studentDTO);
@@ -242,19 +234,8 @@ public class MemberController {
     @PostMapping("/student/modify")
     public String studentModify(StudentDTO studentDTO, MultipartFile file){
 
-        String uuid = UUID.randomUUID().toString();
-        String originalName = file.getOriginalFilename();
-
-        studentDTO.setUuid(uuid);
-        studentDTO.setFileName(originalName);
-
-        Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
-
-        try {
-//           이미지 저장
-            file.transferTo(savePath);
-        } catch (IOException e) {
-            log.error(e.getMessage());
+        if(file != null){
+            studentFileSave(studentDTO, file);
         }
 
         try {
@@ -303,6 +284,51 @@ public class MemberController {
         }
 
     }
+
+
+    private void studentFileSave(StudentDTO studentDTO, MultipartFile file){
+
+        String uuid = UUID.randomUUID().toString();
+        String originalName = file.getOriginalFilename();
+
+        studentDTO.setUuid(uuid);
+        studentDTO.setFileName(originalName);
+
+        Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
+
+        try {
+//           이미지 저장
+            file.transferTo(savePath);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+    }
+
+
+    private void memberFileSave(MemberDTO memberDTO, MultipartFile file){
+
+        String uuid = UUID.randomUUID().toString();
+        String originalName = file.getOriginalFilename();
+
+        memberDTO.setUuid(uuid);
+        memberDTO.setFileName(originalName);
+
+        Path savePath = Paths.get(uploadPath, uuid + "_" + originalName);
+
+        try {
+//           이미지 저장
+            file.transferTo(savePath);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+    }
+
+
+
+
+
 
 
 

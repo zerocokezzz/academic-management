@@ -180,6 +180,14 @@
 
             <form action="/member/student/insert" method="post" id="insertForm" encType="multipart/form-data">
 
+              <!-- imageupload-->
+              <div class="mb-3" id="insertFileName">
+                <input name="file" type="file" id="uploadImage"/>
+              </div>
+              <!-- imageupload-->
+
+
+
               <div>
                 <select class="form-select lessonSelect" id="lessonSelect" name="lessonIdx" required>
                   <option value="" selected>수업 선택</option>
@@ -210,11 +218,7 @@
                 <textarea class="form-control" rows="1"  id="insertEmail" name="email" required placeholder="ex) example@gmail.com"></textarea>
               </div>
 
-              <!-- imageupload-->
-              <div class="mb-3" id="insertFileName">
-                <input name="file" type="file" id="uploadImage"/>
-              </div>
-              <!-- imageupload-->
+
 
 
               <div class="mb-3">
@@ -257,15 +261,24 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+
+            <br>
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="modifyImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
             <form action="/member/student/modify" method="post" id="modifyForm" encType="multipart/form-data">
 
-              <br>
-              <br>
-              <div class="d-flex justify-content-center">
-                <div class="modifyImage" style="width: 200px; height: 200px;">
-                  <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
-                </div>
+
+
+              <!-- imageupload-->
+              <div class="mb-3" id="modifyFileName">
+                <input name="file" type="file" id="modifyFile"/>
               </div>
+              <!-- imageupload-->
 
               <input type="hidden" id="modifyIdx" name="idx"/>
 
@@ -297,11 +310,6 @@
                 <textarea class="form-control" rows="1"  id="modifyEtc" name="etc" required></textarea>
               </div>
 
-              <!-- imageupload-->
-              <div class="mb-3" id="modifyFileName">
-                <input name="file" type="file" id="modifyFile"/>
-              </div>
-              <!-- imageupload-->
 
 
               <div class="modal-footer">
@@ -476,11 +484,12 @@
       modifyEmail.value = result.email;
       modifyBirthday.value = result.birthday;
       modifyEtc.value = result.etc;
+
       if(result.uuid != null){
         modifyImage.innerHTML = '<img src="/view/' + result.uuid + '_' + result.fileName +'" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      }else{
+        modifyImage.innerHTML = `<img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">`;
       }
-
-      //   사진 가져와야됨
 
     }).catch(e => {
 
@@ -692,12 +701,12 @@
     if (modifyFile.files && modifyFile.files[0]) {
       var reader = new FileReader();
 
-      // 파일을 읽어서 이미지를 미리보기에 표시합니다.
+      // 이미지를 미리보기에 표시
       reader.onload = function(e) {
         modifyImage.innerHTML = '<img src="' + e.target.result + '" alt="이미지 미리보기" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
       };
 
-      // 파일을 읽습니다.
+      //  파일을 읽어옴
       reader.readAsDataURL(modifyFile.files[0]);
     }
   })
