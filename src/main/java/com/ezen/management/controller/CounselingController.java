@@ -38,32 +38,7 @@ public class CounselingController {
 
 
 
-    //전체목록
-    @GetMapping("/list")
-    public void counselingList(PageRequestDTO pageRequestDTO
-            , Model model){
-
-        //상담목록
-        PageResponseDTO<Counseling> responseDTO = counselingService.counselingList(pageRequestDTO);
-        model.addAttribute("responseDTO", responseDTO);
-
-        log.info("responseDTO= " + responseDTO);
-
-    }
-
-
-    //학생 상세조회
-    @GetMapping("/detail")
-    public void detail(Long idx, Student student, Model model, PageRequestDTO pageRequestDTO){
-
-        log.info("------가자가자가자 상세페이지------");
-
-       CounselingStudentDTO counselingStudentDTO = counselingService.detail(idx);
-        log.info("counselingStudentDTO= " + counselingStudentDTO);
-        model.addAttribute("dto", counselingStudentDTO);
-    }
-
-
+    //상담 상세리스트
     @GetMapping("/counselingDetail")
     public void findByStudentIdx(Model model, @RequestParam("idx")Long studentIdx) {
         //왜 스트링을 보낼때는 안가고 void로 하니까 갈까?
@@ -123,6 +98,7 @@ public class CounselingController {
     }
 
 
+    //수정하기
     @GetMapping("/update")
     public void update(Model model
                         ,Student Student
@@ -130,50 +106,85 @@ public class CounselingController {
 
         log.info("안녕 여기 수정화면 가는 중");
 
-        //학생 단일 정보 보내기
-        Student student = studentService.findById(Student.getIdx());
-        model.addAttribute("student", student);
-        log.info("student= " + student);
-
         //상담 정보 보내기
         Counseling counseling = counselingService.findByidx(idx);
         model.addAttribute("counseling", counseling);
         log.info("counseling= " + counseling);
 
-    }
+        //학생 단일 정보 보내기
+        Student student = studentService.findById(counseling.getStudent().getIdx());
+        model.addAttribute("student", student);
+        log.info("student= " + student);
 
-    //수정하기
+    }
     @PostMapping("/update")
     public String update(CounselingDTO counselingDTO
                          ,RedirectAttributes redirectAttributes){
 
-        log.info("상담 수정화면 가는 중");
-        //시간 확인용
-        log.info("counselingDTO= " + counselingDTO);
+        log.info("상담 수정화면 나오는 중");
 
 
         counselingService.update(counselingDTO);
         redirectAttributes.addFlashAttribute("result", "updated");
-        redirectAttributes.addAttribute("idx", counselingDTO.getIdx());
+        redirectAttributes.addAttribute("idx", counselingDTO.getStudentIdx());
 
         log.info("counselingDTO= " + counselingDTO);
 
-        return "redirect:/counseling/detail";
+        return "redirect:/counseling/counselingDetail";
     }
 
 
 
     //삭제하기
     @PostMapping("/delete")
-    public String delete(Long idx, RedirectAttributes redirectAttributes){
+    public String delete(@RequestParam("idx") Long idx
+                        ,RedirectAttributes redirectAttributes){
 
-        log.info("counseling delete gogo" + idx);
+        log.info("상담삭제할겨" + idx);
 
+
+        //상담idx 찾기
+        Counseling counseling = counselingService.findByidx(idx);
+
+        //삭제 호출
         counselingService.delete(idx);
+
         redirectAttributes.addFlashAttribute("result", "delete");
+        redirectAttributes.addAttribute("idx", counseling.getStudent().getIdx());
 
-        return "redirect:/counseling/list";
+        return "redirect:/counseling/counselingDetail";
 
+    }
+
+
+
+
+
+
+
+    //전체목록
+    @GetMapping("/list")
+    public void counselingList(PageRequestDTO pageRequestDTO
+            , Model model){
+
+        //상담목록
+        PageResponseDTO<Counseling> responseDTO = counselingService.counselingList(pageRequestDTO);
+        model.addAttribute("responseDTO", responseDTO);
+
+        log.info("responseDTO= " + responseDTO);
+
+    }
+
+
+    //학생 상세조회
+    @GetMapping("/detail")
+    public void detail(Long idx, Student student, Model model, PageRequestDTO pageRequestDTO){
+
+        log.info("------가자가자가자 상세페이지------");
+
+        CounselingStudentDTO counselingStudentDTO = counselingService.detail(idx);
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+        model.addAttribute("dto", counselingStudentDTO);
     }
 
 

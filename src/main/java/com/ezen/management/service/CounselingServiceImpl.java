@@ -37,65 +37,9 @@ public class CounselingServiceImpl implements CounselingService {
     private  final StudentRepository studentRepository;
 
 
-    @Override
-    public PageResponseDTO<Counseling> counselingList(PageRequestDTO pageRequestDTO) {
+   
 
-        String[] types = pageRequestDTO.getTypes();
-        String keyword = pageRequestDTO.getKeyword();
-        Pageable pageable = pageRequestDTO.getPageable("idx");
-
-        Page<Counseling> result = counselingRepository.searchAll(types, keyword, pageable);
-        List<Counseling> dtoList = result.getContent().stream()
-                .map(counseling -> modelMapper.map(counseling, Counseling.class)).collect(Collectors.toList());
-
-        return PageResponseDTO.<Counseling>withAll()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(dtoList)
-                .total((int)result.getTotalPages())
-                .build();
-
-    }
-
-
-
-
-    @Override
-    public CounselingStudentDTO detail(Long idx) {
-
-        Optional<Counseling> result = counselingRepository.findById(idx);
-        Counseling counseling = result.orElseThrow();
-
-        // Counseling 객체에서 studentIdx 가져오기
-        Long studentIdx = counseling.getStudent().getIdx();
-
-        // studentIdx를 사용하여 해당 학생 조회
-        Optional<Student> studentResult = studentRepository.findById(studentIdx);
-        Student student = studentResult.orElseThrow();
-
-        //웩 수동매핑
-        CounselingStudentDTO counselingStudentDTO = CounselingStudentDTO.builder()
-                        .counselingIdx(counseling.getIdx())
-                        .studentIdx(student.getIdx())
-                        .name(student.getName())
-                        .fileName(student.getFileName())
-                        .phone(student.getPhone())
-                        .counselingDate(counseling.getCounselingDate())
-                        .content(counseling.getContent())
-                        .method(counseling.getMethod())
-                        .modDate(counseling.getModDate())
-                        .regDate(counseling.getRegDate())
-                        .writer(counseling.getWriter())
-                        .round(counseling.getRound())
-                        .email(student.getEmail())
-                        .build();
-
-        log.info("counselingStudentDTO= " + counselingStudentDTO);
-
-        return counselingStudentDTO;
-
-    }
-
-
+    //추가하기
     @Override
     public Long insert(CounselingDTO counselingDTO) {
         // CounselingDTO로부터 Counseling 엔티티로 매핑
@@ -119,8 +63,7 @@ public class CounselingServiceImpl implements CounselingService {
     }
 
 
-
-
+    //수정하기
     @Override
     public void update(CounselingDTO counselingDTO) {
 
@@ -138,16 +81,30 @@ public class CounselingServiceImpl implements CounselingService {
 
     }
 
-
-
-
+    
+    //삭제하기
     @Override
     public void delete(Long idx) {
+
+
+        //counseling 값 가져오기
+        Optional<Counseling> result = counselingRepository.findById(idx);
+        Counseling counseling = result.orElseThrow();
+
+        //학생 정보 찾아오기
+        Optional<Student> studentResult = studentRepository.findById(result.get().getStudent().getIdx());
+        Student student = studentResult.orElseThrow();
+
+        //학생Entity 값 변경
+        student.deleteCounseling();
+        studentRepository.save(student);
 
         counselingRepository.deleteById(idx);
     }
 
 
+    
+    //상담정보에서 학생idx로 조회
     @Override
     public Counseling findById(Long studentIdx) {
 
@@ -167,6 +124,7 @@ public class CounselingServiceImpl implements CounselingService {
     }
 
 
+    //단일 상담정보 조회
     @Override
     public Counseling findByidx(Long idx) {
 
@@ -176,9 +134,7 @@ public class CounselingServiceImpl implements CounselingService {
 
         return counseling;
     }
-
-
-
+    
 
     //목록으로 학생정보 가져오기
     @Override
@@ -193,5 +149,64 @@ public class CounselingServiceImpl implements CounselingService {
     }
 
 
+    
+    
+    //전체리스트
+    @Override
+    public PageResponseDTO<Counseling> counselingList(PageRequestDTO pageRequestDTO) {
 
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("idx");
+
+        Page<Counseling> result = counselingRepository.searchAll(types, keyword, pageable);
+        List<Counseling> dtoList = result.getContent().stream()
+                .map(counseling -> modelMapper.map(counseling, Counseling.class)).collect(Collectors.toList());
+
+        return PageResponseDTO.<Counseling>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalPages())
+                .build();
+
+    }
+
+
+
+    //상세조회
+    @Override
+    public CounselingStudentDTO detail(Long idx) {
+
+        Optional<Counseling> result = counselingRepository.findById(idx);
+        Counseling counseling = result.orElseThrow();
+
+        // Counseling 객체에서 studentIdx 가져오기
+        Long studentIdx = counseling.getStudent().getIdx();
+
+        // studentIdx를 사용하여 해당 학생 조회
+        Optional<Student> studentResult = studentRepository.findById(studentIdx);
+        Student student = studentResult.orElseThrow();
+
+        //웩 수동매핑
+        CounselingStudentDTO counselingStudentDTO = CounselingStudentDTO.builder()
+                .counselingIdx(counseling.getIdx())
+                .studentIdx(student.getIdx())
+                .name(student.getName())
+                .fileName(student.getFileName())
+                .phone(student.getPhone())
+                .counselingDate(counseling.getCounselingDate())
+                .content(counseling.getContent())
+                .method(counseling.getMethod())
+                .modDate(counseling.getModDate())
+                .regDate(counseling.getRegDate())
+                .writer(counseling.getWriter())
+                .round(counseling.getRound())
+                .email(student.getEmail())
+                .build();
+
+        log.info("counselingStudentDTO= " + counselingStudentDTO);
+
+        return counselingStudentDTO;
+
+    }
 }

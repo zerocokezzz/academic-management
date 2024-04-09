@@ -22,7 +22,6 @@
                             <h5>상담 수정</h5>
                             <div class="card-body">
                                 <form th:action="@{/counseling/update}" method="post" id="m1">
-                                    <!--  학생번호랑 학생이름은 땡겨오는 걸로                              -->
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담.No</span>
                                         <input type="text" class="form-control" name="idx" th:value="${counseling.idx}" readonly>
@@ -35,14 +34,14 @@
                                         <span class="input-group-text">학생이름</span>
                                         <input type="text" class="form-control" th:value="${student.name}" placeholder="name" readonly>
                                     </div>
-                                    <!-- 수정요청사항 이미 등록된 상담회차는 등록 못하게 + 숫자만 입력할 수 있게 변경 -->
+                                    <!-- 수정요청사항 이미 등록된 상담회차는 등록 못하게 -->
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담회차</span>
                                         <input type="text" id="numberOnly" class="form-control" name="round" th:value="${counseling.round}" placeholder="상담회차" required>
                                     </div>
                                     <div class="bs-body-color-rgb">
                                         <span class="input-group-text">내용</span>
-                                        <textarea class="form-control col-sm-5" rows="5" name="content" th:value="${counseling.content}" placeholder="상담내용을 작성하세요" required></textarea>
+                                        <textarea class="form-control col-sm-5" rows="5" name="content" th:text="${counseling.content}" placeholder="상담내용을 작성하세요" required></textarea>
                                     </div>
                                     <!--  기입으로할지 아니면 radio로 할지                              -->
                                     <div class="input-group mb-3">
@@ -102,20 +101,22 @@
 
 
     //form에 id 추가
-    const formObj = document.querySelector("#m1")
+    const formObj = document.querySelector("#m1");
 
-    //추가하기
+
+    //수정하기
     document.querySelector(".creatBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
+
+        alert("수정되었습니다");
 
         formObj.action = `/counseling/update`
         formObj.method = 'post'
         formObj.submit()
 
-        // alert("저장되었습니다")
-
     }, false)
+
 
     //List 돌아가기
     document.querySelector(".clearBtn").addEventListener("click", function (e){

@@ -28,16 +28,18 @@ public interface CounselingRepository extends JpaRepository<Counseling, Long>, C
     Page<Counseling> findKeyword(String keyword, Pageable pageable);
 
 
-    //list Join으로 가져와 보기
-    @Query("select c from Counseling c join Student s on c.student.idx = s.idx where c.student = :student")
-    Page<Counseling> getCounselingWithStudentName(Student student, Pageable pageable);
-
 
     //학생정보를 List로 받아와서 처리해야함 / 자동으로 query 생성하는 JPQL
     List<Counseling> findByStudentIdx(Long studentIdx);
 
     //한개의 정보조회
     Counseling findByIdx(Long idx);
+
+
+    //list Join으로 가져와 보기
+    @Query("select c from Counseling c join Student s on c.student.idx = s.idx where c.student = :student")
+    Page<Counseling> getCounselingWithStudentName(Student student, Pageable pageable);
+
 
 
 

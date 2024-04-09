@@ -3,7 +3,7 @@ package com.ezen.management.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,17 +31,18 @@ public class Counseling extends BaseEntity{
     @Column(nullable = false)
     private String writer;
 
+    //상담회차
+    private int round;
+
     @Column(nullable = false)
 //    0은 대면, 1 전화, 2 온라인
     private int method;
 
-    //상담회차
-    private int round;
 
-    public void changeContent(int method, String content, int round, String writer){
-        this.method = method;
-        this.content = content;
+    public void changeContent(int round, String content, int method, String writer){
         this.round = round;
+        this.content = content;
+        this.method = method;
         this.writer = writer;
     }
 

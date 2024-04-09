@@ -112,20 +112,21 @@
 
 
     //form에 id 추가
-    const formObj = document.querySelector("#i1")
+    const formObj = document.querySelector("#i1");
 
     //추가하기
     document.querySelector(".creatBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
 
+        alert("추가되었습니다");
+
         formObj.action = `/counseling/insert`
         formObj.method = 'post'
         formObj.submit()
 
-        // alert("저장되었습니다")
-
     }, false)
+
 
     //List 돌아가기
     document.querySelector(".clearBtn").addEventListener("click", function (e){
@@ -144,13 +145,6 @@
     }, false)
 
 
-    //시간 가져오기1
-    // var currentDate = moment();
-    // console.log(currentDate); // 현재 날짜와 시간 출력
-
-    //시간 가져오기2
-    //var today = new Date();
-    //var formattedDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
 
     //유효성검사 / 상담회차, 상담방법 number로 받기
@@ -158,6 +152,14 @@
     $("#numberOnly1").on("keyup", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );})
 
 
+
+    //시간 가져오기1
+    // var currentDate = moment();
+    // console.log(currentDate); // 현재 날짜와 시간 출력
+
+    //시간 가져오기2
+    //var today = new Date();
+    //var formattedDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
 
 
