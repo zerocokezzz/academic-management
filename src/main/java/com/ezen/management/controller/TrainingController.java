@@ -21,10 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -50,7 +47,7 @@ public class TrainingController {
         model.addAttribute("responseDTO", responseDTO);
 //        List<Category> list =  trainingService.categoryIndex();
 //        model.addAttribute("list", list);
-    return "training/category/index";
+        return "training/category/index";
     }
 
     //유형추가
@@ -116,12 +113,16 @@ public class TrainingController {
     public String curriculumIndex(Model model, PageRequestDTO pageRequestDTO){
         PageResponseDTO<Curriculum> responseDTO = trainingService.searchCurriculum(pageRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
+
+        List<Category> category = trainingService.categoryList();
+        model.addAttribute("category", category);
+
         return "training/curriculum/index";
     }
 
     //과정추가
     @PostMapping(value = "/curriculum/insert")
-    public String curriculumInsert(String name, String category, int time, int day){
+    public String curriculumInsert(String name, Long category, int time, int day){
 
         Category c = trainingService.getCategoryIdx(category);
 
@@ -139,7 +140,11 @@ public class TrainingController {
     @PostMapping(value = "/curriculum/update")
     public String  curriculumUpdate(Long idx, String name, String category_name, Long category_idx, int time, int day){
 
-        Category category = trainingService.getCategoryIdx(category_name);
+        log.info("Controller : " +idx + name + category_name + category_idx);
+
+        Category category = trainingService.getCategoryIdx(category_idx);
+
+        log.info(String.valueOf(category));
 
         CurriculumDTO curriculumDTO = new CurriculumDTO();
         curriculumDTO.setIdx(idx);
@@ -183,6 +188,11 @@ public class TrainingController {
         List<Member> member = memberPage.getContent();
         model.addAttribute("member", member);
 
+        //과목들 Map에 담아 보내기
+        List<Subject> subject = trainingService.subjectList();
+        log.info(subject.toString());
+        model.addAttribute("subject", subject);
+
         return "training/lesson/index";
     }
 
@@ -218,7 +228,7 @@ public class TrainingController {
 
     //수업추가
     @PostMapping(value = "/lesson/insert")
-    public String lessonInsert(Long curriculum_idx, String member_id, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content, String questionName){
+    public String lessonInsert(@RequestParam(value = "selectedSubjects", required = false) List<String> selectedSubjects,Long curriculum_idx, String member_id, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content, String questionName){
 
         Optional<Curriculum> curriculumResult = curriculumRepository.findById(curriculum_idx);
         Curriculum curriculum = curriculumResult.orElseThrow();
@@ -227,23 +237,37 @@ public class TrainingController {
         Member member = memberResult.orElseThrow();
 
         LessonDTO lessonDTO = new LessonDTO();
-            lessonDTO.setCurriculum_idx(curriculum.getIdx());
-            lessonDTO.setCurriculum_name(curriculum.getName());
-            lessonDTO.setCurriculum_time(curriculum.getTime());
-            lessonDTO.setCurriculum_day(curriculum.getDay());
-            lessonDTO.setMember_id(member.getId());
-            lessonDTO.setMember_name(member.getName());
-            lessonDTO.setNumber(number);
-            lessonDTO.setStartDay(startDay);
-            lessonDTO.setEndDay(endDay);
-            lessonDTO.setSurvey1(survey1);
-            lessonDTO.setSurvey2(survey2);
-            lessonDTO.setSurvey3(survey3);
-            lessonDTO.setClassRoom(classRoom);
-            lessonDTO.setContent(content);
-            lessonDTO.setQuestionName(questionName);
+        lessonDTO.setCurriculum_idx(curriculum.getIdx());
+        lessonDTO.setCurriculum_name(curriculum.getName());
+        lessonDTO.setCurriculum_time(curriculum.getTime());
+        lessonDTO.setCurriculum_day(curriculum.getDay());
+        lessonDTO.setMember_id(member.getId());
+        lessonDTO.setMember_name(member.getName());
+        lessonDTO.setNumber(number);
+        lessonDTO.setStartDay(startDay);
+        lessonDTO.setEndDay(endDay);
+        lessonDTO.setSurvey1(survey1);
+        lessonDTO.setSurvey2(survey2);
+        lessonDTO.setSurvey3(survey3);
+        lessonDTO.setClassRoom(classRoom);
+        lessonDTO.setContent(content);
+        lessonDTO.setQuestionName(questionName);
 
-        trainingService.lessonInsert(lessonDTO);
+        log.info("컨트롤러 보유과목 : " + selectedSubjects);
+
+        Long subjectIdx = trainingService.lessonInsert(lessonDTO);
+        SubjectHoldDTO subjectHoldDTO = new SubjectHoldDTO();
+        subjectHoldDTO.setLesson_idx(subjectIdx);
+
+        // 선택된 과목 체크박스 SubjectHold에 넣어주기
+        if(selectedSubjects != null){
+            for(String subject : selectedSubjects){
+                subjectHoldDTO.setName(subject);
+                trainingService.subjectHoldInsert(subjectHoldDTO);
+            }
+        }
+
+        log.info("컨트롤러 잘 들어갔나");
 
         return "redirect:/training/lesson";
     }
@@ -254,22 +278,22 @@ public class TrainingController {
     public String lessonUpdate(Long idx, Long curriculumIdx, String memberId, String classRoom, int number, LocalDate startDay, LocalDate endDay, LocalDate survey1,LocalDate survey2,LocalDate survey3, String content, String questionName){
 
         LessonDTO lessonDTO = new LessonDTO();
-            lessonDTO.setIdx(idx);
-            lessonDTO.setCurriculum_idx(curriculumIdx);
-            lessonDTO.setMember_id(memberId);
-            lessonDTO.setClassRoom(classRoom);
-            lessonDTO.setNumber(number);
-            lessonDTO.setStartDay(startDay);
-            lessonDTO.setEndDay(endDay);
-            lessonDTO.setSurvey1(survey1);
-            lessonDTO.setSurvey2(survey2);
-            lessonDTO.setSurvey3(survey3);
-            lessonDTO.setContent(content);
-            lessonDTO.setQuestionName(questionName);
+        lessonDTO.setIdx(idx);
+        lessonDTO.setCurriculum_idx(curriculumIdx);
+        lessonDTO.setMember_id(memberId);
+        lessonDTO.setClassRoom(classRoom);
+        lessonDTO.setNumber(number);
+        lessonDTO.setStartDay(startDay);
+        lessonDTO.setEndDay(endDay);
+        lessonDTO.setSurvey1(survey1);
+        lessonDTO.setSurvey2(survey2);
+        lessonDTO.setSurvey3(survey3);
+        lessonDTO.setContent(content);
+        lessonDTO.setQuestionName(questionName);
 
-            trainingService.lessonUpdate(lessonDTO);
+        trainingService.lessonUpdate(lessonDTO);
 
-            log.info("Controller : " + lessonDTO);
+        log.info("Controller : " + lessonDTO);
 
         return "redirect:/training/lesson/detail?idx="+lessonDTO.getIdx();
     }

@@ -18,125 +18,142 @@
             <h3 style="display: inline-flex">과목관리</h3>
             <button style="display: inline-flex" class="btn btn-primary float-end insertBtn">과목등록</button>
 
-        <hr>
-        <br>
-
-        <!-- 검색 -->
-        <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
-            <form action="/training/subject" method="get">
-                <div class="col">
-                    <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <select class="form-select type" name="type">
-                                <option value="">---</option>
-                                <option th:selected="${pageRequestDTO.type == 'n'}" value="n">과목명</option>
-                                <option th:selected="${pageRequestDTO.type == 'm'}" value="m">평가방법</option>
-                            </select>
-                        </div>
-                        <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px">
-
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-outline-primary searchBtn">검색</button>
-                            <button type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
-                        </div>
-
-                    </div>
-                </div>
-            </form>
-        </div>
-
-
-        <!-- 리스트 -->
-        <br>
-        <div style="display: inline-flex">총 [[${responseDTO.total}]]개</div>
-
-        <br>
-        <hr>
-        <div style="display: inline-flex">과목명</div>
-        <div style="display: inline-flex">평가방식</div>
-
-        <div th:each="subject: ${responseDTO.getDtoList()}">
             <hr>
-            <div style="display: inline-flex" th:text="${subject.name}"></div>
-            <div style="display: inline-flex" th:text="${subject.method}"></div>
+            <br>
 
-            <div class="float-end">
-                <button style="display: inline-flex" class="btn btn-secondary" th:name="${subject.name}" th:idx="${subject.idx}" th:method="${subject.method}" th:onclick="updateBtn(this.getAttribute('name'),this.getAttribute('idx'))" >수정</button>
-                <button style="display: inline-flex" class="btn btn-danger" th:index="${subject.idx}" th:onclick="deleteBtn(this.getAttribute('index'))">삭제</button>
+            <!-- 검색 -->
+            <div class="row mt-3 float-end" style="max-width: 500px; display: inline-flex">
+                <form action="/training/subject" method="get">
+                    <div class="col">
+                        <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select class="form-select type" name="type">
+                                    <option value="">---</option>
+                                    <option th:selected="${pageRequestDTO.type == 'n'}" value="n">과목명</option>
+                                    <option th:selected="${pageRequestDTO.type == 'm'}" value="m">평가방법</option>
+                                </select>
+                            </div> &nbsp;
+                            <input type="text" class="form-control keyword" name="keyword" th:value="${pageRequestDTO.keyword}" style="border-radius: 5px"> &nbsp;
+                            <button style="border-radius: 5px" type="submit" class="btn btn-outline-primary searchBtn">검색</button> &nbsp;
+                            <button style="border-radius: 5px" type="button" class="btn btn-outline-secondary clearBtn">초기화</button>
+
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
 
-        <!-- 페이지 -->
-        <hr>
-        <br>
-        <ul class="pagination flex-wrap">
-            <li class="page-item" th:if="${responseDTO.prev}">
-                <a class="page-link" th:data-num="${responseDTO.start -1}">이전</a>
-            </li>
 
-            <th:block th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
-                    <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
+            <!-- 리스트 -->
+            <br>
+            <div style="display: inline-flex">총 [[${responseDTO.total}]]개</div>
+
+            <br>
+            <hr>
+            <div style="width: 100%">
+                <div style="display: inline-flex;width: 30%; font-weight: bold; font-size: large; color: #0d6efd">과목명</div>
+                <div style="display: inline-flex;  font-weight: bold; font-size: large;  color: #0d6efd">평가방식</div>
+            </div>
+
+            <div style="width: 100%" th:each="subject: ${responseDTO.getDtoList()}">
+                <hr>
+                <a style="cursor: pointer; color: #222;"
+                   th:idx="${subject.idx}"
+                   th:name="${subject.name}"
+                   th:method="${subject.method}"
+                   th:onclick="updateBtn(this.getAttribute('idx'), this.getAttribute('name'),this.getAttribute('method'))">
+                    <div style="display: inline-flex; width: 30%" th:text="${subject.name}"></div>
+                    <div style="display: inline-flex" th:text="${subject.method}"></div>
+                </a>
+            </div>
+
+            <!-- 페이지 -->
+            <hr>
+            <br>
+            <ul class="pagination flex-wrap">
+                <li class="page-item" th:if="${responseDTO.prev}">
+                    <a class="page-link" th:data-num="${responseDTO.start -1}">이전</a>
                 </li>
-            </th:block>
 
-            <li class="page-item" th:if="${responseDTO.next}">
-                <a class="page-link" th:data-num="${responseDTO.end + 1}">다음</a>
-            </li>
+                <th:block th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                    <li th:class="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                        <a class="page-link" th:data-num="${i}" >[[${i}]]</a>
+                    </li>
+                </th:block>
 
-        </ul>
+                <li class="page-item" th:if="${responseDTO.next}">
+                    <a class="page-link" th:data-num="${responseDTO.end + 1}">다음</a>
+                </li>
 
-        <!-- 모달 -->
+            </ul>
 
-        <!-- 등록 모달 -->
-        <div class="modal insertModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">과목 등록</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control subjectName">
-                            <input type="text" class="form-control subjectMethod">
+            <!-- 모달 -->
+
+            <!-- 등록 모달 -->
+            <div class="modal insertModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">과목 등록</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary insertSubmit">등록</button>
-                        <button type="button" class="btn btn-danger insertClose">닫기</button>
+                        <div class="modal-body">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control subjectName" placeholder="과목명">
+                                <input type="text" class="form-control subjectMethod" placeholder="평가방식">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary insertSubmit">등록</button>
+                            <button type="button" class="btn btn-outline-danger insertClose">닫기</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 수정 모달 -->
-        <div class="modal updateModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">과목 수정</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
+            <!-- 수정 모달 -->
+            <div class="modal updateModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">과목 수정</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
                             <input type="hidden" class="updateIdx">
-                            <input type="text" class="form-control updateName">
-                            <input type="text" class="form-control updateMethod">
+
+                            <div class="input-group mb-2">
+                                <div style="width: 50%; display: flex; justify-content:flex-start; align-items: center;">
+                                    <span style="font-weight: 600;">과목명</span>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control updateName">
+                            </div>
+
+                            <br>
+
+                            <div class="input-group mb-2">
+                                <div style="width: 50%; display: flex; justify-content:flex-start; align-items: center;">
+                                    <span style="font-weight: 600;">평가방식</span>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control updateMethod">
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary updateSubmit" >수정</button>
-                        <button type="button" class="btn btn-danger updateClose">닫기</button>
-                        <button type="button" class="btn btn-outline-light remove">초기화</button>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-primary updateSubmit" >수정</button>&nbsp;
+                            <button type="button" class="btn btn-outline-danger deleteBtn" style="display: inline-flex" >삭제</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div> <!-- inner content end -->
-</div> <!-- content end -->
-<!-- content end -->
+        </div> <!-- inner content end -->
+    </div> <!-- content end -->
+    <!-- content end -->
 
     <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
     <a th:replace="/layout/basic :: back-to-top"></a>
@@ -167,6 +184,18 @@
 
     // 과목 등록하기
     insertSubmit.addEventListener("click", function (e) {
+
+        if(subjectName.value.trim() == "" && subjectMethod.value.trim() != "" ){
+            alert("등록할 과목명 입력하세요.")
+            return;
+        }else if(subjectName.value.trim() != "" && subjectMethod.value.trim() == ""){
+            alert("등록할 평가방식을 입력하세요.")
+            return;
+        }else if(subjectName.value.trim() == "" && subjectMethod.value.trim() == "" ){
+            alert("빈 칸을 입력하세요.")
+            return;
+        }
+
         const insertName = {
             contentType: 'application/json',
             name: subjectName.value,
@@ -193,17 +222,16 @@
     //과목 수정 모달
     const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
     const updateMethod = document.querySelector(".updateMethod")
-    const updateClose = document.querySelector(".updateClose")
-    // const deleteBtn = document.querySelector(".deleteBtn")
+    const deleteBtn = document.querySelector(".deleteBtn")
     const updateSubmit = document.querySelector(".updateSubmit")
     const updateIdx = document.querySelector(".updateIdx")
     const updateName = document.querySelector(".updateName")
 
     //과목 상세 모달
-    async function updateBtn(method,name, idx){
-        updateMethod.value = method
-        updateName.value= name
+    async function updateBtn(idx,name, method){
         updateIdx.value = idx
+        updateName.value= name
+        updateMethod.value = method
         updateModal.show()
     }
 
@@ -223,27 +251,27 @@
         }).catch(e => {
             console.log(e)
         })
-
     }, false)
 
-    //과목 수정 모달 닫기
-    updateClose.addEventListener("click", function (e){
-        updateModal.hide()
-    })
-
-
     //과목 삭제
-    async function deleteBtn(index){
+    deleteBtn.addEventListener("click", function (e){
         if(!confirm("과목을 삭제하시겠습니까?")){
             return
         }
+        const idx = {
+            contentType: 'application/json',
+            idx : updateIdx.value
+        }
 
-        subjectDelete(index).then(result => {
+        subjectDelete(idx).then(result => {
+            updateIdx.value = ''
+            updateModal.hide()
             location.reload()
         }).catch(e =>{
             console.log(e)
         })
-    }
+    })
+
 
     //페이지 클릭
     document.querySelector(".pagination").addEventListener("click", function (e) {

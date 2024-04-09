@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long> , StudentSearch {
@@ -20,6 +21,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> , Studen
     Optional<Student> getByLessonAndName(Lesson lesson, String name);
 
     @Query("select s from Student s where s.lesson.idx = :lessonIdx ")
-    Optional<Student> getByLessonIdx(long lessonIdx);
+    List<Student> getByLessonIdx(long lessonIdx);
 
 }

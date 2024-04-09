@@ -2,13 +2,16 @@ package com.ezen.management.service;
 
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import com.ezen.management.domain.SubjectTest;
 import com.ezen.management.dto.LessonPageRequestDTO;
 import com.ezen.management.dto.LessonPageResponseDTO;
 import com.ezen.management.dto.PageRequestDTO;
 import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.StudentRepository;
+import com.ezen.management.repository.SubjectTestRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,7 @@ public class LessonServiceImpl implements LessonService{
 
     private final LessonRepository lessonRepository;
     private final StudentRepository studentRepository;
+    private final SubjectTestRepository subjectTestRepository;
 
     public List<Lesson> findAll(){
         return lessonRepository.findAll();
@@ -64,6 +68,11 @@ public class LessonServiceImpl implements LessonService{
                 .build();
     }
 
+    @Override
+    public List<Lesson> getOngoingLesson() {
+        return lessonRepository.getLessonsByEndDayGreaterThan(LocalDate.now());
+    }
+
     //완료된 수업 & 검색 & 페이징
     @Override
     public PageResponseDTO<Lesson> endLesson(PageRequestDTO pageRequestDTO) {
@@ -99,6 +108,17 @@ public class LessonServiceImpl implements LessonService{
                 .dtoList(dtoList)
                 .total((int)studentPage.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public List<Student> studentList(Long idx){
+        return studentRepository.getByLessonIdx(idx);
+    }
+
+    //학생 인덱스로 과목평가 가져오기
+    @Override
+    public List<SubjectTest> searchSubjectTest(Long studentIdx){
+        return subjectTestRepository.searchSubjectTest(studentIdx);
     }
 
 }

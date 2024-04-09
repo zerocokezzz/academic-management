@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -88,9 +90,10 @@ public class LessonRepositoryTests {
     }
 
     @Test
+    @Transactional
     public void 현재진행중인수업(){
-        Optional<Member> result = memberRepository.findById("teacher");
-        Member teacher = result.orElseThrow();
+//        Optional<Member> result = memberRepository.findById("teacher");
+//        Member teacher = result.orElseThrow();
 
         LocalDate now = LocalDate.now();
 
@@ -99,7 +102,7 @@ public class LessonRepositoryTests {
 //        List<Lesson> lessons = lessonsByEndDayGreaterThan.orElseThrow();
 
 
-//        log.info("lessons...... " + lessons);
+        log.info("lessons...... " + lessonsByEndDayGreaterThan);
     }
 
     @Test

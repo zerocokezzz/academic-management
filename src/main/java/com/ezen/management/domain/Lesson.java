@@ -1,5 +1,6 @@
 package com.ezen.management.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Lesson extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Curriculum curriculum;
 
@@ -26,6 +27,7 @@ public class Lesson extends BaseEntity{
 
     //교사
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Member member;
 
     //기수
@@ -71,6 +73,13 @@ public class Lesson extends BaseEntity{
         this.headCount++;
     }
 
+    public void headCountDown(){
+        if(headCount < 1){
+            return;
+        }
+
+        this.headCount--;
+    }
 
     public void changeCurriculum(Curriculum curriculum){this.curriculum = curriculum;}
 

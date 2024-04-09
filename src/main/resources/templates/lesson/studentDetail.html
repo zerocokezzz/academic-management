@@ -2,24 +2,19 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="/layout/basic :: head">
+    <style>
+
+        img {
+            max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 너비 설정 */
+            max-height: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 높이 설정 */
+        }
+    </style>
+
 </head>
-<style>
-  img {
-    max-width: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 너비 설정 */
-    max-height: 100%; /* 이미지가 부모 요소를 넘지 않도록 최대 높이 설정 */
-  }
-
-  /*스크롤바 지우기*/
-  ::-webkit-scrollbar{
-    display: none;
-  }
-</style>
 <body>
-
-
 <!-- warpper start -->
 <div class="wrapper">
-  <div th:replace="/layout/basic :: sidebar"></div>
+    <div th:replace="/layout/basic :: sidebar"></div>
 
   <!-- content start -->
   <div class="content">
@@ -28,132 +23,265 @@
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
       <h3 style="display: inline-flex" > [[${student.name}]] </h3>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; " class="btn float-end counselingBtn">상담내역</button>
-      <button style="display: inline-flex ; background-color: #ec7f24; color: white; margin-right: 10px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
+
+      <button style="display: inline-flex ; background-color: #0d6efd; color: white; " class="btn float-end counselingBtn">상담내역</button>
+      <button style="display: inline-flex ; background-color: #0d6efd; color: white; margin-right: 5px" class="btn float-end" th:studentIdx="${student.idx}" onclick="openPaper(this.getAttribute('studentIdx'))">사전평가결과지</button>
 
 
-      <hr>
-      <br>
-
-      <!-- 본문 -->
-      <div style="display: inline-flex"></div>
-
-      <div th:each="student : ${student}">
-        <a th:href="@{/lesson/studentDetail(idx=${student.idx})}" style="color: black">
-          <div>
             <hr>
-            <input type="hidden" class="studentIdx" th:value="${student.idx}">
-            <div style="display: inline-flex" th:text="${student.lesson.curriculum.category.name}"></div>
-            <div style="display: inline-flex" th:text="${student.lesson.curriculum.name}"></div>
-            <div style="display: inline-flex" th:text="${student.lesson.number}"></div>
-            <div style="display: inline-flex" th:text="${student.name}"></div>
-            <div style="display: inline-flex" th:text="${student.done}"></div>
-            <div style="display: inline-flex" th:text="${student.pretest}"></div>
-            <div style="display: inline-flex" th:text="${student.survey}"></div>
-            <div style="display: inline-flex" th:text="${student.counseling}"></div>
-          </div>
-        </a>
-      </div>
+            <br>
+
+            <!-- 본문 -->
+            <div th:each="student : ${student}">
+                <input type="hidden" class="studentIdx" th:value="${student.idx}">
+                <input type="hidden" class="lessonIdx" th:value="${student.lesson.idx}">
+                <div style="display: inline-flex">
+                    <img th:src="${'/images/' + student.fileName}" alt=""
+                         style="width: 150px; height: 180px; margin-right: 40px; object-fit: cover">
+                    <div style="line-height: 90%"> <!-- 이미지랑 텍스트로 두 칸 -->
+                        <br>
+                        <div> <!-- 이름이랑 값으로 두칸 -->
+                            <h5 style="margin-right: 50px">이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${student.name}]]</h5>
+                        </div>
+                        <br>
+                        <div>
+                            <h5 style="margin-right: 20px">생년월일&nbsp;&nbsp;&nbsp;&nbsp;[[${student.birthday}]]</h5>
+                        </div>
+                        <br>
+                        <div>
+                            <h5 style="margin-right: 20px">전화번호&nbsp;&nbsp;&nbsp;&nbsp;[[${student.phone}]]</h5>
+                        </div>
+                        <br>
+                        <div>
+                            <h5 style="margin-right: 35px">이메일&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${student.email}]]</h5>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <hr>
+                <div>
+                    <table style="width: 100% ;font-size: large; font-weight: bold; line-height: 250%">
+                        <tr>
+                            <td style="width: 15%; text-align: left">유형</td>
+                            <td style="text-align: left" th:text="${student.lesson.curriculum.category.name}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">과정</td>
+                            <td style="text-align: left" th:text="${student.lesson.curriculum.name}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">기수</td>
+                            <td style="text-align: left" th:text="${student.lesson.number}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">담당교사</td>
+                            <td style="text-align: left" th:text="${student.lesson.member.name}"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">수료여부</td>
+                            <td style="text-align: left">
+                                <span th:if="${student.pretest}">완료</span>
+                                <span th:if="${!student.pretest}">미완료 </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+
+                            <td style="width: 15%; text-align: left">사전평가</td>
+<!--                            <td style="text-align: left" th:text="${student.pretest}"></td>-->
+                            <td style="text-align: left" th:text="${student.pretest} ? ${student.score} + '점' : '아직 사전평가가 등록되지 않았습니다.'"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">설문여부</td>
+                            <td style="text-align: left">
+                                <span th:if="${student.survey == 0}"> 미완료</span>
+                                <span th:if="${student.survey == 1}"> 첫번째 설문 완료 </span>
+                                <span th:if="${student.survey == 2}">두번째 설문 완료 </span>
+                                <span th:if="${student.survey == 3}">세번째 설문 완료 </span>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">상담여부</td>
+                            <td style="text-align: left">
+                                <span th:if="${student.counseling == 0}"> 완료된 상담이 없습니다.</span>
+                                <span th:if="${student.counseling == 1}"> 첫번째 상담 완료</span>
+                                <span th:if="${student.counseling == 2}"> 두번째 상담 완료</span>
+                                <span th:if="${student.counseling == 3}"> 세번째 상담 완료</span>
+                                <span th:if="${student.counseling == 4}"> 네번째 상담 완료</span>
+                                <span th:if="${student.counseling == 5}"> 다섯번째 상담 완료</span>
+                                <span th:if="${student.counseling == 6}"> 여섯번째 상담 완료</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr>
+                            </td> <!-- 가로선 추가 -->
+                        </tr>
+                        <tr>
+                            <td style="width: 15%; text-align: left">과목평가여부</td>
+                            <td>
+                                <table>
+                                    <tr th:each="test:${subjectTest}">
+                                        <td style="width: 15%" th:text="${test.subject}"></td>
+                                        <td style="width: 15%">
+                                            <span th:if="${test.state eq 'X'}"> 완료 </span>
+                                            <span th:if="${test.state eq 'O'}"> 미완료 </span>
+                                        </td>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   9
+                                    </tr>
+                                </table>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="float-end" style="display: inline-flex">
+                <button style="display: inline-flex" class="btn btn-outline-dark backList">학생전체목록</button>
+            </div>
+
+            <!-- 수정 모달 -->
+            <div class="modal updatModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div> <!-- inner content end -->
 
 
 
 
 
-      <br>
-
-      <div class="float-end" style="display: inline-flex">
-
-        <button style="display: inline-flex" class="btn btn-outline-dark backList" >목록</button>
-      </div>
 
 
-    </div> <!-- inner content end -->
+      <!-- 답안지 모달 -->
+
+      <div class="modal fade" id="answerPaper" tabindex="-1" aria-labelledby="answerPaperLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="answerPaperLabel">답안지</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+
+                      <!-- 학생 정보 -->
+<!--                      <div class="studentInfo" style="display: inline-flex; margin-top: 40px; margin-left: 10%">-->
+
+<!--                          <div style=" border: 1px solid lightgray; margin-right: 50px; width: 150px; height: 200px" class="studentFilename">-->
+<!--                              <img src="">-->
+<!--                              &lt;!&ndash;                                image here&ndash;&gt;-->
+<!--                          </div>-->
+<!--                          <table class="table table-borderless" style="width: 600px; flex-wrap: wrap">-->
+
+<!--                              <tr>-->
+<!--                                  <td>이름</td>-->
+<!--                                  <td colspan="2" class="studentName">이름임</td>-->
+<!--                                  <td rowspan="5"><div class="studentScore" style="margin: 60px 0 60px 0; font-size: 20pt; display: inline-flex">00점/</div><p style="display: inline-flex">/100점</p></td>-->
+<!--                              </tr>-->
+<!--                              <tr>-->
+<!--                                  <td>생년월일</td>-->
+<!--                                  <td colspan="2" class="studentBirthday">960123</td>-->
+<!--                              </tr>-->
+<!--                              <tr>-->
+<!--                                  <td>연락처</td>-->
+<!--                                  <td colspan="2" class="studentPhone">010-0000-0000</td>-->
+<!--                              </tr>-->
+<!--                              <tr>-->
+<!--                                  <td>이메일</td>-->
+<!--                                  <td colspan="2" class="studentEmail">byeol@gmail.com</td>-->
+<!--                              </tr>-->
+<!--                              <tr>-->
+<!--                                  <td>과정</td>-->
+<!--                                  <td colspan="2"><div style="max-width: 300px; overflow: scroll; display: inline-flex; word-break: keep-all" class="studentLesson">과정이름과정이름과정이름과정이름과정이름과정이름과정이름</div></td>-->
+<!--                              </tr>-->
+
+<!--                          </table>-->
 
 
 
+<!--                      </div>-->
+                      <!-- 학생 정보 끝-->
+
+
+<!--                      <br>-->
+<!--                      <br>-->
+<!--                      <br>-->
+<!--                      <hr>-->
+<!--                      <br>-->
+
+                      <!-- 문제 리스트 -->
+                      <div class="questionAnswerPaper" style="margin: 20px; ">
 
 
 
+                      </div>
+                      <!-- 문제 리스트 끝 -->
 
 
-
-    <!-- 답안지 모달 -->
-
-    <div class="modal fade" id="answerPaper" tabindex="-1" aria-labelledby="answerPaperLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="answerPaperLabel">답안지</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-
-            <!-- 학생 정보 -->
-            <div class="studentInfo" style="display: inline-flex; margin-top: 40px; margin-left: 10%">
-
-              <div style=" border: 1px solid lightgray; margin-right: 50px; max-width: 150px; max-height: 200px; width : 150px; height: 200px" class="studentFilename">
-                <img src="">
-                <!--                                image here-->
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                  </div>
               </div>
-              <table class="table table-borderless" style="width: 600px; flex-wrap: wrap">
-
-                <tr>
-                  <td>이름</td>
-                  <td colspan="2" class="studentName">이름임</td>
-                  <td rowspan="5"><div class="studentScore" style="margin: 60px 0 60px 0; font-size: 20pt; display: inline-flex">00점/</div><p style="display: inline-flex">/100점</p></td>
-                </tr>
-                <tr>
-                  <td>생년월일</td>
-                  <td colspan="2" class="studentBirthday">960123</td>
-                </tr>
-                <tr>
-                  <td>연락처</td>
-                  <td colspan="2" class="studentPhone">010-0000-0000</td>
-                </tr>
-                <tr>
-                  <td>이메일</td>
-                  <td colspan="2" class="studentEmail">byeol@gmail.com</td>
-                </tr>
-                <tr>
-                  <td>과정</td>
-                  <td colspan="2"><div style="max-width: 300px; overflow: scroll; display: inline-flex; word-break: keep-all" class="studentLesson">과정이름과정이름과정이름과정이름과정이름과정이름과정이름</div></td>
-                </tr>
-
-              </table>
-
-
-
-            </div>
-
-
-            <br>
-            <br>
-            <br>
-            <hr>
-            <br>
-
-            <!-- 문제 리스트 -->
-            <div class="questionAnswerPaper" style="margin: 20px; ">
-
-            </div>
-            <!-- 문제 리스트 끝 -->
-
-
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-          </div>
-        </div>
       </div>
-    </div>
 
 
-    <!-- 답안지 모달 끝 -->
+      <!-- 답안지 모달 끝 -->
 
 
 
-  </div> <!-- content end -->
-  <a th:replace="/layout/basic :: back-to-top"></a>
+
+
+
+
+
+    </div> <!-- content end -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
 </div>
 <!-- wrapper end-->
 
@@ -165,6 +293,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/training.js"></script>
 <script layout:fragment="script" th:inline="javascript">
+
 
   console.log("studentIdx확인용= " + [[${student.idx}]])
 
@@ -183,6 +312,15 @@
 
 
 
+    const lessonIdx = document.querySelector(".lessonIdx")
+    document.querySelector(".backList").addEventListener("click", function (e) {
+        const idx = lessonIdx.value
+
+        console.log("idx : " + idx);
+        window.location.href = '/lesson/studentList?idx=' + idx;
+    })
+
+
   const studentIdx = document.querySelector(".studentIdx")
   document.querySelector(".backList").addEventListener("click", function (e){
     const idx = studentIdx.value
@@ -191,7 +329,10 @@
   })
 
 
-//학생 개별 상담내역 검색
+
+// 학생 개별 상담내역 검색
+//   const studentIdx = document.querySelector(".studentIdx")
+
   document.querySelector(".counselingBtn").addEventListener("click", function (e){
 
     const idx = [[${student.idx}]]
@@ -212,6 +353,8 @@
 
   })
 
+  const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
+
 
   // 답안지 모달
   async function getQuestionAnswer(paramList){
@@ -219,15 +362,15 @@
     return response.data;
   }
 
-  async function getStudent(paramList){
-    const response = await axios.get('/student/getStudent', {params : paramList});
-    console.log("done!");
-    console.log(response);
+  // async function getStudent(paramList){
+  //   const response = await axios.get('/student/getStudent', {params : paramList});
+  //   console.log("done!");
+  //   console.log(response);
+  //
+  //   return response.data;
+  // }
 
-    return response.data;
-  }
 
-  const questionAnswerPaper = document.querySelector(".questionAnswerPaper");
 
   const studentName = document.querySelector(".studentName");
   const studentBirthday = document.querySelector(".studentBirthday");
@@ -236,9 +379,12 @@
   const studentFileName = document.querySelector('.studentFilename');
   const studentScore = document.querySelector(".studentScore");
 
+
+
   function openPaper(studentIdx){
     // console.log('questionAnswerIdx : ' + questionAnswerIdx);
     console.log('studentIdx : ' + studentIdx);
+    let htmls = '';
 
     const params = {
       studentIdx : studentIdx
@@ -246,22 +392,22 @@
 
 
     // 학생 정보
-    getStudent(params).then(result => {
-      console.log("student info!");
-      console.log(result);
-
-      studentName.innerText = result.name;
-      studentLesson.innerText = result.lessonName + ' ' +  result.lessonNumber + '회차';
-      studentPhone.innerText = result.phone;
-      studentBirthday.innerText = result.birthday;
-      studentFileName.innerHTML = `<img src="/images/${result.fileName}" style="object-fit: fill">`;
-      studentScore.innerText = result.score + '점';
-
-
-    }).catch( e => {
-      alert('student error!');
-
-    })
+    // getStudent(params).then(result => {
+    //   console.log("student info!");
+    //   console.log(result);
+    //
+    //   studentName.innerText = result.name;
+    //   studentLesson.innerText = result.lessonName + ' ' +  result.lessonNumber + '회차';
+    //   studentPhone.innerText = result.phone;
+    //   studentBirthday.innerText = result.birthday;
+    //   studentFileName.innerHTML = `<img src="/images/${result.fileName}" style="object-fit: cover; width: 150px; height: 200px">`;
+    //   studentScore.innerText = result.score + '점';
+    //
+    //
+    // }).catch( e => {
+    //   alert('student error!');
+    //
+    // })
 
 
     // 답안지
@@ -274,7 +420,7 @@
       console.log('1. answer : ' + result.answerList[0].answer.toString());
       console.log(result.answerList[0].answer.toString() === result.questionAnswer[0]);
 
-      let htmls = '';
+
 
       for(let i = 0; i < 20; i++){
         // $(".questionAnswerPaper").append()
@@ -317,19 +463,20 @@
                             </div>
                         <!-- 문제 하나  끝-->`;
 
-        questionAnswerPaper.innerHTML = htmls;
 
       }
+        questionAnswerPaper.innerHTML = htmls;
 
     }).catch( e => {
       console.log(e);
+      htmls = '<div style="text-align: center">아직 사전평가가 등록되지 않았습니다.</div><br>';
+      questionAnswerPaper.innerHTML = htmls;
     });
 
 
     $("#answerPaper").modal('show');
 
   }
-
 
 
 
