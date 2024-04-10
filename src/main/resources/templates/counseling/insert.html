@@ -31,14 +31,15 @@
                                     <span class="input-group-text">학생이름</span>
                                     <input type="text" class="form-control" th:value="${student.name}" placeholder="name" readonly>
                                 </div>
-<!-- 수정요청사항 이미 등록된 상담회차는 등록 못하게 + 숫자만 입력할 수 있게 변경 -->
+<!-- 수정요청사항 이미 등록된 상담회차는 등록 못하게 -->
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">상담회차</span>
                                     <input type="text" id="numberOnly" class="form-control" name="round" placeholder="상담회차" required>
                                 </div>
                                 <div class="bs-body-color-rgb">
                                     <span class="input-group-text">내용</span>
-                                    <textarea class="form-control col-sm-5" rows="5" name="content" placeholder="상담내용을 작성하세요" required></textarea>
+                                    <textarea class="form-control col-sm-5" rows="5" id="content" name="content" maxlength="1000" placeholder="상담내용을 작성하세요" required oninput="checkTextareaLength()"></textarea>
+                                    <p class="text-end" id="charCount"></p>
                                 </div>
 <!--  기입으로할지 아니면 radio로 할지                              -->
                                 <div class="input-group mb-3">
@@ -150,6 +151,27 @@
     //유효성검사 / 상담회차, 상담방법 number로 받기
     $("#numberOnly").on("keyup", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );})
     $("#numberOnly1").on("keyup", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );})
+
+
+
+
+
+    //입력된 글자 수 표시
+    function checkTextareaLength() {
+        var textarea = document.getElementById('content');
+        var charCount = document.getElementById('charCount');
+        var content = textarea.value;
+        const maxLength = 1000;
+
+        //1000자 이상일 경우 글자수 알림
+        if (content.length > maxLength) {
+            charCount.textContent = '글자 수: ' + maxLength + ' / ' + maxLength + ' (초과)';
+            alert("1000자 이하로 작성바랍니다.")
+        } else {
+            charCount.textContent = '글자 수: ' + content.length + ' / ' + maxLength;
+        }
+    }
+
 
 
 

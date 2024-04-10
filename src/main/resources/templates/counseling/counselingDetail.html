@@ -19,23 +19,26 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h5>상담 상세 보기</h5>
-                            <h8>※상담방식: ( 0: 대면 / 1: 온라인 / 2: 전화 )</h8><br>
-                <!-- 버튼을 어느쪽에 놓을까~~~~ 아따 중간에 왜 띄워져 있는겨-->
                             <div class="row justify-content-end">
                                 <div class="col-auto">
                                     <button type="button" class="btn btn-outline-dark clearBtn">목록</button>
-                                </div>
-                                <div class="col-auto">
-                                    <button type="button" class="btn btn-primary creatBtn" style="margin: 1px;">추가</button>
+                                    <button type="button" class="btn btn-primary creatBtn">추가</button>
                                 </div>
                             </div>
+                        <!-- Title -->
+                            <div class="row">
+                                <p class="fs-2 fw-bold">상담</p>
+                                <!--<h8>※상담방식: ( 0: 대면 / 1: 온라인 / 2: 전화 )</h8><br>-->
+                        <!-- Curriculum -->
+                                <input type="text" class="form-control" th:value="${student.lesson.curriculum.name}" style="margin: 0;" readonly />
+                            </div>
+                            <hr>
+
                             <div class="card-body">
                                 <div class="row">
-                <!-- 왼쪽에 학생 정보 표시 -->
-                                    <div class="col-md-8">
+                                    <div class="col-md-6">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text">학생No</span>
+                                            <span class="input-group-text">No</span>
                                             <input type="text" class="form-control" name="studentIdx" th:value="${student.idx}" readonly>
                                         </div>
                                         <div class="input-group mb-3">
@@ -43,7 +46,7 @@
                                             <input type="text" class="form-control" name="name" th:value="${student.name}" readonly>
                                         </div>
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text">전화번호</span>
+                                            <span class="input-group-text">연락처</span>
                                             <input type="text" class="form-control" name="phone" th:value="${student.phone}" readonly>
                                         </div>
                                         <div class="input-group mb-3">
@@ -55,16 +58,17 @@
                 <!-- 오른쪽에 사진 표시 -->
 
                                     <div class="col-md-6">
-                                        <div class="border border-dark rounded p-2" style="margin: 1px; width: 160px;">
+                                        <div class="border border-dark-end rounded p-2 d-flex justify-content-end align-items-center" style="margin: 1px; width: 160px;">
                                             <!-- 여기에 사진 표시인디 사진은 변화없이 고정해놓고 싶은데 -->
                                             <img src="/images/default_profile.jpg" alt="학생 사진" class="img-fluid" style="width: 150px; height: 200px; padding: 1px; object-fit: cover;">
-
                                         </div>
                                     </div>
                                 </div>
-                                <hr>
+
+
                 <!-- 여기부터는 상담List로 나오기 -->
                                 <form th:each="counseling: ${counselingList}" id="l1">
+                                    <hr>
                                     <div class="input-group mb-3">
                                         <input type="hidden" class="form-control" name="idx" th:value="${counseling.idx}" readonly>
                                     </div>
@@ -78,24 +82,32 @@
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담내용</span>
-                                        <input type="text" class="form-control" name="content" th:value="${counseling.content}" readonly>
+                                        <textarea class="form-control col-sm-5" name="content" id="content" th:text="${counseling.content}" style="resize: none; overflow: hidden;" readonly></textarea>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담방식</span>
-                                        <input type="text" class="form-control counselingMethod" name="method" th:value="${counseling.method}" readonly>
+                                        <input type="hidden" class="form-control counselingMethod" name="method" th:value="${counseling.method}" readonly>
+                                        <div class="form-control" th:switch="${counseling.method}">
+                                            <span th:case="0"> 대면 </span>
+                                            <span th:case="1"> 온라인 </span>
+                                            <span th:case="2"> 전화 </span>
+                                            <span th:case="*" class="text-danger"> 몰?루? </span>
+                                        </div>
                                     </div>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">담당자</span>
                                         <input type="text" class="form-control" name="writer" th:value="${counseling.writer}" readonly>
                                     </div>
                 <!-- button -->
-                                    <div class="my-4">
-                                        <a th:href="|@{/counseling/update}?idx=${counseling.idx}|">
-                                            <button type="button" class="btn btn-secondary modBtn">수정하기</button>
-                                        </a>
-                                        <a th:href="|@{/counseling/delete}?idx=${counseling.idx}|">
-                                            <button type="button" class="btn btn-danger delBtn">삭제하기</button>
-                                        </a>
+                                    <div class="row my-4">
+                                        <div class="col text-end">
+                                            <a th:href="|@{/counseling/update}?idx=${counseling.idx}|">
+                                                <button type="button" class="btn btn-secondary modBtn">수정하기</button>
+                                            </a>
+                                            <a th:href="|@{/counseling/delete}?idx=${counseling.idx}|">
+                                                <button type="button" class="btn btn-danger delBtn">삭제하기</button>
+                                            </a>
+                                        </div>
                                     </div>
                                 </form><!-- end th:each -->
 
@@ -189,6 +201,7 @@
 
 
 
+
     const formObj = document.querySelector("#l1");
 
     // 삭제하기
@@ -213,22 +226,24 @@
 
 
 
+    // textarea의 높이를 동적으로 조절하는 함수
+    function adjustTextareaHeight() {
+        var textarea = document.getElementById('content');
+        textarea.style.height = 'auto'; // 기본 높이로 재설정
+        textarea.style.height = textarea.scrollHeight + 'px'; // 내용에 맞게 높이 조절
+    }
 
-//상담방법에 따라 형식 변환
-//     const method = document.querySelector(".counselingMethod").value;
-//
-//     function getCounselingMethod(method) {
-//         switch (method) {
-//             case 0:
-//                 return "대면";
-//             case 1:
-//                 return "전화";
-//             case 2:
-//                 return "온라인";
-//             default:
-//                 return "몰?루?";
-//         }
-//     }
+    // 페이지 로드 시 textarea의 높이를 조절
+    window.onload = function() {
+        adjustTextareaHeight();
+    };
+
+    // textarea의 값이 변경될 때마다 높이를 조절
+    document.getElementById('content').addEventListener('input', function() {
+        adjustTextareaHeight();
+    });
+
+
 
 </script>
 
