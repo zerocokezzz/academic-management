@@ -100,11 +100,11 @@
                         <div class="modal-body">
                             <div class="input-group mb-3">
                                 <input type="hidden" class="updateIdx">
-                                <input type="text" class="form-control updateName" placeholder="유형명" readonly>
+                                <input type="text" class="form-control updateName" placeholder="유형명">
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <!--                        <button type="button" class="btn btn-outline-primary updateSubmit" >수정</button>&nbsp;-->
+                            <button type="button" class="btn btn-outline-primary updateSubmit" >수정</button>&nbsp;
                             <button type="button" class="btn btn-outline-danger deleteBtn" style="display: inline-flex" >삭제</button>
                         </div>
                     </div>
@@ -177,7 +177,7 @@
     //유형 수정 모달
     const updateModal = new bootstrap.Modal(document.querySelector(".updateModal"))
     const updateName = document.querySelector(".updateName")
-    // const updateSubmit = document.querySelector(".updateSubmit")
+    const updateSubmit = document.querySelector(".updateSubmit")
     const updateIdx = document.querySelector(".updateIdx")
     const deleteBtn = document.querySelector(".deleteBtn")
 
@@ -188,25 +188,25 @@
         updateModal.show()
     }
 
-    // updateSubmit.addEventListener("click", function (e){
-    //
-    //     const updateCategory = {
-    //         contentType: 'application/json',
-    //         idx : updateIdx.value,
-    //         name: updateName.value
-    //     }
-    //
-    //     categoryUpdate(updateCategory).then(result => {
-    //         updateName.value = ''
-    //         updateIdx.value=''
-    //         updateModal.hide()
-    //         location.reload()
-    //     }).catch(e => {
-    //         console.log(e)
-    //     })
-    // }, false)
+    updateSubmit.addEventListener("click", function (e){
 
-    //유형 수정 모달 닫기
+        const updateCategory = {
+            contentType: 'application/json',
+            idx : updateIdx.value,
+            name: updateName.value
+        }
+
+        categoryUpdate(updateCategory).then(result => {
+            updateName.value = ''
+            updateIdx.value=''
+            updateModal.hide()
+            location.reload()
+        }).catch(e => {
+            console.log(e)
+        })
+    }, false)
+
+    // // 유형 수정 모달 닫기
     // updateClose.addEventListener("click", function (e){
     //     updateModal.hide()
     // })

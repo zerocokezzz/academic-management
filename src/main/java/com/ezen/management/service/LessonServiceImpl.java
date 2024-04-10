@@ -2,11 +2,9 @@ package com.ezen.management.service;
 
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import com.ezen.management.domain.Subject;
 import com.ezen.management.domain.SubjectTest;
-import com.ezen.management.dto.LessonPageRequestDTO;
-import com.ezen.management.dto.LessonPageResponseDTO;
-import com.ezen.management.dto.PageRequestDTO;
-import com.ezen.management.dto.PageResponseDTO;
+import com.ezen.management.dto.*;
 import com.ezen.management.repository.LessonRepository;
 import com.ezen.management.repository.StudentRepository;
 import com.ezen.management.repository.SubjectTestRepository;
@@ -18,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
@@ -119,6 +118,42 @@ public class LessonServiceImpl implements LessonService{
     @Override
     public List<SubjectTest> searchSubjectTest(Long studentIdx){
         return subjectTestRepository.searchSubjectTest(studentIdx);
+    }
+
+    @Override
+    public Long subjectTestUpdate(SubjectTestList subjectTestList){
+
+        List<SubjectTest> subjectTest =  subjectTestListTOSubjectTest(subjectTestList);
+        subjectTestRepository.saveAll(subjectTest);
+
+        return subjectTest.get(0).getStudent().getIdx();
+    }
+
+    public SubjectTest SubjectTesListDTOtoSubjectTestEntity(SubjectTestListDTO subjectTestListDTO){
+
+        log.info("서비스 : " + subjectTestListDTO);
+
+        Student student = studentRepository.findById(subjectTestListDTO.getStudentIdx()).orElseThrow();
+
+        SubjectTest subjectTest = SubjectTest.builder()
+                .idx(subjectTestListDTO.getIdx())
+                .subject(subjectTestListDTO.getSubject())
+                .state(subjectTestListDTO.getState())
+                .student(student)
+                .build();
+
+        return subjectTest;
+    }
+
+    public List<SubjectTest> subjectTestListTOSubjectTest(SubjectTestList subjectTestList){
+        List<SubjectTest> list = new ArrayList<>();
+
+        for(SubjectTestListDTO subjectTestListDTO : subjectTestList){
+            SubjectTest subjectTest = SubjectTesListDTOtoSubjectTestEntity(subjectTestListDTO);
+            list.add(subjectTest);
+        }
+
+        return list;
     }
 
 }

@@ -69,6 +69,8 @@ public class TrainingController {
     @ResponseBody
     @DeleteMapping("/category/{idx}")
     public void categoryDelete(@PathVariable Long idx){
+        log.info("컨트롤러 들어오나 :" + idx);
+
         trainingService.categoryDelete(idx);
     }
 
@@ -140,9 +142,9 @@ public class TrainingController {
     @PostMapping(value = "/curriculum/update")
     public String  curriculumUpdate(Long idx, String name, String category_name, Long category_idx, int time, int day){
 
-        log.info("Controller : " +idx + name + category_name + category_idx);
+        log.info("Controller : " +idx + name +"dsdfsasdfsasdf"+ category_name + category_idx);
 
-        Category category = trainingService.getCategoryIdx(category_idx);
+        Category category = trainingService.getCategoryByName(category_name);
 
         log.info(String.valueOf(category));
 
@@ -152,6 +154,8 @@ public class TrainingController {
         curriculumDTO.setCategory(category);
         curriculumDTO.setTime(time);
         curriculumDTO.setDay(day);
+
+        log.info(String.valueOf(curriculumDTO));
 
         trainingService.curriculumUpdate(curriculumDTO);
         return "redirect:/training/curriculum";

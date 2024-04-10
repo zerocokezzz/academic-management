@@ -3,12 +3,10 @@ package com.ezen.management.service;
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
 import com.ezen.management.domain.SubjectTest;
-import com.ezen.management.dto.LessonPageRequestDTO;
-import com.ezen.management.dto.LessonPageResponseDTO;
-import com.ezen.management.dto.PageRequestDTO;
-import com.ezen.management.dto.PageResponseDTO;
+import com.ezen.management.dto.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface LessonService {
@@ -33,9 +31,5 @@ public interface LessonService {
 
     List<SubjectTest> searchSubjectTest(Long studentIdx);
 
-
-
-
-
-
+    Long subjectTestUpdate(SubjectTestList subjectTestList);
 }

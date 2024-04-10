@@ -358,7 +358,7 @@
         }
 
         lessonDelete(idx).then(result => {
-            location.reload()
+            window.location.href ='/training/lesson';
         }).catch(e => {
             console.log(e)
         })
