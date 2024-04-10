@@ -94,6 +94,7 @@ public class LessonServiceImpl implements LessonService{
     //학생 목록
     @Override
     public PageResponseDTO<Student> searchStudent(PageRequestDTO pageRequestDTO, Long lessonIdx){
+
         Pageable pageable = pageRequestDTO.getPageable();
 
         String[] types = pageRequestDTO.getTypes();

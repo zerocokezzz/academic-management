@@ -215,7 +215,7 @@ public class TrainingServiceImpl implements TrainingService{
 
     //수업 전체
     @Override
-    public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO, String userId) {
         Pageable pageable = pageRequestDTO.getPageable();
 
         String[] types = pageRequestDTO.getTypes();

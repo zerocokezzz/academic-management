@@ -27,7 +27,7 @@ public interface LessonService {
 
     List<Student> studentList(Long idx);
 
-    PageResponseDTO<Student> searchStudent(PageRequestDTO pageRequestDTO, Long lessonIdx);
+    public PageResponseDTO<Student> searchStudent(PageRequestDTO pageRequestDTO, Long lessonIdx);
 
     List<SubjectTest> searchSubjectTest(Long studentIdx);
 

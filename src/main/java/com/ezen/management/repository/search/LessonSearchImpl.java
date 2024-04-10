@@ -85,6 +85,7 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
         booleanBuilder.and(lesson.endDay.gt(now));
         booleanBuilder.and(lesson.startDay.loe(now));
 
+
         if (types != null && keyword != null) {
             for (String type : types) {
                 switch (type) {

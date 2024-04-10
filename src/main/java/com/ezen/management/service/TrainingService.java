@@ -102,7 +102,7 @@ public interface TrainingService {
     //----------------------------------------------------수업----------------------------------------------------
 
     //수업전체 & 검색 & 페이징
-    public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO);
+    public PageResponseDTO<Lesson> searchLesson(PageRequestDTO pageRequestDTO, String userID);
 
     //수업전체
     public List<Lesson> lessonList();

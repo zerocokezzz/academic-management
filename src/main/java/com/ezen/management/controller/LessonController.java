@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +38,11 @@ public class LessonController {
     //전체 수업 목록
     @GetMapping("")
     public String lesson(Model model, PageRequestDTO pageRequestDTO){
-        PageResponseDTO<Lesson> responseDTO = trainingService.searchLesson(pageRequestDTO);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        UserDetails userDetails = (UserDetails)principal;
+        String userId = ((UserDetails) principal).getUsername();
+
+        PageResponseDTO<Lesson> responseDTO = trainingService.searchLesson(pageRequestDTO, userId);
         model.addAttribute("responseDTO", responseDTO);
 
         List<QuestionName> questionName = questionNameService.findAll();
