@@ -11,6 +11,8 @@ public interface SurveyAnswerRepository extends JpaRepository<SurveyAnswer, Long
 
     List<SurveyAnswer> findByLessonIdx(Long lessonIdx);
 
+    List<SurveyAnswer> findByLessonIdxAndRound(Long lessonIdx, int round);
+
     //결과를 가져오는 쿼리
     @Query(value = "SELECT * FROM (" +
             "(SELECT 'an1' AS an, " +

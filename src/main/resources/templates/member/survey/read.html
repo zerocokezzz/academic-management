@@ -40,8 +40,9 @@
                                 <table class="table">
                                     <thead>
                                     <tr>
-                                        <th th:name="${survey.number}" th:text="${survey.number}" disabled></th>
-                                        <td colspan="7">
+                                        <td colspan="8">
+                                            <span th:name="${survey.number}" th:text="${survey.number}" disabled></span>
+                                            <span>.</span>
                                             <span th:text="${survey.content}"></span>
                                         </td>
                                     </tr>
@@ -53,8 +54,11 @@
                                         <th>답변보기</th>
                                         <td th:each="i : ${#numbers.sequence(1, 7)}">
                                             <span th:if="${survey.type eq '객관식'}">
-                                                <label>
-                                                    <input type="radio" th:text="${survey['item' + i]}" disabled>
+                                                <label th:if="${survey['item' + i]} != 7">
+                                                    <input type="radio" th:text="${survey['item' + i]}" disabled="disabled">
+                                                </label>
+                                                <label th:if="${survey['item' + i]} == 7">
+                                                    <input type="radio" th:text="${survey['item' + i]} check">
                                                 </label>
                                             </span>
                                             <span th:if="${survey.type eq '주관식'}">
@@ -69,10 +73,10 @@
                     </div><!--end col-12-->
                 </div>
 
-                <div class="col-12">
-                    <div class="btn-group" role="group">
+                <div class="col-12" style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+                    <div class="btn-group" role="group" style="margin-right: 10px;">
                         <button type="button" class="btn btn-secondary modifyBtn">수정</button>
-                        <button type="button" class="btn btn-danger removeBtn">삭제</button>
+                        <!--<button type="button" class="btn btn-danger removeBtn">삭제</button>-->
                     </div>
                 </div>
                 <div class="col-12"></div>

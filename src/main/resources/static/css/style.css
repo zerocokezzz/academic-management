@@ -306,4 +306,29 @@ footer{
     margin-left: 0;
 }
 
+.roundNum {
+    object-fit: cover;
+    width: 100%;
+    height: 210px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 3;
+}
 
+.roundNum:hover {
+    transition: opacity 0.5s ease;
+    opacity: 0.3;
+}
+
+.roundNum:not(:hover) {
+    transition: opacity 0.5s ease;
+    opacity: 0.9;
+}
+
+.roundNum:hover .roundSpan {
+    display: block;
+}
+
+.roundSpan {
+    display: none;
+}

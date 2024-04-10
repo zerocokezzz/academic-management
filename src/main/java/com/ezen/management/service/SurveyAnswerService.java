@@ -16,6 +16,8 @@ public interface SurveyAnswerService {
 
     List<SurveyResultDTO> calculateSumOfAnswers(int round, Long lessonIndex);
 
+    List<SurveyAnswerDTO> findByLessonIdxAndRound(Long lessonIdx, int round);
+
 
     default SurveyAnswer surveyAnswerDtoToEntity(SurveyAnswerDTO surveyAnswerDTO){
 
@@ -98,5 +100,4 @@ public interface SurveyAnswerService {
 
         return surveyAnswerDTO;
     }
-
 }

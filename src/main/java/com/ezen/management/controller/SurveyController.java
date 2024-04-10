@@ -2,6 +2,7 @@ package com.ezen.management.controller;
 
 import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.Student;
+import com.ezen.management.domain.SurveyAnswer;
 import com.ezen.management.dto.*;
 import com.ezen.management.service.*;
 import lombok.RequiredArgsConstructor;
@@ -156,11 +157,9 @@ public class SurveyController {
 
     //1회차
     @GetMapping("/member/lesson/survey/result")
-    public String result(Model model, @RequestParam("lessonIdx")Long lessonIdx){
+    public String result(Model model, @RequestParam("lessonIdx")Long lessonIdx, @RequestParam("round")int round){
         //수업에서 필요한 정보 : 커리큘럼, 기수, 시작일, 종료일, 교사
         //그리고.. survey와 surveyAnswer 필요
-
-        int round = 1;
 
         //수업
         Lesson lesson = lessonService.findById(lessonIdx);
@@ -170,16 +169,18 @@ public class SurveyController {
 
         log.info("확인용 : " + surveyDTOList);
 
-        //설문(결과)
+        //설문(결과 : 객관식)
         List<SurveyResultDTO> surveyResultDTOList = surveyAnswerService.calculateSumOfAnswers(round, lessonIdx);
         log.info("컨트롤러" + surveyResultDTOList);
 
-        //MAP으로 한다면?? List<MAP>
+        //설문(주관식 때문에 필요)
+        List<SurveyAnswerDTO> surveyAnswerDTOList = surveyAnswerService.findByLessonIdxAndRound(lessonIdx,round);
 
         model.addAttribute("round", round);
         model.addAttribute("lesson", lesson);
         model.addAttribute("surveyDTOList", surveyDTOList);
         model.addAttribute("surveyResultDTOList", surveyResultDTOList);
+        model.addAttribute("surveyAnswerDTOList", surveyAnswerDTOList);
 
         return "/member/lesson/survey/result";
     }

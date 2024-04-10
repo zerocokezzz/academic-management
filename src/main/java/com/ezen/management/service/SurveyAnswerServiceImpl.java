@@ -93,18 +93,31 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService{
 
         List<SurveyResultDTO> surveyResultDTOList = new ArrayList<>();
 
-        // SurveyResultDTO로 변환하여 결과를 저장합니다.
+        // SurveyResultDTO로 변환하여 결과를 저장
         for (Object[] obj : objects) {
-            // SurveyResultDTO 생성자나 빌더 메서드를 이용하여 객체를 생성합니다.
             SurveyResultDTO surveyResultDTO = new SurveyResultDTO();
-            surveyResultDTO.setAn(String.valueOf(obj[0])); // 첫 번째 컬럼은 an 값입니다.
-            surveyResultDTO.setSumOf1(Integer.parseInt(String.valueOf(obj[1]))); // 두 번째 컬럼은 sum_of_1 값입니다.
-            surveyResultDTO.setSumOf2(Integer.parseInt(String.valueOf(obj[2]))); // 두 번째 컬럼은 sum_of_1 값입니다.
-            surveyResultDTO.setSumOf3(Integer.parseInt(String.valueOf(obj[3]))); // 두 번째 컬럼은 sum_of_1 값입니다.
-            surveyResultDTO.setSumOf4(Integer.parseInt(String.valueOf(obj[4]))); // 두 번째 컬럼은 sum_of_1 값입니다.
-            surveyResultDTO.setSumOf5(Integer.parseInt(String.valueOf(obj[5]))); // 두 번째 컬럼은 sum_of_1 값입니다.
-            surveyResultDTO.setSumOf6(Integer.parseInt(String.valueOf(obj[6]))); // 두 번째 컬럼은 sum_of_1 값입니다.
-            surveyResultDTO.setSumOf6(Integer.parseInt(String.valueOf(obj[7]))); // 두 번째 컬럼은 sum_of_1 값입니다.
+
+            if (obj != null && obj.length >= 8) {
+                surveyResultDTO.setAn(obj[0] != null ? String.valueOf(obj[0]) : "default"); // 첫 번째 컬럼은 an 값
+                surveyResultDTO.setSumOf1(obj[1] != null ? Integer.parseInt(String.valueOf(obj[1])) : 0); // 두 번째 컬럼은 sum_of_1 값
+                surveyResultDTO.setSumOf2(obj[2] != null ? Integer.parseInt(String.valueOf(obj[2])) : 0); // 세 번째 컬럼은 sum_of_2 값
+                surveyResultDTO.setSumOf3(obj[3] != null ? Integer.parseInt(String.valueOf(obj[3])) : 0); // 네 번째 컬럼은 sum_of_3 값
+                surveyResultDTO.setSumOf4(obj[4] != null ? Integer.parseInt(String.valueOf(obj[4])) : 0); // 다섯 번째 컬럼은 sum_of_4 값
+                surveyResultDTO.setSumOf5(obj[5] != null ? Integer.parseInt(String.valueOf(obj[5])) : 0); // 여섯 번째 컬럼은 sum_of_5 값
+                surveyResultDTO.setSumOf6(obj[6] != null ? Integer.parseInt(String.valueOf(obj[6])) : 0); // 일곱 번째 컬럼은 sum_of_6 값
+                surveyResultDTO.setSumOf7(obj[7] != null ? Integer.parseInt(String.valueOf(obj[7])) : 0); // 여덟 번째 컬럼은 sum_of_7 값
+            } else {
+                // obj가 null이거나 length가 8보다 작을 경우 기본값을 설정
+                // obj의 길이가 8보다 작으면 ArrayIndexOutOfBoundsException 발생
+                surveyResultDTO.setAn("default");
+                surveyResultDTO.setSumOf1(0);
+                surveyResultDTO.setSumOf2(0);
+                surveyResultDTO.setSumOf3(0);
+                surveyResultDTO.setSumOf4(0);
+                surveyResultDTO.setSumOf5(0);
+                surveyResultDTO.setSumOf6(0);
+                surveyResultDTO.setSumOf7(0);
+            }
 
             surveyResultDTOList.add(surveyResultDTO);
         }
@@ -112,6 +125,23 @@ public class SurveyAnswerServiceImpl implements SurveyAnswerService{
         log.info("리스트 찍어 보자" + surveyResultDTOList);
 
         return surveyResultDTOList;
+    }
+
+    @Override
+    public List<SurveyAnswerDTO> findByLessonIdxAndRound(Long lessonIdx, int round) {
+
+        List<SurveyAnswer> surveyAnswerList = surveyAnswerRepository.findByLessonIdxAndRound(lessonIdx,round);
+
+        List<SurveyAnswerDTO> surveyAnswerDTOList = new ArrayList<>();
+
+        for (SurveyAnswer surveyAnswer : surveyAnswerList) {
+            SurveyAnswerDTO surveyAnswerDTO = surveyAnswerEntityToDTO(surveyAnswer);
+            surveyAnswerDTOList.add(surveyAnswerDTO);
+        }
+
+        log.info("여기는 서비스의 find" + surveyAnswerDTOList);
+
+        return surveyAnswerDTOList;
     }
 
 }
