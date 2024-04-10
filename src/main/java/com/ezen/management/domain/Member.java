@@ -25,12 +25,13 @@ public class Member extends BaseEntity{
 //    private int access;
 
 
-
+    private String uuid;
 
     @Builder.Default
     private String fileName = "default_profile.jpg";
 
-    public void changeProfile(String fileName){
+    public void changeProfile(String uuid, String fileName){
+        this.uuid = uuid;
         this.fileName = fileName;
     }
 

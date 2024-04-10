@@ -9,21 +9,30 @@ import com.ezen.management.dto.PageResponseDTO;
 import com.ezen.management.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
+
+    @Value("${com.ezen.management.upload.path}")
+    private String uploadPath;
+
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -37,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         if(!memberDTO.getFileName().isEmpty()){
-            member.changeProfile(memberDTO.getFileName());
+            member.changeProfile(memberDTO.getUuid(), memberDTO.getFileName());
         }
 
         member.addRole(MemberRole.ADMIN);
@@ -56,7 +65,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         if(!memberDTO.getFileName().isEmpty()){
-            member.changeProfile(memberDTO.getFileName());
+            member.changeProfile(memberDTO.getUuid(), memberDTO.getFileName());
         }
 
         member.addRole(MemberRole.TEACHER);
@@ -115,49 +124,54 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public int delete(String id) {
+    public void delete(String id) throws IOException {
         log.info("id......" + id);
 
         Optional<Member> result = memberRepository.findById(id);
+        Member member = result.orElseThrow();
 
-        log.info("findById result......" + result);
+        if(member.getUuid() != null){
+            Resource resource = new FileSystemResource(uploadPath + File.separator + member.getUuid() + '_' + member.getFileName());
 
-        if(result.isPresent()){
-            Member member = result.get();
-
-            log.info("result.get()......" + member);
-            memberRepository.delete(member);
-
-            return 1;
+            try{
+                resource.getFile().delete();
+            }catch (Exception e){
+                throw new IOException();
+            }
         }
 
-        return 0;
+        memberRepository.delete(member);
 
     }
 
     @Override
-    public int update(MemberDTO memberDTO) {
+    public void update(MemberDTO memberDTO) throws IOException {
 
         Optional<Member> result = memberRepository.findById(memberDTO.getId());
+        Member member = result.orElseThrow();
 
-        if(result.isPresent()){
-            Member member = result.get();
+        if(member.getUuid() != null){
+            Resource resource = new FileSystemResource(uploadPath + File.separator + member.getUuid() + '_' + member.getFileName());
 
-//            프로필 사진, 이름만 변경 가능
-//            비밀번호 변경은 로직 따로
-            member.changeName(memberDTO.getName());
-
-            if(!memberDTO.getFileName().isEmpty()){
-                member.changeProfile(memberDTO.getFileName());
+            try{
+                resource.getFile().delete();
+            }catch (Exception e){
+                throw new IOException();
             }
-
-            log.info("member......" + member);
-            memberRepository.save(member);
-
-            return 1;
         }
-        return 0;
+
+//        프로필 사진, 이름만 변경 가능
+        member.changeName(memberDTO.getName());
+
+        if(!memberDTO.getFileName().isEmpty()){
+            member.changeProfile(memberDTO.getUuid(), memberDTO.getFileName());
+        }
+
+        log.info("member......" + member);
+        memberRepository.save(member);
+
     }
+
 
     @Override
     public Optional<Member> findById(String id) {
@@ -169,6 +183,9 @@ public class MemberServiceImpl implements MemberService {
     public int countAll() {
         return memberRepository.countAll();
     }
+
+
+
 
 
 }
