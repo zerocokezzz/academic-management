@@ -37,11 +37,12 @@
                                     <!-- 수정요청사항 이미 등록된 상담회차는 등록 못하게 -->
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">상담회차</span>
-                                        <input type="text" id="numberOnly" class="form-control" name="round" th:value="${counseling.round}" placeholder="상담회차" required>
+                                        <input type="text" id="numberOnly" class="form-control" name="round" th:value="${counseling.round}" placeholder="상담회차" readonly>
                                     </div>
                                     <div class="bs-body-color-rgb">
                                         <span class="input-group-text">내용</span>
-                                        <textarea class="form-control col-sm-5" rows="5" name="content" th:text="${counseling.content}" placeholder="상담내용을 작성하세요" required></textarea>
+                                        <textarea class="form-control col-sm-5" rows="40" name="content" id="content" maxlength="1000" th:text="${counseling.content}" oninput="checkTextareaLength()" style="resize: none; overflow: hidden;" placeholder="상담내용을 작성하세요" required></textarea>
+                                        <p class="text-end" id="charCount"></p>
                                     </div>
                                     <!--  기입으로할지 아니면 radio로 할지                              -->
                                     <div class="input-group mb-3">
@@ -137,7 +138,40 @@
 
 
 
+    //입력된 글자 수 표시
+    function checkTextareaLength() {
+        var textarea = document.getElementById('content');
+        var charCount = document.getElementById('charCount');
+        var content = textarea.value;
+        const maxLength = 1000;
 
+        //1000자 이상일 경우 글자수 알림
+        if (content.length > maxLength) {
+            charCount.textContent = '글자 수: ' + maxLength + ' / ' + maxLength + ' (초과)';
+            alert("1000자 이하로 작성바랍니다.")
+        } else {
+            charCount.textContent = '글자 수: ' + content.length + ' / ' + maxLength;
+        }
+    }
+
+
+
+    // textarea의 높이를 동적으로 조절하는 함수
+    function adjustTextareaHeight() {
+        var textarea = document.getElementById('content');
+        textarea.style.height = 'auto'; // 기본 높이로 재설정
+        textarea.style.height = textarea.scrollHeight + 'px'; // 내용에 맞게 높이 조절
+    }
+
+    // 페이지 로드 시 textarea의 높이를 조절
+    window.onload = function() {
+        adjustTextareaHeight();
+    };
+
+    // textarea의 값이 변경될 때마다 높이를 조절
+    document.getElementById('content').addEventListener('input', function() {
+        adjustTextareaHeight();
+    });
 
 
 

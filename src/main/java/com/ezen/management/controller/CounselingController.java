@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -51,6 +53,10 @@ public class CounselingController {
 
         //학생정보 List에 실어보내기
         List<Counseling> counselingList = counselingService.findByStudentIdx(studentIdx);
+
+        //상담회차 기준으로 정렬해서 보내기
+        Collections.sort(counselingList, Comparator.comparingInt(Counseling::getRound).reversed());
+
         model.addAttribute("counselingList", counselingList);
         log.info("counselingList= " + counselingList);
 
