@@ -72,12 +72,17 @@
     console.log(urlSearchParams.get("code"));
     const code = urlSearchParams.get("code");
 
+
     switch (code){
         case 'success' :
             alert('제출되었습니다. ◝(ᵔᵕᵔ)◜');
             break;
         case 'fail' :
             alert('오류 발생! 다시 제출해주세요. (T⌓T)');
+            break;
+        case 'not-exist-student' :
+            alert('존재하지 않는 학생입니다 (T⌓T)\n 다시 입력해주세요.');
+
     }
 
 </script>
