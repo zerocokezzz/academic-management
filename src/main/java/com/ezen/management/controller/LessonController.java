@@ -54,7 +54,11 @@ public class LessonController {
     //진행중인 수업 목록
     @GetMapping("/ongoing")
     public String ongoing(Model model, PageRequestDTO pageRequestDTO){
-        PageResponseDTO<Lesson> responseDTO = lessonService.ongoingLesson(pageRequestDTO);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userId = ((UserDetails) principal).getUsername();
+
+
+        PageResponseDTO<Lesson> responseDTO = lessonService.ongoingLesson(pageRequestDTO, userId);
         model.addAttribute("responseDTO", responseDTO);
 
         List<QuestionName> questionName = questionNameService.findAll();
@@ -66,7 +70,10 @@ public class LessonController {
     //완료된 수업 목록
     @GetMapping("/end")
     public String end(Model model, PageRequestDTO pageRequestDTO){
-        PageResponseDTO<Lesson> responseDTO = lessonService.endLesson(pageRequestDTO);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userId = ((UserDetails) principal).getUsername();
+
+        PageResponseDTO<Lesson> responseDTO = lessonService.endLesson(pageRequestDTO, userId);
         model.addAttribute("responseDTO", responseDTO);
 
         List<QuestionName> questionName = questionNameService.findAll();

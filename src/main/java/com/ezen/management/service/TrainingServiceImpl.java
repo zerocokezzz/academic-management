@@ -221,15 +221,29 @@ public class TrainingServiceImpl implements TrainingService{
         String[] types = pageRequestDTO.getTypes();
         String keyword = pageRequestDTO.getKeyword();
 
-        Page<Lesson> lessonPage = lessonRepository.searchLesson(types, keyword, pageable);
+        Optional<Member> memberResult = memberRepository.findById(userId);
+        Member member = memberResult.orElseThrow();
+        String role = member.getRoleSet().toString();
 
-        List<Lesson> dtoList = lessonPage.getContent();
+        log.info("서비스 : " + role +" , "+userId );
 
-        return PageResponseDTO.<Lesson>withAll()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(dtoList)
-                .total((int)lessonPage.getTotalElements())
-                .build();
+        if(role.equals("[ROLE_TEACHER]")){
+            Page<Lesson> lessonPage = lessonRepository.searchLesson(types, keyword, pageable, userId);
+            List<Lesson> dtoList = lessonPage.getContent();
+            return PageResponseDTO.<Lesson>withAll()
+                    .pageRequestDTO(pageRequestDTO)
+                    .dtoList(dtoList)
+                    .total((int)lessonPage.getTotalElements())
+                    .build();
+        }else{
+            Page<Lesson> lessonPage = lessonRepository.searchLesson(types, keyword, pageable, "None");
+            List<Lesson> dtoList = lessonPage.getContent();
+            return PageResponseDTO.<Lesson>withAll()
+                    .pageRequestDTO(pageRequestDTO)
+                    .dtoList(dtoList)
+                    .total((int)lessonPage.getTotalElements())
+                    .build();
+        }
     }
 
     //수업 전체

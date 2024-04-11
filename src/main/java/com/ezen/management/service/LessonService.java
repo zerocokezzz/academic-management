@@ -18,12 +18,12 @@ public interface LessonService {
     Lesson findById(Long lessonIdx);
 
     //진행중인 수업 & 검색 & 페이징
-    public PageResponseDTO<Lesson> ongoingLesson(PageRequestDTO pageRequestDTO);
+    public PageResponseDTO<Lesson> ongoingLesson(PageRequestDTO pageRequestDTO, String userId);
 
     List<Lesson> getOngoingLesson();
 
     //완료된 수업 & 검색 & 페이징
-    public PageResponseDTO<Lesson> endLesson(PageRequestDTO pageRequestDTO);
+    public PageResponseDTO<Lesson> endLesson(PageRequestDTO pageRequestDTO, String userId);
 
     List<Student> studentList(Long idx);
 

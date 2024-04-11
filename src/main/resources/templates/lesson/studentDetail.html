@@ -185,9 +185,9 @@
 
             <br>
 
-            <div class="float-end" style="display: inline-flex">
-                <button style="display: inline-flex ; background-color: #0d6efd; color: white; position: absolute;" class="btn float-end subjectTestBtn">과목평가수정</button>
-                <button style="display: inline-flex" class="btn btn-outline-dark backList">학생전체목록</button>
+            <div class="float-end" style="display: inline-flex;">
+                <button style=" background-color: #0d6efd; color: white; margin-right: 10px" class="btn float-end subjectTestBtn">과목평가수정</button>
+                <button class="btn btn-outline-dark backList">학생전체목록</button>
             </div>
 
             <!-- 과목 평가 수정 모달 -->
@@ -352,8 +352,6 @@
 <script layout:fragment="script" th:inline="javascript">
 
 
-  console.log("studentIdx확인용= " + [[${student.idx}]])
-
   //에러메세지 띄워주기
   const errors = [[${errors}]]
   console.log(errors)
@@ -371,19 +369,9 @@
 
     const lessonIdx = document.querySelector(".lessonIdx")
     document.querySelector(".backList").addEventListener("click", function (e) {
-        const idx = lessonIdx.value
-
-        console.log("idx : " + idx);
-        window.location.href = '/lesson/studentList?idx=' + idx;
+        window.location.href = '/lesson/studentList?idx=' + lessonIdx.value;
     })
 
-
-  const studentIdx = document.querySelector(".studentIdx")
-  document.querySelector(".backList").addEventListener("click", function (e){
-    const idx = studentIdx.value
-    window.location.href = '/lesson/studentList?idx=' + idx;
-
-  })
 
 
 
