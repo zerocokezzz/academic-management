@@ -27,7 +27,7 @@ public interface MemberService {
 
     void delete(String id) throws IOException;
 
-    void update(MemberDTO memberDTO) throws IOException;
+    void modify(MemberDTO memberDTO) throws IOException;
 
     Optional<Member> findById(String id);
 

@@ -61,9 +61,16 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public PageResponseDTO<Student> searchStudent(Long lessonIdx, PageRequestDTO pageRequestDTO) {
 
+        log.info("type : {}", pageRequestDTO.getType());
+
         Pageable pageable = pageRequestDTO.getPageable("regDate");
 
         String[] types = pageRequestDTO.getTypes();
+
+//        for (String type : types) {
+//            log.info(type);
+//        }
+
         String keyword = pageRequestDTO.getKeyword();
 
         Page<Student> studentPage = studentRepository.searchStudent(lessonIdx, types, keyword, pageable);
@@ -82,7 +89,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public void insertStudent(StudentDTO studentDTO) {
+    public void insert(StudentDTO studentDTO) {
 
         Optional<Lesson> byId = lessonRepository.findById(studentDTO.getLessonIdx());
         Lesson lesson = byId.get();
@@ -118,12 +125,13 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public void modifyStudent(StudentDTO studentDTO) throws IOException {
+    public void modify(StudentDTO studentDTO) throws IOException {
 
         Optional<Student> byId = studentRepository.findById(studentDTO.getIdx());
         Student student = byId.orElseThrow();
 
-        if(student.getUuid() != null){
+//        수정 시 주의 : 기존(student)에 사진이 있고, DTO에 사진이 있다면 기존 사진을 서버에서 삭제
+        if(student.getUuid() != null && studentDTO.getUuid() != null){
             Resource resource = new FileSystemResource(uploadPath + File.separator + student.getUuid() + '_' + student.getFileName());
 
             try{
@@ -149,7 +157,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public void deleteStudent(StudentDTO studentDTO) throws IOException {
+    public void delete(StudentDTO studentDTO) throws IOException {
         Optional<Student> studentById = studentRepository.findById(studentDTO.getIdx());
         Student student = null;
 
@@ -159,7 +167,6 @@ public class StudentServiceImpl implements StudentService{
 
         if(studentById.isPresent()){
             student = studentById.get();
-
         }
 
         if(student == null){

@@ -145,25 +145,28 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void update(MemberDTO memberDTO) throws IOException {
+    public void modify(MemberDTO memberDTO) throws IOException {
 
         Optional<Member> result = memberRepository.findById(memberDTO.getId());
         Member member = result.orElseThrow();
 
-        if(member.getUuid() != null){
+//        프로필 사진, 이름만 변경 가능
+        member.changeName(memberDTO.getName());
+
+//        수정 시 주의 : 기존(member)에 사진이 있고, DTO에 사진이 있다면 기존 사진을 서버에서 삭제
+        if(member.getUuid() != null && memberDTO.getUuid() != null){
             Resource resource = new FileSystemResource(uploadPath + File.separator + member.getUuid() + '_' + member.getFileName());
 
             try{
                 resource.getFile().delete();
             }catch (Exception e){
+                log.info("delete exception");
                 throw new IOException();
             }
         }
 
-//        프로필 사진, 이름만 변경 가능
-        member.changeName(memberDTO.getName());
 
-        if(!memberDTO.getFileName().isEmpty()){
+        if(memberDTO.getUuid() != null){
             member.changeProfile(memberDTO.getUuid(), memberDTO.getFileName());
         }
 

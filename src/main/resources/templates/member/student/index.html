@@ -44,7 +44,8 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <select class="form-select type" name="type">
-                  <option value="">---</option>
+                  <option th:selected="${pageRequestDTO.type == 'nl'}" value="nl" selected>수업 | 이름</option>
+                  <option th:selected="${pageRequestDTO.type == 'l'}" value="l">수업</option>
                   <option th:selected="${pageRequestDTO.type == 'n'}" value="n">이름</option>
 <!--                  <option th:selected="${pageRequestDTO.type == 'i'}" value="i">아이디</option>-->
 <!--                  <option th:selected="${pageRequestDTO.type == 'ni'}" value="ni">이름/아이디</option>-->

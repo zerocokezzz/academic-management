@@ -92,14 +92,15 @@ public class MemberController {
     @PostMapping("/admin/update")
     public String adminUpdate(MemberDTO memberDTO, MultipartFile file){
 
-        if(file != null){
-            memberFileSave(memberDTO, file);
-        }
+        log.info("memberDTO : {}", memberDTO);
+
+        memberFileSave(memberDTO, file);
 
         try{
-            memberService.update(memberDTO);
+            memberService.modify(memberDTO);
             return "redirect:/member/admin?code=modify-success";
         }catch (Exception e){
+            log.error(e.getMessage());
             return "redirect:/member/admin?code=modify-fail";
         }
     }
@@ -169,12 +170,10 @@ public class MemberController {
     @PostMapping("/teacher/update")
     public String teacherUpdate(MemberDTO memberDTO, MultipartFile file){
 
-        if(file != null){
-            memberFileSave(memberDTO, file);
-        }
+        memberFileSave(memberDTO, file);
 
         try{
-            memberService.update(memberDTO);
+            memberService.modify(memberDTO);
             return "redirect:/member/teacher?code=modify-success";
         }catch (Exception e){
             return "redirect:/member/teacher?code=modify-fail";
@@ -208,8 +207,6 @@ public class MemberController {
     @GetMapping("/student")
     public String student(Long lessonIdx, PageRequestDTO pageRequestDTO, Model model){
 
-//        model.addAttribute("students", students);
-
         PageResponseDTO<Student> pageResponseDTO = studentService.searchStudent(lessonIdx, pageRequestDTO);
         model.addAttribute("pageResponseDTO", pageResponseDTO);
 
@@ -226,7 +223,7 @@ public class MemberController {
         }
 
         try {
-            studentService.insertStudent(studentDTO);
+            studentService.insert(studentDTO);
             return "redirect:/member/student?code=insert-success";
         }catch (Exception e){
             return "redirect:/member/student?code=insert-fail";
@@ -239,12 +236,10 @@ public class MemberController {
     @PostMapping("/student/modify")
     public String studentModify(StudentDTO studentDTO, MultipartFile file){
 
-        if(file != null){
-            studentFileSave(studentDTO, file);
-        }
+        studentFileSave(studentDTO, file);
 
         try {
-            studentService.modifyStudent(studentDTO);
+            studentService.modify(studentDTO);
             return "redirect:/member/student?code=modify-success";
         }catch (Exception e){
             return "redirect:/member/student?code=modify-fail";
@@ -283,7 +278,7 @@ public class MemberController {
     public String deleteStudent(StudentDTO studentDTO){
 
         try{
-            studentService.deleteStudent(studentDTO);
+            studentService.delete(studentDTO);
             return "redirect:/member/student?code=delete-success";
         }catch (Exception e){
             return "redirect:/member/student?code=delete-fail";
@@ -295,6 +290,10 @@ public class MemberController {
 
 
     private void studentFileSave(StudentDTO studentDTO, MultipartFile file){
+
+        if(file.isEmpty()){
+            return;
+        }
 
         String uuid = UUID.randomUUID().toString();
         String originalName = file.getOriginalFilename();
@@ -315,6 +314,10 @@ public class MemberController {
 
 
     private void memberFileSave(MemberDTO memberDTO, MultipartFile file){
+
+        if(file.isEmpty()){
+            return;
+        }
 
         String uuid = UUID.randomUUID().toString();
         String originalName = file.getOriginalFilename();
