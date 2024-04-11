@@ -71,11 +71,13 @@ public class SurveyController {
     @GetMapping("/member/survey/read")
     public String read(Model model, @RequestParam("round")int round) {
 
-        // 특정 회차(round)에 대한 Survey 목록을 조회합
+        // 특정 회차(round)에 대한 Survey 목록을 조회
         List<SurveyDTO> surveyList = surveyService.readAllByRound(round);
 
         // 조회된 Survey 목록을 모델에 추가
         model.addAttribute("surveys", surveyList);
+
+        log.info("안찍???????" + surveyList);
 
         // 뷰 페이지로 이동합니다.
         return "/member/survey/read";
@@ -120,9 +122,13 @@ public class SurveyController {
     @PostMapping("/student/survey")
     public String survey(Model model, StudentDTO studentDTO){
 
+        log.info("되나" + studentDTO);
+
         Student student = studentService.findById(studentDTO.getIdx());
 
-        int round = student.getSurvey() + 1;
+        int round = student.getSurvey();
+
+        log.info("라운드" + round);
 
         // 특정 회차(round)에 대한 Survey 목록을 조회
         List<SurveyDTO> surveyList = surveyService.readAllByRound(round);

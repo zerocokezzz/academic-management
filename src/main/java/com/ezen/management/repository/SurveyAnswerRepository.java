@@ -34,7 +34,6 @@ public interface SurveyAnswerRepository extends JpaRepository<SurveyAnswer, Long
             "SUM(CASE WHEN an2 = 6 THEN 1 ELSE 0 END) AS item6, " +
             "SUM(CASE WHEN an2 = 7 THEN 1 ELSE 0 END) AS item7 " +
             "FROM survey_answer WHERE round = :round AND lesson_idx = :lessonIdx) " +
-            // 이하 생략, an3 ~ an14까지 동일한 패턴으로 작성
             "UNION ALL " +
             "(SELECT 'an3' AS an, " +
             "SUM(CASE WHEN an3 = 1 THEN 1 ELSE 0 END) AS item1, " +
