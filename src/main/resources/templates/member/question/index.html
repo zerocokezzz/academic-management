@@ -602,8 +602,11 @@
     // 리스트를 가져와서 그 크기에 +1로 number를 설정
     getQuestionList(param).then(result => {
 
-      console.log(result);
-      console.log(result.length + 1);
+      if(result.length >= 20){
+        alert('[' + insertQuestionKeyword.value + ']의 문제는 이미 20개입니다.\n문제는 20개 이상 등록할 수 없습니다.');
+        return;
+      }
+
       insertNumber.value = result.length + 1;
 
       // trim
@@ -651,48 +654,46 @@
 
       console.log(insertParam);
 
-      let htmls = '';
 
+      // let htmls = '';
       insertQuestion(insertParam).then(result => {
 
-        console.log("insertQuestion result");
-        console.log(result);
-
     //   문제 리스트가 리턴되면 새로운 문제 리스트를 출력하고 모달 초기화한 뒤 모달을 닫음
-        for(const question of result){
-
-          htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
-                  &nbsp;
-                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
-                  <div class="float-end" style="display: inline-flex">
-                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
-                  &nbsp;
-                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
-                  </div>
-                  <hr>`;
-        }// for
+    //     for(const question of result){
+    //
+    //       htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+    //               &nbsp;
+    //               <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+    //               <div class="float-end" style="display: inline-flex">
+    //               <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+    //               &nbsp;
+    //               <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+    //               </div>
+    //               <hr>`;
+    //     }// for
 
         // [분류] n번 문제가 등록되었습니다.
         alert('[' + insertQuestionKeyword.value + '] ' + insertNumber.value + '번 문제가 등록되었습니다.');
-
         // 문제 리스트 교체
-        questionList.innerHTML = htmls;
+        // questionList.innerHTML = htmls;
+
 
         // 모달 초기화
-        insertNumber.value = '';
-        registerBtn.value = '';
-        insertContent.value = '';
-        insertExample.value = '';
-        insertItem1.value = '';
-        insertItem2.value = '';
-        insertItem3.value = '';
-        insertItem4.value = '';
-        insertAnswer.value = '';
-        insertQuestionKeyword.value = '';
+        // insertNumber.value = '';
+        // registerBtn.value = '';
+        // insertContent.value = '';
+        // insertExample.value = '';
+        // insertItem1.value = '';
+        // insertItem2.value = '';
+        // insertItem3.value = '';
+        // insertItem4.value = '';
+        // insertAnswer.value = '';
+        // insertQuestionKeyword.value = '';
+        //
+        // // 모달 닫기
+        // $("#insertModal").modal('hide');
 
-        // 모달 닫기
-        $("#insertModal").modal('hide');
-
+        location.reload();
       })
 
 
@@ -724,23 +725,26 @@
     let htmls = '';
     deleteQuestion(deleteParams).then(result => {
 
-      for(const question of result){
-
-        htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
-                  &nbsp;
-                  <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
-                  <div class="float-end" style="display: inline-flex">
-                  <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
-                  &nbsp;
-                  <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
-                  </div>
-                  <hr>`;
-      }// for
+      // for(const question of result){
+      //
+      //   htmls += `<div style="border-radius: 5px; border: solid #2a2d34 1px; max-width: 100px; display: inline-flex"><p style="margin: 5px">${question.name}</p></div>
+      //             &nbsp;
+      //             <div style="max-width: 60%; display: inline-flex"><a style="word-break: keep-all">${question.number}. ${question.content}</a></div>
+      //             <div class="float-end" style="display: inline-flex">
+      //             <button class="btn btn-secondary" questionIdx="${question.idx}" onclick="questionModify(this.getAttribute('questionIdx'))">수정</button>
+      //             &nbsp;
+      //             <button class="btn btn-danger" questionIdx="${question.idx}" onclick="questionDelete(this.getAttribute('questionIdx'))">삭제</button>
+      //             </div>
+      //             <hr>`;
+      // }// for
 
       alert('삭제되었습니다.');
 
       // 문제 리스트 교체
-      questionList.innerHTML = htmls;
+      // questionList.innerHTML = htmls;
+
+      // 페이징 처리를 위해 새로고침
+      location.href = '/member/question';
 
     })
 
@@ -769,13 +773,12 @@
   switch (code){
     case 'success' :
       alert('등록되었습니다.');
-      location.replace("/member/question");
+      // location.replace("/member/question");
+      location.reload();
       break;
     case 'fail' :
       alert('등록에 실패하였습니다. 다시 시도해주세요.');
   }
-
-
 
 
 </script>

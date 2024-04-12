@@ -150,12 +150,6 @@ public class QuestionController {
                              @RequestParam("item4") List<String> item4,
                              @RequestParam("answer") List<Integer> answer){
 
-        log.info("!!!!!!!!!!!!!!!!!!! createPOST! !!!!!!!!!!!!!!!!!!!");
-
-        log.info("number : {}", number);
-        log.info("content : {}", content);
-        log.info("answer : {}", answer);
-
         questionNameService.save(name);
 
         List<QuestionDTO> questionDTOList = new ArrayList<>();
@@ -185,6 +179,14 @@ public class QuestionController {
     }
 
 
+
+    @GetMapping("/isExist")
+    @ResponseBody
+    public boolean isExist(String name){
+        QuestionName byName = questionNameService.findByName(name);
+
+        return byName != null;
+    }
 
 
 

@@ -5,6 +5,7 @@ import com.ezen.management.domain.Member;
 import com.ezen.management.domain.MemberRole;
 import com.ezen.management.domain.Student;
 import com.ezen.management.dto.*;
+import com.ezen.management.repository.MemberRepository;
 import com.ezen.management.service.LessonService;
 import com.ezen.management.service.MemberService;
 import com.ezen.management.service.StudentService;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLDataException;
 import java.util.*;
 
 @Controller
@@ -111,7 +114,12 @@ public class MemberController {
     @PostMapping("/admin/delete")
     @ResponseBody
     public void adminDelete(String id) throws IOException {
-        memberService.delete(id);
+
+        try {
+            memberService.delete(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 //    행정 끝 -----------------------------------------------------------------------------------------------------
 
@@ -149,6 +157,7 @@ public class MemberController {
             memberService.teacherInsert(memberDTO);
             return "redirect:/member/teacher?code=insert-success";
         }catch (Exception e){
+            log.error(e.getMessage());
             return "redirect:/member/teacher?code=insert-fail";
         }
 
@@ -185,14 +194,16 @@ public class MemberController {
 //    교사 삭제
     @PreAuthorize("hasAnyRole('MASTER', 'ADMIN')")
     @PostMapping("/teacher/delete")
-    public String teacherDelete(@RequestParam String id){
+    @ResponseBody
+    public boolean teacherDelete(@RequestParam String id) throws Exception {
 
+//       외래키가 존재하면 삭제되지 않음 -> 삭제에서 QUIT으로 변경
         try{
             memberService.delete(id);
-            return "redirect:/member/teacher?code=delete-success";
+            return true;
         }catch (Exception e){
-            return "redirect:/member/teacher?code=delete-fail";
-
+            log.error(e.getMessage());
+            return false;
         }
 
     }

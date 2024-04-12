@@ -293,8 +293,8 @@
 
         for(let i = 0; i < 20; i++){
             if(answerContainers[i].value === '' || answerContainers[i].value === null){
-                $('html, body').animate({scrollTop: $('#studentAnswer'+ (i + 1)).offset().top - 100});
-                // alert((i + 1) + '번 문제의 답이 선택되지 않았습니다.');
+                alert((i + 1) + '번 문제의 답이 선택되지 않았습니다.');
+                $('html, body').animate({scrollTop: $('#studentAnswer'+ (i + 1)).offset().top - 150});
                 return;
             }
         }
