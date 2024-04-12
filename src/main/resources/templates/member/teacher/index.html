@@ -17,7 +17,7 @@
     <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
 
       <h3 style="display: inline-flex">강사 관리</h3>
-      <button style="display: inline-flex" class="btn btn-primary float-end" onclick="location.href='/member/teacher/insert'"> 강사 등록 </button>
+      <button style="display: inline-flex" class="btn btn-primary float-end teacherInsertBtn"> 강사 등록 </button>
 
       <hr>
       <br>
@@ -30,10 +30,9 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <select class="form-select type" name="type">
-                  <option value="">---</option>
+                  <option th:selected="${pageRequestDTO.type == 'ni'}" value="ni">이름 | 아이디</option>
                   <option th:selected="${pageRequestDTO.type == 'n'}" value="n">이름</option>
                   <option th:selected="${pageRequestDTO.type == 'i'}" value="i">아이디</option>
-                  <option th:selected="${pageRequestDTO.type == 'ni'}" value="ni">이름/아이디</option>
                 </select>
               </div>
 
@@ -57,13 +56,14 @@
       <div th:each="member : ${pageResponseDTO.getDtoList()}" th:with="teacher=${teacher}">
 
           <hr>
-          <img class="rounded-circle" th:src="${'/images/' + member.fileName}" alt="" style="width: 40px; height: 40px;">
+          <img th:if="${member.uuid != null}" class="rounded-circle" th:src="${'/view/' + member.uuid + '_' + member.fileName}" alt="" style="width: 40px; height: 40px; object-fit: cover">
+          <img th:if="${member.uuid == null}" class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 40px; height: 40px; object-fit: cover">
         &nbsp;&nbsp;
           <div style="display: inline-flex" th:text="${member.name}"></div> &nbsp;&nbsp; | &nbsp;&nbsp;
           <div style="display: inline-flex" th:text="${#temporals.format(member.regDate, 'yy-MM-dd')}"></div>
           <div class="float-end">
-            <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${member.id}" th:onclick="teacherUpdate(this.getAttribute('data-name'))">수정</button>
-            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}" th:onclick="teacherdelete(this.getAttribute('data-name'))">삭제</button>
+            <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${member.id}" onclick="teacherModify(this.getAttribute('data-name'))">수정</button>
+            <button style="display: inline-flex" class="btn btn-danger" th:data-name="${member.id}" onclick="teacherDelete(this.getAttribute('data-name'))">삭제</button>
           </div>
       </div>
 
@@ -95,6 +95,135 @@
 <!--    inner content end-->
 
 
+    <!-- 등록 모달 -->
+
+    <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="insertModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">강사 등록</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="inputImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+
+            <br>
+            <br>
+
+
+            <form action="/member/teacher/insert" method="post" id="insertForm" encType="multipart/form-data">
+
+
+              <!-- imageupload-->
+              <div class="mb-3" id="insertFileName">
+                <input name="file" type="file" id="uploadImage" style="display: none"/>
+              </div>
+              <!-- imageupload-->
+
+
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="id" placeholder="아이디" id="insertId">
+              </div>
+              <div class="input-group mb-3">
+                <input type="password" class="form-control" name="pwd" placeholder="비밀번호" id="insertPassword" autoComplete="off" >
+              </div>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="name" placeholder="이름" id="insertName">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary registerBtn">등록</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 등록 모달 끝 -->
+
+
+    <!-- 수정 모달 -->
+
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">강사 수정</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <br>
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="modifyImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+            <br>
+            <br>
+
+
+            <form action="/member/teacher/update" method="post" id="modifyForm" encType="multipart/form-data">
+
+              <!-- imageupload-->
+              <div class="mb-3" id="modifyFileName">
+                <input name="file" type="file" id="modifyFile" style="display: none"/>
+              </div>
+              <!-- imageupload-->
+
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="id" placeholder="아이디" id="modifyId" readonly>
+              </div>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" name="name" placeholder="이름" id="modifyName">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary modifyBtn">수정</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 수정 모달 끝 -->
+
+
+
+    <!-- 팝업 모달 -->
+
+    <div class="modal fade" id="popupModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">알림</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <div class="popupContent"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal" aria-label="Close">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 팝업 모달 끝 -->
+
+
+
+
   </div>
   <!-- content end -->
 
@@ -112,68 +241,10 @@
 
 <div th:replace="/layout/basic :: scriptSet"></div>
 
+<script src="/js/member/teacher.js"></script>
+
 <script>
 
-  //  삭제 버튼
-  function teacherDelete(memberId) {
-    if(confirm('삭제하시겠습니까?')){
-      location.href='/member/teacher/delete?id=' + memberId;
-    }
-  }
-
-
-  //  수정 버튼
-  function teacherUpdate(memberId) {
-    location.href='/member/teacher/update?id=' + memberId;
-  }
-
-  //   페이지 클릭 이벤트 처리
-  //   clear 버튼 누르면 검색 조건 사라진 목록(/member/teacher) 출력
-  document.querySelector(".pagination").addEventListener("click", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const target = e.target;
-
-    if (target.tagName !== 'A') {
-      return;
-    }
-
-    const formObj = document.querySelector("form");
-
-    const num = target.getAttribute("data-num");
-    const keyword = document.querySelector(".keyword");
-    const type = document.querySelector(".type");
-
-    // 버튼 누르면 ?page=num
-    formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
-
-    // 검색 목록이면
-    if(keyword.value !== ''){
-      formObj.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
-      formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
-    }
-
-    formObj.submit();
-
-  }, false);
-  //  페이지 클릭 end
-
-
-  //  검색 조건 초기화
-  document.querySelector(".clearBtn").addEventListener("click", function (e){
-    e.stopPropagation();
-    e.preventDefault();
-
-    self.location = '/member/teacher';
-
-  }, false)
-  //  검색 초기화 end
-
-
-  // nav 활성화
-  document.querySelector(".teacherManagement").classList.add("active");
-  document.querySelector(".memberManagement").classList.add("active");
 
 </script>
 </body>

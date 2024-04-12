@@ -7,6 +7,7 @@ import com.ezen.management.dto.StudentDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +21,10 @@ public interface StudentService {
 
     PageResponseDTO<Student> searchStudent(Long lessonIdx, PageRequestDTO pageRequestDTO);
 
-    void insertStudent(StudentDTO studentDTO);
+    void insert(StudentDTO studentDTO);
 
-    void modifyStudent(StudentDTO studentDTO);
+    void modify(StudentDTO studentDTO) throws IOException;
 
-    void deleteStudent(Long studentIdx);
+    void delete(StudentDTO studentDTO) throws IOException;
 
 }

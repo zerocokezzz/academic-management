@@ -51,8 +51,6 @@ public class HomeController {
             log.info("is that MASTER? {}", auth.toString().equals(MemberRole.MASTER.toString()));
         });
 
-
-
         return "/member/index";
     }
 
@@ -66,7 +64,7 @@ public class HomeController {
         for (GrantedAuthority authority : userDetails.getAuthorities()) {
             String authorityName = authority.getAuthority();
 
-            log.info(authorityName);
+            log.info("authorityName : {}",  authorityName);
 
 
             return switch (authorityName) {
@@ -83,7 +81,7 @@ public class HomeController {
 //    @GetMapping("/logout")
 //    public String logout(){
 //
-//        return null;
+//        return "redirect:/";
 //    }
 
 

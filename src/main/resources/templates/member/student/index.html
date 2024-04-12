@@ -3,6 +3,20 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="/layout/basic :: head"></head>
+<style>
+  .list-title{
+    font-weight: bold;
+    font-size: large;
+    color: #0d6efd;
+    margin-bottom: 15px;
+  }
+
+  .studentName:hover, .lessonName:hover {
+    text-decoration-line : underline;
+    cursor: pointer;
+  }
+
+</style>
 <body>
 <!-- warpper start -->
 <div class="wrapper">
@@ -30,7 +44,8 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <select class="form-select type" name="type">
-                  <option value="">---</option>
+                  <option th:selected="${pageRequestDTO.type == 'nl'}" value="nl" selected>수업 | 이름</option>
+                  <option th:selected="${pageRequestDTO.type == 'l'}" value="l">수업</option>
                   <option th:selected="${pageRequestDTO.type == 'n'}" value="n">이름</option>
 <!--                  <option th:selected="${pageRequestDTO.type == 'i'}" value="i">아이디</option>-->
 <!--                  <option th:selected="${pageRequestDTO.type == 'ni'}" value="ni">이름/아이디</option>-->
@@ -77,20 +92,20 @@
       <div style="display: inline-flex">총 [[${pageResponseDTO.total}]]명</div>
       <hr>
 
-        <table class="table table-hover">
+        <table class="table table-hover" style="margin-top: 0">
           <tr>
-            <th class="align-middle">수업</th>
-            <th class="align-middle">이름</th>
-            <th class="align-middle">생년월일</th>
-            <th class="align-middle">이메일</th>
-            <th class="align-middle">연락처</th>
+            <th class="align-middle"><div class="list-title">수업</div></th>
+            <th class="align-middle"><div class="list-title">이름</div></th>
+            <th class="align-middle"><div class="list-title">생년월일</div></th>
+            <th class="align-middle"><div class="list-title">이메일</div></th>
+            <th class="align-middle"><div class="list-title">연락처</div></th>
 <!--            <th class="align-middle">비고</th>-->
-            <th class="align-middle"><div>수정/삭제</div></th>
+            <th class="align-middle"><div class="list-title">수정/삭제</div></th>
 
           </tr>
           <tr th:each="student : ${pageResponseDTO.dtoList}">
-            <td th:text="${student.lesson.curriculum.name + ' ' + student.lesson.number + '회차'}" class="align-middle"></td>
-            <td th:text="${student.name}" class="align-middle"></td>
+            <td th:text="${student.lesson.curriculum.name + ' ' + student.lesson.number + '회차'}" class="align-middle lessonName" th:idx="${student.lesson.idx}" onclick="goToLessonInfo(this.getAttribute('idx'))"></td>
+            <td th:text="${student.name}" class="align-middle studentName" th:idx="${student.idx}" onclick="goToStudentInfo(this.getAttribute('idx'))"></td>
             <td th:text="${student.birthday}" class="align-middle"></td>
             <td th:text="${student.email}" class="align-middle"></td>
             <td th:text="${student.phone}" class="align-middle"></td>
@@ -99,7 +114,8 @@
               <div>
               <button style="display: inline-flex" class="btn btn-secondary" th:data-name="${student.idx}" onclick="studentModify(this.getAttribute('data-name'))">수정</button>
               <form action="/member/student/delete" method="post" id="deleteForm" style="display: inline-flex">
-                <input type="hidden" name="studentIdx" th:value="${student.idx}"/>
+                <input type="hidden" name="lessonIdx" th:value="${student.lesson.idx}"/>
+                <input type="hidden" name="idx" th:value="${student.idx}"/>
                 <button style="display: inline-flex" class="btn btn-danger" onclick="studentDelete()">삭제</button>
               </form>
               </div>
@@ -155,7 +171,28 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/member/student/insert" method="post" id="insertForm">
+
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="inputImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+
+
+            <br>
+            <br>
+
+            <form action="/member/student/insert" method="post" id="insertForm" encType="multipart/form-data">
+
+              <!-- imageupload-->
+              <div class="mb-3" id="insertFileName">
+                <input name="file" type="file" id="uploadImage"/>
+              </div>
+              <!-- imageupload-->
+
+
 
               <div>
                 <select class="form-select lessonSelect" id="lessonSelect" name="lessonIdx" required>
@@ -188,14 +225,11 @@
               </div>
 
 
+
+
               <div class="mb-3">
                 <label for="insertEtc" class="col-form-label">비고</label>
                 <textarea class="form-control" rows="1"  id="insertEtc" name="etc" required></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="insertFileName" class="col-form-label">사진</label>
-                <input class="form-control" type="file" id="insertFileName"/>
               </div>
 
 
@@ -205,6 +239,12 @@
               </div>
 
             </form>
+
+
+
+
+
+
           </div>
 
         </div>
@@ -227,9 +267,24 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/member/student/modify" method="post" id="modifyForm">
 
-              <br>
+            <br>
+            <br>
+            <div class="d-flex justify-content-center">
+              <div class="modifyImage" style="width: 200px; height: 200px;">
+                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">
+              </div>
+            </div>
+
+            <form action="/member/student/modify" method="post" id="modifyForm" encType="multipart/form-data">
+
+
+
+              <!-- imageupload-->
+              <div class="mb-3" id="modifyFileName">
+                <input name="file" type="file" id="modifyFile"/>
+              </div>
+              <!-- imageupload-->
 
               <input type="hidden" id="modifyIdx" name="idx"/>
 
@@ -261,10 +316,6 @@
                 <textarea class="form-control" rows="1"  id="modifyEtc" name="etc" required></textarea>
               </div>
 
-              <div class="mb-3">
-                <label for="modifyFilename" class="col-form-label">사진</label>
-                <input class="form-control" type="file" id="modifyFilename"/>
-              </div>
 
 
               <div class="modal-footer">
@@ -299,330 +350,9 @@
 
 <div th:replace="/layout/basic :: scriptSet"></div>
 
+<script src="/js/member/student.js"></script>
+
 <script>
-
-
-  // 페이지 ------------------------------------------------------------
-  //   페이지 클릭 이벤트 처리
-  //   clear 버튼 누르면 검색 조건 사라진 목록(/member/teacher) 출력
-  document.querySelector(".pagination").addEventListener("click", function (e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const target = e.target;
-
-    if (target.tagName !== 'A') {
-      return;
-    }
-
-    const formObj = document.querySelector("form");
-
-    const num = target.getAttribute("data-num");
-    const keyword = document.querySelector(".keyword");
-    const type = document.querySelector(".type");
-
-    // 버튼 누르면 ?page=num
-    formObj.innerHTML += `<input type="hidden" name="page" value="${num}">`;
-
-    // 검색 목록이면
-    if(keyword.value !== ''){
-      formObj.innerHTML += `<input type="hidden" name="type" value="${type.value}">`
-      formObj.innerHTML += `<input type="hidden" name="keyword" value="${keyword.value}">`
-    }
-
-    formObj.submit();
-
-  }, false);
-  //  페이지 클릭 end
-
-
-  //  검색 조건 초기화
-  document.querySelector(".clearBtn").addEventListener("click", function (e){
-    e.stopPropagation();
-    e.preventDefault();
-
-    self.location = '/member/student';
-
-  }, false)
-  //  검색 초기화 end
-  // 페이지 끝 ------------------------------------------------------------
-
-
-
-  // 등록------------------------------------------------------------
-  const lessonSelect = document.querySelector(".lessonSelect");
-
-
-  const registerBtn = document.querySelector("#registerBtn");
-  const insertForm = document.querySelector("#insertForm");
-
-  const insertName = document.querySelector("#insertName");
-  const insertPhone = document.querySelector("#insertPhone");
-  const insertBirthday = document.querySelector("#insertBirthday");
-  const insertEmail = document.querySelector("#insertEmail");
-
-
-  // 등록 모달 띄우기
-  // const insertModal = document.querySelector(".insertModal");
-  document.querySelector(".studentInsertBtn").addEventListener("click", function (){
-
-    getOngoingLesson().then( result => {
-      console.log(result);
-        // console.log('result curriculum' + result[0].curriculum.name);
-
-      let htmls = '';
-
-      htmls += `<option value="" selected>수업 선택</option>`;
-
-      for(const lesson of result){
-        htmls += `<option value="${lesson.idx}">${lesson.curriculum.name} ${lesson.number}회차</option>`;
-      }
-
-      lessonSelect.innerHTML = htmls;
-    }).catch( e => {
-
-    });
-
-    $("#insertModal").modal('show');
-  })
-
-
-
-  registerBtn.addEventListener("click", function (e){
-    e.stopPropagation();
-    e.preventDefault();
-
-    insertValid();
-  });
-
-
-
-  async function getOngoingLesson(){
-    const response = await axios.get('/lesson/getOngoing', null);
-    console.log(response);
-
-    return response.data;
-
-  }
-  // 등록 끝------------------------------------------------------------
-
-
-
-
-
-
-
-  // 수정------------------------------------------------------------
-  const modifyIdx = document.querySelector("#modifyIdx");
-  const modifyName = document.querySelector("#modifyName");
-  const modifyPhone = document.querySelector("#modifyPhone");
-  const modifyBirthday = document.querySelector("#modifyBirthday");
-  const modifyEmail = document.querySelector("#modifyEmail");
-  const modifyEtc = document.querySelector("#modifyEtc");
-
-
-  // 수정 모달 띄우기
-  function studentModify(studentIdx){
-
-    const params = {
-      studentIdx : studentIdx
-    }
-
-    getStudent(params).then(result => {
-
-      console.log(result);
-
-      // modifyLessonIdx.value = result.lessonIdx;
-      modifyIdx.value = result.idx;
-      modifyName.value = result.name;
-      modifyPhone.value = result.phone;
-      modifyEmail.value = result.email;
-      modifyBirthday.value = result.birthday;
-      modifyEtc.value = result.etc;
-
-    //   사진 가져와야됨
-
-    }).catch(e => {
-
-    })
-
-    $("#modifyModal").modal('show');
-
-  }
-
-
-  function modifyValid(){
-
-    console.log('modifyValid!');
-    console.log(modifyIdx.value);
-
-    modifyName.value = modifyName.value.trim();
-    modifyPhone.value = modifyPhone.value.trim();
-    modifyBirthday.value = modifyBirthday.value.trim();
-    modifyEmail.value = modifyEmail.value.trim();
-
-
-    if(modifyName.value === ""){
-      alert("이름이 입력되지 않았습니다.");
-      return;
-    }
-
-    if(modifyPhone.value === ""){
-      alert("연락처가 입력되지 않았습니다.");
-      return;
-    }
-
-    if(modifyBirthday.value === ""){
-      alert("생년월일이 입력되지 않았습니다.");
-      return;
-    }
-
-    modifyForm.submit();
-
-  }
-
-
-  const modifyForm = document.querySelector("#modifyForm");
-  const modifyBtn = document.querySelector("#modifyBtn");
-  modifyBtn.addEventListener("click", function (e){
-    e.stopPropagation();
-    e.preventDefault();
-
-    modifyValid();
-
-
-
-
-  })
-
-
-
-  async function getStudent(paramList){
-    const response = await axios.get('/member/student/getStudent', {params : paramList});
-    console.log(response);
-
-    return response.data;
-  }
-
-
-  // 수정 끝------------------------------------------------------------
-
-
-
-
-
-  // async function modifyStudent(paramList){
-  //   await axios.post('/member/student/modify', null, {params : paramList});
-  // }
-
-  // async function deleteStudent(paramList){
-  //   await axios.post('/member/student/delete', null, {params : paramList});
-  // }
-
-
-
-
-  const deleteStudentIdx = document.querySelector("#deleteStudentIdx");
-  const deleteForm = document.querySelector("#deleteForm");
-  function studentDelete(studentIdx){
-
-    if(!confirm('삭제하시겠습니까?')){
-      return;
-    }
-
-    if(!confirm('관련 데이터가 모두 삭제됩니다.\n정말로 삭제하시겠습니까?')){
-      return;
-    }
-
-    deleteForm.submit();
-
-
-    // const param = {
-    //   studentIdx : studentIdx
-    // }
-    // deleteStudent(param);
-
-
-
-
-  }
-
-
-  function insertValid(){
-
-    insertName.value = insertName.value.trim();
-    insertPhone.value = insertPhone.value.trim();
-    insertBirthday.value = insertBirthday.value.trim();
-    insertEmail.value = insertEmail.value.trim();
-
-    if(lessonSelect.value === ""){
-      alert("수업이 선택되지 않았습니다.");
-      return;
-    }
-
-    if(insertName.value === ""){
-      alert("이름이 입력되지 않았습니다.");
-      return;
-    }
-
-    if(insertPhone.value === ""){
-      alert("연락처가 입력되지 않았습니다.");
-      return;
-    }
-
-    if(insertBirthday.value === ""){
-      alert("생년월일이 입력되지 않았습니다.");
-      return;
-    }
-
-    insertForm.submit();
-
-  }
-
-
-
-
-  const url = new URL(window.location.href);
-  console.log(window.location.href);
-  const urlSearchParams = url.searchParams;
-
-  console.log(urlSearchParams.get("code"));
-  const code = urlSearchParams.get("code");
-
-  switch (code){
-    case 'insert-success' :
-      alert('등록되었습니다. ◝(ᵔᵕᵔ)◜');
-      history.replaceState({}, null, location.pathname);
-      break;
-    case 'insert-fail' :
-      alert('이미 존재하는 학생입니다.');
-      history.replaceState({}, null, location.pathname);
-      break;
-    case 'modify-success' :
-      alert('수정되었습니다.');
-      history.replaceState({}, null, location.pathname);
-      break;
-    case 'modify-fail' :
-      alert('수정에 실패했습니다.');
-      history.replaceState({}, null, location.pathname);
-      break;
-    case 'delete-fail' :
-      alert('삭제에 실패했습니다.');
-      history.replaceState({}, null, location.pathname);
-      break;
-    case 'delete-success' :
-      alert('삭제되었습니다.');
-      history.replaceState({}, null, location.pathname);
-      break;
-
-  }
-
-
-
-
-  // nav 활성화
-  // document.querySelector(".teacherManagement").classList.add("active");
-  // document.querySelector(".memberManagement").classList.add("active");
 
 </script>
 </body>

@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -53,15 +56,26 @@ public class TrainingController {
     //유형추가
     @ResponseBody
     @PostMapping(value = "/category/insert")
-    public void categoryInsert(@RequestBody CategoryDTO categoryDTO, BindingResult bindingResult) throws BindException {
-        trainingService.categoryInsert(categoryDTO);
+    public int categoryInsert(@RequestBody CategoryDTO categoryDTO, BindingResult bindingResult) throws BindException {
+        int i = 0;
+        List<Category> categoryList = trainingService.categoryList();
+        for (Category category : categoryList){
+            if(category.getName().equals(categoryDTO.getName())){
+                i = 1;
+            }
+        }
+        if(i == 0) {
+            trainingService.categoryInsert(categoryDTO);
+            return 0;
+        }else{
+            return 1;
+        }
     }
 
     //유형수정
     @ResponseBody
     @PutMapping(value = "/category/{idx}")
     public void categoryUpdate(@RequestBody CategoryDTO categoryDTO){
-        log.info("Controller input : " + categoryDTO);
         trainingService.categoryUpdate(categoryDTO);
     }
 
@@ -86,8 +100,21 @@ public class TrainingController {
     //과목추가
     @ResponseBody
     @PostMapping(value = "/subject/insert")
-    public void subjectInsert(@RequestBody SubjectDTO subjectDTO){
-        trainingService.subjectInsert(subjectDTO);
+    public int subjectInsert(@RequestBody SubjectDTO subjectDTO){
+        List<Subject> subjectList = trainingService.subjectList();
+        int i = 0;
+        for(Subject subject : subjectList) {
+            if(subject.getName().equals(subjectDTO.getName())){
+                i = 1;
+            }
+        }
+
+        if(i == 0) {
+            trainingService.subjectInsert(subjectDTO);
+            return 0;
+        }else{
+            return 1;
+        }
     }
 
     //과목수정
@@ -111,8 +138,10 @@ public class TrainingController {
     //과정전체
     @GetMapping("/curriculum")
     public String curriculumIndex(Model model, PageRequestDTO pageRequestDTO){
+
         PageResponseDTO<Curriculum> responseDTO = trainingService.searchCurriculum(pageRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
+
 
         List<Category> category = trainingService.categoryList();
         model.addAttribute("category", category);
@@ -122,29 +151,53 @@ public class TrainingController {
 
     //과정추가
     @PostMapping(value = "/curriculum/insert")
-    public String curriculumInsert(String name, Long category, int time, int day){
+    public String curriculumInsert(String name, Long category, int time, int day,Model model,PageRequestDTO pageRequestDTO){
 
-        Category c = trainingService.getCategoryIdx(category);
+        Category setCategory = trainingService.getCategoryIdx(category);
 
         CurriculumDTO curriculumDTO = new CurriculumDTO();
         curriculumDTO.setName(name);
-        curriculumDTO.setCategory(c);
+        curriculumDTO.setCategory(setCategory);
         curriculumDTO.setTime(time);
         curriculumDTO.setDay(day);
 
-        trainingService.curriculumInsert(curriculumDTO);
-        return "redirect:/training/curriculum";
+        List<Curriculum> curriculumList = trainingService.curriculumList();
+
+
+        //중복 처리
+        int i = 0;
+        for(Curriculum curriculum : curriculumList ){
+
+            log.info("컨트롤러 과정 : " + curriculum.getName());
+            for(Category category1 : trainingService.categoryList()){
+                if (category1.getIdx()==category && curriculum.getName().equals(name)){
+                    i =1;
+                }
+            }
+        }
+
+         if(i == 0){
+            trainingService.curriculumInsert(curriculumDTO);
+         }
+
+        PageResponseDTO<Curriculum> responseDTO = trainingService.searchCurriculum(pageRequestDTO);
+        model.addAttribute("responseDTO", responseDTO);
+        model.addAttribute("category", curriculumList);
+
+        return "training/curriculum/index";
     }
 
     //과정수정
     @PostMapping(value = "/curriculum/update")
     public String  curriculumUpdate(Long idx, String name, String category_name, Long category_idx, int time, int day){
 
-        log.info("Controller : " +idx + name + category_name + category_idx);
+        Category category = new Category();
 
-        Category category = trainingService.getCategoryIdx(category_idx);
-
-        log.info(String.valueOf(category));
+        if(category_name.equals("유형을 변경하시려면 선택하세요.")){
+            category = trainingService.getCategoryIdx(category_idx);
+        }else {
+            category = trainingService.getCategoryByName(category_name);
+        }
 
         CurriculumDTO curriculumDTO = new CurriculumDTO();
         curriculumDTO.setIdx(idx);
@@ -169,8 +222,11 @@ public class TrainingController {
     //수업전체
     @GetMapping("/lesson")
     public String lessonIndex(Model model, PageRequestDTO pageRequestDTO){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        UserDetails userDetails = (UserDetails)principal;
+        String userId = ((UserDetails) principal).getUsername();
 
-        PageResponseDTO<Lesson> responseDTO = trainingService.searchLesson(pageRequestDTO);
+        PageResponseDTO<Lesson> responseDTO = trainingService.searchLesson(pageRequestDTO, userId);
         model.addAttribute("responseDTO", responseDTO);
 
         PageResponseDTO<Curriculum> responseCurriculum = trainingService.searchCurriculum(pageRequestDTO);
@@ -190,7 +246,6 @@ public class TrainingController {
 
         //과목들 Map에 담아 보내기
         List<Subject> subject = trainingService.subjectList();
-        log.info(subject.toString());
         model.addAttribute("subject", subject);
 
         return "training/lesson/index";
@@ -220,7 +275,6 @@ public class TrainingController {
 
         //인덱스에 해당하는 수업
         model.addAttribute("lesson", trainingService.getLessonByIdx(idx));
-        log.info("컨트롤러 레슨 : " + trainingService.getLessonByIdx(idx));
 
         return "/training/lesson/detail";
     }
@@ -253,8 +307,6 @@ public class TrainingController {
         lessonDTO.setContent(content);
         lessonDTO.setQuestionName(questionName);
 
-        log.info("컨트롤러 보유과목 : " + selectedSubjects);
-
         Long subjectIdx = trainingService.lessonInsert(lessonDTO);
         SubjectHoldDTO subjectHoldDTO = new SubjectHoldDTO();
         subjectHoldDTO.setLesson_idx(subjectIdx);
@@ -266,8 +318,6 @@ public class TrainingController {
                 trainingService.subjectHoldInsert(subjectHoldDTO);
             }
         }
-
-        log.info("컨트롤러 잘 들어갔나");
 
         return "redirect:/training/lesson";
     }
@@ -292,8 +342,6 @@ public class TrainingController {
         lessonDTO.setQuestionName(questionName);
 
         trainingService.lessonUpdate(lessonDTO);
-
-        log.info("Controller : " + lessonDTO);
 
         return "redirect:/training/lesson/detail?idx="+lessonDTO.getIdx();
     }

@@ -4,6 +4,7 @@ import com.ezen.management.domain.Lesson;
 import com.ezen.management.domain.QLesson;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+
+@Slf4j
 public class LessonSearchImpl extends QuerydslRepositorySupport implements LessonSearch {
 
 
@@ -21,7 +24,7 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
     }
 
     @Override
-    public Page<Lesson> searchLesson(String[] types, String keyword, Pageable pageable) {
+    public Page<Lesson> searchLesson(String[] types, String keyword, Pageable pageable, String userId) {
 
         QLesson lesson = QLesson.lesson;
 
@@ -29,37 +32,41 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
+        if(!userId.equals("None")){
+            booleanBuilder.and(lesson.member.id.eq(userId));
+        }
+
         if (types != null && keyword != null) {
             for (String type : types) {
                 switch (type) {
                     case "c":
-                        booleanBuilder.or(lesson.curriculum.category.name.contains(keyword));
+                        booleanBuilder.and(lesson.curriculum.category.name.contains(keyword));
                         break;
                     case "t":
                         booleanBuilder.and(lesson.curriculum.name.contains(keyword));
                         break;
                     case "n":
-                        booleanBuilder.or(lesson.number.eq(Integer.parseInt(keyword)));
+                        booleanBuilder.and(lesson.number.eq(Integer.parseInt(keyword)));
                         break;
                     case "m":
-                        booleanBuilder.or(lesson.member.name.contains(keyword));
+                        booleanBuilder.and(lesson.member.name.contains(keyword));
                         break;
                     case "h":
-                        booleanBuilder.or(lesson.headCount.eq(Integer.parseInt(keyword)));
+                        booleanBuilder.and(lesson.headCount.eq(Integer.parseInt(keyword)));
                         break;
                     case "s":
-                        booleanBuilder.or(lesson.startDay.eq(LocalDate.parse(keyword)));
+                        booleanBuilder.and(lesson.startDay.eq(LocalDate.parse(keyword)));
                         break;
                     case "e":
-                        booleanBuilder.or(lesson.endDay.eq(LocalDate.parse(keyword)));
+                        booleanBuilder.and(lesson.endDay.eq(LocalDate.parse(keyword)));
                         break;
                     case "r":
-                        booleanBuilder.or(lesson.classRoom.contains(keyword));
+                        booleanBuilder.and(lesson.classRoom.contains(keyword));
 
                 }
             }
         }
-
+        query.orderBy(lesson.curriculum.name.asc(), lesson.number.asc());
         query.where(booleanBuilder);
 
         //페이징
@@ -72,7 +79,7 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
     }
 
     @Override
-    public Page<Lesson> searchLessonOngoing(String[] types, String keyword, Pageable pageable) {
+    public Page<Lesson> searchLessonOngoing(String[] types, String keyword, Pageable pageable, String userId) {
 
         QLesson lesson = QLesson.lesson;
 
@@ -85,6 +92,11 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
         booleanBuilder.and(lesson.endDay.gt(now));
         booleanBuilder.and(lesson.startDay.loe(now));
 
+        if(!userId.equals("None")){
+            booleanBuilder.and(lesson.member.id.eq(userId));
+        }
+
+
         if (types != null && keyword != null) {
             for (String type : types) {
                 switch (type) {
@@ -115,7 +127,7 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
                 }
             }
         }
-
+        query.orderBy(lesson.curriculum.name.asc(), lesson.number.asc());
         query.where(booleanBuilder);
 
         //페이징
@@ -128,7 +140,7 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
     }
 
     @Override
-    public Page<Lesson> searchLessonEnd(String[] types, String keyword, Pageable pageable) {
+    public Page<Lesson> searchLessonEnd(String[] types, String keyword, Pageable pageable, String userId) {
 
         QLesson lesson = QLesson.lesson;
 
@@ -140,6 +152,10 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(lesson.endDay.loe(now));
 //        booleanBuilder.and(lesson.startDay.goe(now));
+
+        if(!userId.equals("None")){
+            booleanBuilder.and(lesson.member.id.eq(userId));
+        }
 
         if (types != null && keyword != null) {
             for (String type : types) {
@@ -171,7 +187,7 @@ public class LessonSearchImpl extends QuerydslRepositorySupport implements Lesso
                 }
             }
         }
-
+        query.orderBy(lesson.curriculum.name.asc(), lesson.number.asc());
         query.where(booleanBuilder);
 
         //페이징

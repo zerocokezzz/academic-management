@@ -96,7 +96,7 @@
 <!--                        <a href="/counseling/list" class="dropdown-item">상담 관리</a>-->
 <!--                        <a href="#" class="dropdown-item">과목 평가</a>-->
                         <a href="/member/question" class="dropdown-item">사전 평가(문제 수정)</a>
-                        <a href="/member/survey/list" class="dropdown-item">설문 조사(문제 수정)</a>
+                        <a href="/member/survey/read?round=1" class="dropdown-item">설문 조사(문제 수정)</a>
 <!--                        <a href="/member/lesson/question" class="dropdown-item">사전 평가</a>-->
 
                     </div>
@@ -288,11 +288,20 @@
     console.log("hello!");
     // nav 프로필 사진 변경
     const fileName = '[[${#authentication.principal.fileName}]]';
+    const uuid = '[[${#authentication.principal.uuid}]]';
 
     const profile = document.querySelectorAll(".profile");
 
+    console.log(fileName);
+    console.log(uuid);
+
     profile.forEach(function (profile) {
-        profile.src = `/images/${fileName}`;
+        if(uuid !== null || uuid === ''){
+            profile.src = `/view/${uuid + '_' + fileName}`;
+        }
+
+        profile.src = `/images/default_profile.jpg`;
+
     })
 
 </script>

@@ -21,42 +21,49 @@
                         <div class="card-header">
                             <h5>상담 추가</h5>
                         <div class="card-body">
-                            <form action="/counseling/insert" method="post">
+                            <form th:action="@{/counseling/insert}" method="post" id="i1">
 <!--  학생번호랑 학생이름은 땡겨오는 걸로                              -->
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">학생.No</span>
-                                    <input type="text" name="studentIdx" class="form-control" placeholder="학생번호">
+                                    <input type="text" class="form-control" name="studentIdx" th:value="${student.idx}" readonly>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">학생이름</span>
-                                    <input type="text" name="name" class="form-control" placeholder="이름">
+                                    <input type="text" class="form-control" th:value="${student.name}" placeholder="name" readonly>
                                 </div>
+<!-- 수정요청사항 이미 등록된 상담회차는 등록 못하게 -->
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">상담회차</span>
-                                    <input type="text" name="round" class="form-control" placeholder="상담회차">
+                                    <input type="text" id="numberOnly" class="form-control" name="round" placeholder="상담회차" required>
                                 </div>
                                 <div class="bs-body-color-rgb">
                                     <span class="input-group-text">내용</span>
-                                    <textarea class="form-control col-sm-5" rows="5" name="content" placeholder="상담내용을 작성하세요"></textarea>
+                                    <textarea class="form-control col-sm-5" rows="5" id="content" name="content" maxlength="1000" placeholder="상담내용을 작성하세요" required oninput="checkTextareaLength()"></textarea>
+                                    <p class="text-end" id="charCount"></p>
                                 </div>
 <!--  기입으로할지 아니면 radio로 할지                              -->
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">상담 방법</span>
-                                    <input type="text" class="form-control" name="method" placeholder="0:대면, 1:온라인, 2:전화 중 맞는 방법을 입력하세요">
+                                    <input type="text" id="numberOnly1" class="form-control" name="method" placeholder="0:대면, 1:온라인, 2:전화 중 맞는 방법을 입력하세요" required>
                                 </div>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text">담당자</span>
-                                    <input type="text" name="writer" class="form-control" placeholder="담당자를 입력하세요" >
+                                    <input type="text" class="form-control" name="writer" placeholder="담당자를 입력하세요" required>
                                 </div>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">날짜</span>
+                                    <input type="text" class="form-control counselingDate" name="counselingDate" placeholder="상담시간" >
+                                </div>
+
 
                                 <div class="my-4">
                                     <div class="float-end">
-                                        <button type="button" class="btn btn-primary creatBtn">save</button>
-                                        <button type="button" class="btn btn-outline-dark clearBtn">back</button>
+                                        <button type="button" class="btn btn-primary creatBtn">저장</button>
+                                        <button type="button" class="btn btn-outline-dark clearBtn">취소</button>
                                     </div>
                                 </div>
                             </form>
-                        </div>
+                        </div><!-- end card body -->
 
                         </div><!-- end card-header -->
                     </div><!-- end card -->
@@ -89,21 +96,97 @@
 
     console.log("안녕 여기 상담추가");
 
+
+    //시간 설정하기
+    // HTML 요소를 선택합니다.
+    const counselingDateInput = document.querySelector(".counselingDate");
+
+    // 혹은 특정 포맷으로 날짜를 가져올 수 있습니다.
+    const formattedDate = moment().format('YYYY-MM-DD HH:mm:ss');
+    console.log(formattedDate); // 예: "2024-04-09 13:45:30"
+
+    // 가져온 오늘 날짜를 input 요소의 값으로 설정합니다.
+    counselingDateInput.value = formattedDate;
+    console.log("counselingDateInput=" + counselingDateInput.value);
+
+
+
+
+    //form에 id 추가
+    const formObj = document.querySelector("#i1");
+
     //추가하기
     document.querySelector(".creatBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
 
-        self.location ='/counseling/list'
+        alert("추가되었습니다");
+
+        formObj.action = `/counseling/insert`
+        formObj.method = 'post'
+        formObj.submit()
+
     }, false)
+
 
     //List 돌아가기
     document.querySelector(".clearBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
 
-        self.location ='/counseling/list'
+        const studentIdx = [[${student.idx}]]
+        console.log("studentIdx= " + studentIdx);
+
+        self.location ='/counseling/counselingDetail?idx=' + studentIdx;
+
+        //꼭 목록으로 돌아가야 할까?
+        //self.location ='/lesson/studentList?idx=' + idx;
+
+
     }, false)
+
+
+
+
+    //유효성검사 / 상담회차, 상담방법 number로 받기
+    $("#numberOnly").on("keyup", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );})
+    $("#numberOnly1").on("keyup", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );})
+
+
+
+
+
+    //입력된 글자 수 표시
+    function checkTextareaLength() {
+        var textarea = document.getElementById('content');
+        var charCount = document.getElementById('charCount');
+        var content = textarea.value;
+        const maxLength = 1000;
+
+        //1000자 이상일 경우 글자수 알림
+        if (content.length > maxLength) {
+            charCount.textContent = '글자 수: ' + maxLength + ' / ' + maxLength + ' (초과)';
+            alert("1000자 이하로 작성바랍니다.")
+        } else {
+            charCount.textContent = '글자 수: ' + content.length + ' / ' + maxLength;
+        }
+    }
+
+
+
+
+    //시간 가져오기1
+    // var currentDate = moment();
+    // console.log(currentDate); // 현재 날짜와 시간 출력
+
+    //시간 가져오기2
+    //var today = new Date();
+    //var formattedDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+
+
+
+
 
 
 </script>

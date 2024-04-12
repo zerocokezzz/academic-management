@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="/layout/basic :: head"></head>
+<body>
+<!-- warpper start -->
+<div class="wrapper">
+    <div th:replace="/layout/basic :: sidebar">
+    </div>
+
+
+    <!-- content start -->
+    <div class="content">
+        <div th:replace="/layout/basic :: navbar"></div>
+
+        <div class="inner-content" style="margin: 2vw 0 0 6vh; max-width: 80%">
+
+            <div class="row float-end">
+                <div class="col-auto">
+                    <button type="button" class="btn btn-outline-dark clearBtn">목록</button>
+                    <button type="button" class="btn btn-primary creatBtn">추가</button>
+                </div>
+            </div>
+
+            <h3> 상담 </h3>
+            <hr>
+            <br>
+            <!-- 학생 정보-->
+
+
+            <div style="display: inline-flex">
+                <img th:if="${student.uuid != null}" th:src="${'/view/' + student.uuid + '_' + student.fileName}" alt=""
+                     style="width: 150px; height: 180px; margin-right: 40px; object-fit: cover">
+                <img th:if="${student.uuid == null}" src="/images/default_profile.jpg" alt=""
+                     style="width: 150px; height: 180px; margin-right: 40px; object-fit: cover">
+                <div style="line-height: 90%"> <!-- 이미지랑 텍스트로 두 칸 -->
+                    <br>
+                    <div> <!-- 이름이랑 값으로 두칸 -->
+                        <h5 style="margin-right: 50px">이름&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${student.name}]]</h5>
+                    </div>
+                    <br>
+                    <div>
+                        <h5 style="margin-right: 20px">생년월일&nbsp;&nbsp;&nbsp;&nbsp;[[${student.birthday}]]</h5>
+                    </div>
+                    <br>
+                    <div>
+                        <h5 style="margin-right: 20px">전화번호&nbsp;&nbsp;&nbsp;&nbsp;[[${student.phone}]]</h5>
+                    </div>
+                    <br>
+                    <div>
+                        <h5 style="margin-right: 35px">이메일&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${student.email}]]</h5>
+                    </div>
+                    <br>
+                    <div>
+                        <h5 style="margin-right: 35px">과정&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${student.lesson.curriculum.name}]]</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 학생정보 끝 -->
+
+
+            <br>
+            <br>
+
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+
+                        <!-- Title -->
+<!--                            <div class="row">-->
+<!--&lt;!&ndash;                                <p class="fs-2 fw-bold">상담</p>&ndash;&gt;-->
+<!--                                &lt;!&ndash;<h8>※상담방식: ( 0: 대면 / 1: 온라인 / 2: 전화 )</h8><br>&ndash;&gt;-->
+<!--                        &lt;!&ndash; Curriculum &ndash;&gt;-->
+<!--                                <input type="text" class="form-control" th:value="${student.lesson.curriculum.name}" style="margin: 0;" readonly />-->
+<!--                            </div>-->
+
+                <!-- 여기부터는 상담List로 나오기 -->
+                            <div class="card-body">
+                                <div th:each="counseling: ${counselingList}" id="l1">
+                                <form>
+                                <div class="row">
+                                    <div class="col text-end">
+                                            <a th:href="|@{/counseling/update}?idx=${counseling.idx}|">
+                                                <button type="button" class="btn btn-secondary modBtn">수정하기</button>
+                                            </a>
+                                            <a th:href="|@{/counseling/delete}?idx=${counseling.idx}|">
+                                                <button type="button" class="btn btn-danger delBtn">삭제하기</button>
+                                            </a>
+                                    </div>
+
+                                    <div class="input-group mb-3">
+                                        <input type="hidden" class="form-control" name="idx" th:value="${counseling.idx}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담회차</span>
+                                        <input type="text" class="form-control" name="round" th:value="${counseling.round}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담일자</span>
+                                        <input type="text" class="form-control" name="counselingDate" th:value="${#temporals.format(counseling.counselingDate, 'yyyy-MM-dd')}" readonly>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담내용</span>
+                                        <textarea class="form-control col-sm-5" name="content" id="content" th:text="${counseling.content}" style="resize: none; overflow: hidden;" readonly></textarea>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">상담방식</span>
+                                        <input type="hidden" class="form-control counselingMethod" name="method" th:value="${counseling.method}" readonly>
+                                        <div class="form-control" th:switch="${counseling.method}">
+                                            <span th:case="0"> 대면 </span>
+                                            <span th:case="1"> 온라인 </span>
+                                            <span th:case="2"> 전화 </span>
+                                            <span th:case="*" class="text-danger"> 몰?루? </span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text">담당자</span>
+                                        <input type="text" class="form-control" name="writer" th:value="${counseling.writer}" readonly>
+                                    </div>
+                <!-- button -->
+                            </div><!-- end card body -->
+                                </form><!-- end th:each -->
+                                </div>
+
+
+
+                        </div><!-- end card-header -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div><!-- end row -->
+        </div><!-- end inner-content -->
+
+
+
+
+
+    </div><!--end content -->
+
+
+
+
+
+
+
+
+
+    <!-- 진짜 개 천천히 top으로 올라가네요-->
+    <!--    좀 빠르게 고침 -->
+    <!-- 더 빠르게 바꾸고 싶으면 main.js에서 back-to-top speed 조정 낮을수록 빠름 -->
+    <a th:replace="/layout/basic :: back-to-top"></a>
+
+</div>
+<!-- wrapper end-->
+
+
+
+<div th:replace="/layout/basic :: scriptSet">
+</div>
+
+<script content="script" th:inline="javascript">
+
+    console.log("안녕 여기 상담 상세");
+
+
+    //에러메세지 띄워주기
+    const errors = [[${errors}]]
+    console.log(errors)
+
+    let errorMsg = ''
+
+    if(errors){
+        for(let i=0; i<errors.length; i++){
+            errorMsg += `${errors[i].field}는 ${errors[i].code} \n`
+        }
+        alert(errorMsg)
+    }
+
+
+
+    //학생정보확인
+    const studentIdx = [[${student.idx}]]
+    console.log("studentIdx= " + studentIdx);
+
+
+
+
+    //상담 추가하기
+    document.querySelector(".creatBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+
+        location.href = '/counseling/insert?idx=' + studentIdx;
+
+    }, false)
+
+
+
+
+    //학생목록으로 돌아가~
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const lessonIdx = [[${student.lesson.idx}]]
+        console.log("lessonIdx= " + lessonIdx);
+
+        location.href = '/lesson/studentList?idx=' + lessonIdx;
+
+    }, false)
+
+
+
+
+    const formObj = document.querySelector("#l1");
+
+    // 삭제하기
+    document.querySelectorAll(".delBtn").forEach(function(btn) {
+        btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 확인 창 표시
+            const confirmed = confirm("삭제하시겠습니까?");
+
+            if (confirmed) {
+                // 삭제할 form 요소 선택
+                const form = this.closest("form");
+                form.action = `/counseling/delete`;
+                form.method = 'post';
+                form.submit();
+            }
+        });
+    });
+
+
+
+
+    // textarea의 높이를 동적으로 조절하는 함수
+    function adjustTextareaHeight() {
+        var textarea = document.getElementById('content');
+        textarea.style.height = 'auto'; // 기본 높이로 재설정
+        textarea.style.height = textarea.scrollHeight + 'px'; // 내용에 맞게 높이 조절
+    }
+
+    // 페이지 로드 시 textarea의 높이를 조절
+    window.onload = function() {
+        adjustTextareaHeight();
+    };
+
+    // textarea의 값이 변경될 때마다 높이를 조절
+    document.getElementById('content').addEventListener('input', function() {
+        adjustTextareaHeight();
+    });
+
+
+
+
+</script>
+
+</body>
+</html>

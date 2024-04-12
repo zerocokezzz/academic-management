@@ -13,6 +13,7 @@ import com.ezen.management.service.QuestionAnswerService;
 import com.ezen.management.service.QuestionService;
 import com.ezen.management.service.StudentService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,6 @@ public class StudentController {
     @GetMapping("")
     public String index(Model model) {
 
-
 //        List<Lesson> lessonList = lessonService.findAll();
 //        현재 진행 중인 수업 리스트
         List<Lesson> lessonList = lessonService.findAllGreaterThan(LocalDate.now());
@@ -54,19 +54,17 @@ public class StudentController {
     @PostMapping("/select")
     public String select(Model model, StudentDTO studentDTO) {
 
+        Student student = null;
 
 //        레슨 인덱스와 받아온 이름으로 학생 조회
 //        뷰에서는 학생 정보를 보여주고 사전평가/설문조사 중 하나를 클릭하면 거기로 student idx를 넘겨줌
-        Student student = studentService.findByLessonIdxAndName(studentDTO.getLessonIdx(), studentDTO.getName());
+        try {
+            student = studentService.findByLessonIdxAndName(studentDTO.getLessonIdx(), studentDTO.getName());
+        }catch (Exception e){
+//        학생이 존재하지 않으면 돌아감
+            return "redirect:/student?code=not-exist-student";
 
-
-//        학생이 존재하지 않으면 문제를 풀 수 없음
-
-        if (student == null) {
-
-            return "redirect:/student";
         }
-
 
         model.addAttribute("lesson", student.getLesson());
         model.addAttribute("student", student);
@@ -108,58 +106,17 @@ public class StudentController {
 
 
     @PostMapping("/question/insert")
-    public String insert(QuestionAnswerDTO questionAnswerDTO) {
+    public String insert(@Valid QuestionAnswerDTO questionAnswerDTO) {
 
         log.info("questionAnswerDTO : {}", questionAnswerDTO);
 
-//        답안지 삽입
-//        채점
-//        학생 테이블 pretest = true, score = 점수
-        int result = questionAnswerService.grading(questionAnswerDTO);
-
-//        response.setCharacterEncoding("utf-8");
-//        response.setContentType("text/html; charset=utf-8");
-//        PrintWriter w = null;
-//
-//        try {
-//            w = response.getWriter();
-//        } catch (IOException e) {
-////            throw new RuntimeException(e);
-//            return "redirect:/student";
-//        }
-//
-//        if(result == 1){
-//            w.println("<script> alert('제출되었습니다.');");
-//        }else{
-//            w.println("<script> alert('Error!');");
-//        }
-//
-//        w.println("location.href='/student' </script>");
-//        w.close();
-//        return null;
-
-
-//        이렇게 보내면 뷰에서 파라미터 받은 후 자바스크립트로 처리
-        if (result == 1) {
+        try{
+//          채점 (답안지 삽입 + 학생 컬럼 pretest = true, score = 점수)
+            questionAnswerService.grading(questionAnswerDTO);
             return "redirect:/student?code=success";
+        }catch (Exception e){
+            return "redirect:/student?code=fail";
         }
-
-        return "redirect:/student?code=fail";
-//        const url = new URL(window.location.href);
-//        console.log(window.location.href);
-//        const urlSearchParams = url.searchParams;
-//
-//        console.log(urlSearchParams.get("code"));
-//        const code = urlSearchParams.get("code");
-//
-//            switch (code){
-//                case 'success' :
-//                    alert('제출되었습니다.');
-//                    break;
-//                case 'fail' :
-//                    alert('오류 발생! 다시 제출해주세요.');
-//            }
-
 
     }
 
@@ -180,12 +137,14 @@ public class StudentController {
                 .number(student.getLesson().getNumber())
                 .build();
 
+//        엔티티에 뷰에 보여주면 안 되는 값이 있으면 DTO로 변환해서 반환함
         StudentDTO studentDTO = StudentDTO.builder()
                 .name(student.getName())
                 .email(student.getEmail())
                 .idx(student.getIdx())
                 .birthday(student.getBirthday())
                 .phone(student.getPhone())
+                .uuid(student.getUuid())
                 .fileName(student.getFileName())
                 .counseling(student.getCounseling())
                 .pretest(student.isPretest())
