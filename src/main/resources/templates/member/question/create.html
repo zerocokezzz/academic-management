@@ -306,6 +306,12 @@
       e.stopPropagation();
       e.preventDefault();
 
+      if(questionName.value === ''){
+          alert('분류가 등록되지 않았습니다.');
+          return;
+      }
+
+
       const params = {
           name : questionName.value
       }

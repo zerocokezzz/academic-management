@@ -201,7 +201,7 @@
 
                     <!--                    사진 -->
                     <div th:if="${question.fileName != null}">
-                        <img th:src="'/img/question/' + ${question.fileName}" style="max-width: 270px; margin: 30px">
+                        <img th:src="'/view/' + ${question.uuid} + '_' + ${question.fileName}" style="max-width: 270px; margin: 30px">
                     </div>
 
 

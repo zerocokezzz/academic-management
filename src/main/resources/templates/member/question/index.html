@@ -143,7 +143,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form>
+
+
+
+
+            <form action="/member/question/modify" method="post" encType="multipart/form-data" id="modifyForm">
 
               <div style="max-width: 300px">
                 <select class="form-select questionKeywordSelect" id="updateQuestionKeyword" name="name" required>
@@ -162,6 +166,21 @@
               <div class="mb-3">
                 <label for="content" class="col-form-label">문제</label>
                 <textarea type="text" rows="2" class="form-control" id="content" name="content"></textarea>
+              </div>
+
+
+              <div class="d-flex justify-content-center">
+                <div class="modifyImage" style="width: 200px; height: 200px;">
+                  <!--                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">-->
+                </div>
+              </div>
+              <br>
+              <br>
+
+
+              <div class="mb-3">
+                <label for="modifyFile" class="col-form-label">사진</label>
+                <input type="file" class="form-control" name="file" id="modifyFile"/>
               </div>
 
               <div class="mb-3">
@@ -221,7 +240,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/member/question/insert" method="post" id="insertForm">
+            <form action="/member/question/insert" method="post" id="insertForm" enctype="multipart/form-data">
 
               <input type="hidden" name="number" id="insertNumber"/>
 
@@ -238,6 +257,25 @@
                 <label for="insertContent" class="col-form-label">문제</label>
                 <textarea type="text" rows="2" class="form-control" id="insertContent" name="content" required></textarea>
               </div>
+
+
+
+              <div class="d-flex justify-content-center">
+                <div class="insertImage" style="width: 200px; height: 200px;">
+                  여기에 등록한 이미지 뜨게 할 거임(자바스크립트)
+                  <!--                <img class="rounded-circle" src="/images/default_profile.jpg" alt="" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">-->
+                </div>
+              </div>
+              <br>
+              <br>
+
+
+
+              <div class="mb-3">
+                <label for="inputImage" class="col-form-label">사진</label>
+                <input type="file" class="form-control" name="file" id="inputImage"/>
+              </div>
+
 
 
               <div class="mb-3">
@@ -434,6 +472,7 @@
   const item3 = document.querySelector("#item3");
   const item4 = document.querySelector("#item4");
   const answer = document.querySelector("#answer");
+  const modifyImage = document.querySelector(".modifyImage");
   function questionModify(index){
 
     const paramList = {
@@ -450,11 +489,20 @@
       item4.value = result.item4;
       number.value = result.number;
       idx.value = result.idx;
+
+      if(result.uuid != null){
+        modifyImage.innerHTML = '<img src="/view/' + result.uuid + '_' + result.fileName +'" class="rounded-circle" style="width: 100%; height:100%; object-fit: cover; cursor: pointer">';
+      }else {
+        modifyImage.innerHTML = '<br><br><br><br>등록된 이미지가 없습니다.';
+      }
+
+
       $("select[id=updateQuestionKeyword]").val(result.name).prop("selected", true);
       $("select[id=answer]").val(result.answer).prop("selected", true);
       $("#modifyModal").modal('show');
 
     }).catch( e => {
+      console.log(e);
       console.log('error!');
 
     })
@@ -638,25 +686,29 @@
         return;
       }
 
+
+
       // param을 작성 후 /member/question/insert로 Post 요청
       // insertForm.submit();
-      const insertParam = {
-        name : insertQuestionKeyword.value,
-        number : insertNumber.value,
-        content : insertContent.value,
-        example : insertExample.value,
-        item1 : insertItem1.value,
-        item2 : insertItem2.value,
-        item3 : insertItem3.value,
-        item4 : insertItem4.value,
-        answer : insertAnswer.value
-      }
+      // const insertParam = {
+      //   name : insertQuestionKeyword.value,
+      //   number : insertNumber.value,
+      //   content : insertContent.value,
+      //   example : insertExample.value,
+      //   item1 : insertItem1.value,
+      //   item2 : insertItem2.value,
+      //   item3 : insertItem3.value,
+      //   item4 : insertItem4.value,
+      //   answer : insertAnswer.value
+      // }
 
-      console.log(insertParam);
+      // console.log(insertParam);
+
+      insertForm.submit();
 
 
       // let htmls = '';
-      insertQuestion(insertParam).then(result => {
+      // insertQuestion(insertParam).then(result => {
 
     //   문제 리스트가 리턴되면 새로운 문제 리스트를 출력하고 모달 초기화한 뒤 모달을 닫음
     //     for(const question of result){
@@ -673,7 +725,7 @@
     //     }// for
 
         // [분류] n번 문제가 등록되었습니다.
-        alert('[' + insertQuestionKeyword.value + '] ' + insertNumber.value + '번 문제가 등록되었습니다.');
+        // alert('[' + insertQuestionKeyword.value + '] ' + insertNumber.value + '번 문제가 등록되었습니다.');
         // 문제 리스트 교체
         // questionList.innerHTML = htmls;
 
@@ -693,8 +745,8 @@
         // // 모달 닫기
         // $("#insertModal").modal('hide');
 
-        location.reload();
-      })
+        // location.reload();
+      // })
 
 
     })
@@ -773,8 +825,7 @@
   switch (code){
     case 'success' :
       alert('등록되었습니다.');
-      // location.replace("/member/question");
-      location.reload();
+      history.replaceState({}, null, location.pathname);
       break;
     case 'fail' :
       alert('등록에 실패하였습니다. 다시 시도해주세요.');
